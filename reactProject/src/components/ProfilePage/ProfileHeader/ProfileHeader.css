@@ -1,0 +1,15 @@
+.ProfileHeader{
+    width: 100%;
+    background-color: rgb(15, 45, 105);
+    height: 70px;
+    color: white;
+    position: fixed;
+    z-index: 100;
+}
+
+.ProfileHeader img {
+    cursor: pointer;
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+  }

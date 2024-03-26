@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  width: 100%;
+  background-color: rgb(15, 45, 105);
+  height: 80px;
+  color: white;
+  position: fixed;
+  z-index: 100;
+}
+
+.header img {
+  cursor: pointer;
+  float: right;
+  margin-right: 20px;
+  margin-top: 10px;
+}

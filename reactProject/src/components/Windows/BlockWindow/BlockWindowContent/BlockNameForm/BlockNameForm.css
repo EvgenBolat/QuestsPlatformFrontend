@@ -1,0 +1,33 @@
+.ActionButton{
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    margin-right: 5px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.TaskBlockName{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: blueviolet;
+}
+
+
+
+.BlockNameForm input{
+    width: 500px;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    text-align: center;
+    background-color: transparent;
+    border: 0px;
+}
+
+.BlockNameForm input:focus{
+    outline: none;
+}

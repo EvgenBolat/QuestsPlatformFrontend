@@ -1,0 +1,25 @@
+.BlockWindow{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 103;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.TaskExitButtonImage{
+    cursor: pointer;
+}
+
+.TaskExitButton{
+    position: relative;
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    margin-top: -250px;
+    margin-left: -18px;
+}

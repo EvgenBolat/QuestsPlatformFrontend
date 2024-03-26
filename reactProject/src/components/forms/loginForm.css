@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.login {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.main__form {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(35, 74, 154);
+  width: 400px;
+  padding: 32px 32px 15px 32px;
+  border-radius: 10px;
+  font-family: sans-serif;
+  letter-spacing: 1px;
+}
+
+.main__form input[type="email"],
+.main__form input[type="password"],
+.main__form input[type="submit"] {
+  position: relative;
+  font-family: sans-serif;
+  letter-spacing: 1px;
+  font-size: 16px;
+  margin-bottom: 30px;
+}
+
+.main__form input[type="password"] {
+  margin-bottom: 5px;
+}
+
+.main__form input[type="submit"] {
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  margin-bottom: 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: white;
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.main__form input[type="submit"]:focus,
+.main__form input[type="submit"]:hover {
+  background-color: rgb(232, 232, 232);
+}
+
+.main__form input[type="email"],
+.main__form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+}
+
+.main__form h1 {
+  text-align: center;
+  margin: 0 0 32px 0;
+  color: white;
+}
+
+.wrong_data {
+  color: rgb(255, 61, 61);
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+@media screen and (max-width: 500px) {
+  .main__form {
+    width: 70vw;
+    padding-bottom: 8px;
+  }
+
+  .wrong_data {
+    font-size: 16px;
+    padding-bottom: 0px;
+  }
+
+  .main__form h1 {
+    margin-bottom: 15px;
+  }
+
+  .main__form input[type="email"],
+  .main__form input[type="password"],
+  .main__form input[type="submit"] {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+
+  .main__form input[type="password"] {
+    margin-bottom: 0px;
+  }
+}

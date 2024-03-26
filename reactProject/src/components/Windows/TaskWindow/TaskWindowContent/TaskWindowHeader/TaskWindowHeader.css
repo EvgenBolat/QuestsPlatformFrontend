@@ -1,0 +1,46 @@
+.TaskNameHeader{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(80, 135, 255);
+    width: 500px;
+    max-width: 500px;
+    border-radius: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.TaskNameHeader img{
+    position: relative;
+    right: 0px;
+    cursor: pointer;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.TaskNameHeader .Flagtrue{
+    opacity: 1;
+}
+
+.TaskNameHeader .Flagfalse{
+    opacity: 0.3;
+}
+
+.TaskNameHeaderForm input{
+    position: relative;
+    width: 420px;
+    margin-left: 40px;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+    text-align: center;
+    background-color: transparent;
+    border: 0px;
+    /* background-color: red; */
+    color: white;
+    /* cursor: text; */
+}
+
+.TaskNameHeaderForm input:focus{
+    outline: none;
+}

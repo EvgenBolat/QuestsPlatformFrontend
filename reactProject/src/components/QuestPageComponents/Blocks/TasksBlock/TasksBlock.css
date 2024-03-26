@@ -1,0 +1,35 @@
+.TaskBlockButton{
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+}
+
+.BlockName {
+  position: absolute;
+  top: 185px;
+  color: white;
+  width: 150px;
+  text-align: center;
+  font-weight: bold;
+  background-color: black;
+  border-radius: 10px;
+}
+
+.BlockImage {
+  scale: 2;
+}
+
+.TasksBlock {
+  cursor: grab;
+  width: 150px;
+  height: 200px;
+  position: relative;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+  background-color: rgb(0, 133, 255);
+}

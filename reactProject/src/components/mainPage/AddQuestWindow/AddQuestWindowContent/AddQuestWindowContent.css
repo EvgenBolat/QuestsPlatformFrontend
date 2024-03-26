@@ -1,0 +1,17 @@
+.AddQuestWindowContent{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: blue;
+}
+
+.AddQuestWindowContentForm{
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: row;
+}

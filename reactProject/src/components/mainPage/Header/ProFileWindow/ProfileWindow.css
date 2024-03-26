@@ -1,0 +1,20 @@
+.BackgroungProfileWindowContent {
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 102;
+}
+
+.ProfileWindowContent{
+    position: absolute;
+    right: 10px;
+    top: 50px;
+}

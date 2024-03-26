@@ -1,0 +1,24 @@
+.TaskForm{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    max-width: 500px;
+}
+
+select{
+    /* width: 100px; */
+    color: black;
+}
+
+#emailError{
+    color: red;
+    font-weight: bold;
+}
+
+.TaskForm #CreationTaskButton{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 100px;
+}

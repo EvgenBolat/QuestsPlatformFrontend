@@ -1,0 +1,44 @@
+.Headers {
+  top: 19px;
+  width: 100%;
+  position: fixed;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.QuestHeader {
+  position: relative;
+  top: 35px;
+  background-color: rgb(35, 74, 154);
+  width: 500px;
+  text-align: center;
+  font-size: 25px;
+  color: white;
+}
+
+.CreationMenu {
+  width: 150px;
+  top: 0%;
+  right: 25px;
+}
+
+.exitToQuestButton{
+  padding: 0;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  position: absolute;
+  z-index: 105;
+  left: 3px;
+  height: 50px;
+  top: -5px;
+  scale: 1.5;
+}
+
+.exitToQuestButtonImage{
+  cursor: pointer;
+}

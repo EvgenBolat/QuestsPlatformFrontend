@@ -1,0 +1,9 @@
+.exitToQuestButtonFromView{
+    position: fixed;
+    background-color: blue;
+    right: 10px;
+    bottom: 10px;
+    border-radius: 100px;
+    padding: 10px;
+    border: none;
+}

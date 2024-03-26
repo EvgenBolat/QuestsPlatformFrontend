@@ -1,0 +1,20 @@
+.ActionMenuContent{
+    position: absolute;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 140;
+}
+
+.ActionMenuContentQuest{
+    right: 235px;
+    top: 70px;
+}
+
+.ActionMenuContentBlock{
+    top: 285px;
+    right: 240px;
+}
