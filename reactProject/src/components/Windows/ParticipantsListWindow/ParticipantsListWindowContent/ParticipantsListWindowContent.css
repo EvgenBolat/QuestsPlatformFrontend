@@ -1,0 +1,27 @@
+#ParticipantsListWindowContent{
+    background-color: blue;
+    color: white;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+#ParticipantsListHeader{
+    margin-bottom: 10px;
+    font-size: 23px;
+}
+
+#deleteParticipantButton{
+    height: 25px;
+    width: 25px;
+    margin-top: -10px;
+    cursor: pointer;
+    display: block;
+}
+
+#participantsElement{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    font-size: 18px;
+}

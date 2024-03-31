@@ -9,6 +9,7 @@ const AddQuestWindowContent = (props: any) => {
   endDate.setMinutes(endDate.getMinutes() + 5);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [typeOfQuest, setTypeOfQuest] = useState(-1);
   const [start_time, setStartTime] = useState(startDate.toLocaleTimeString());
   const [minEndDate] = useState(new Date(endDate));
   const [end_date, setEndDate] = useState(
@@ -71,10 +72,9 @@ const AddQuestWindowContent = (props: any) => {
             placeholder="Название квеста"
           />{" "}
           <br />
-          <input
+          <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            type="textarea"
             name="description"
             id="description"
             placeholder="Описание"
@@ -155,12 +155,29 @@ const AddQuestWindowContent = (props: any) => {
             min={minEndDate.toLocaleTimeString()}
             name="end_time"
             id="end_time"
-          />{" "}
-          <div>
-            <input type="submit" value="Создать" />
-          </div>
+          />
         </div>
       </form>
+      <div className="lowerButtons">
+        <div className="chooseTypeOfQuest">
+          <div>Режим:</div>
+          <select
+            name="tasktype"
+            id="tasktype"
+            onChange={(e) => {
+              setTypeOfQuest(Number(e.target.value));
+            }}
+          >
+            <option value="" selected hidden></option>
+            <option value="0">Одиночный</option>
+            <option value="1">Командный</option>
+          </select>
+        </div>
+        <input
+          type="submit"
+          value={props.typeOfWindow === 0 ? "Создать" : "Сохранить изменения"}
+        />
+      </div>
     </div>
   );
 };

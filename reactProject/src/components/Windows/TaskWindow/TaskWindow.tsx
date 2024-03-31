@@ -2,10 +2,18 @@ import "./TaskWindow.css";
 import TaskWindowContent from "./TaskWindowContent/TaskWindowContent";
 
 const TaskWindow = (props: any) => {
+  console.log(props.deleteId)
   return (
     <div className="TaskWindow">
-      <TaskWindowContent typeOfWindow={props.typeOfWindow}
-      useQuestData={props.useQuestData} />
+      <TaskWindowContent
+        typeOfWindow={props.typeOfWindow}
+        useQuestData={props.useQuestData}
+        actionMenuData={props.actionMenuData}
+        deleteId={props.deleteId}
+        tasks={props.tasks}
+        setTaskWindowActive={props.setTaskWindowActive}
+        setTasks={props.setTasks}
+      />
       <button
         onClick={(e) => {
           props.setTaskWindowActive(false);

@@ -6,7 +6,7 @@ function Logout() {
   const navigate = useNavigate();
 
   return (
-    <button onClick={() => {setAuth(false); localStorage.setItem("auth", JSON.stringify(false)); window.location.reload();}}>Logout</button>
+    <button onClick={() => {setAuth(false);localStorage.setItem("id", "") ; localStorage.setItem("auth", JSON.stringify(false)); window.location.reload();}}>Logout</button>
   )
 }
 

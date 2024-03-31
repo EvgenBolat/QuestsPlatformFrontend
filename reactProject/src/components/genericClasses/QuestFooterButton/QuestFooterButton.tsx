@@ -11,8 +11,17 @@ const QuestFooterButton = (props: any) => {
             //todo проверка на дату окончания квеста
             navigate('/user/' + userid + "/quest/" + questid + "/total")
         }
-        if(props.typeOfButton === "viewMode"){
+        else if(props.typeOfButton === "viewMode"){
             navigate('/user/' + userid + "/quest/" + questid + "/view", {state: {type: "quest", questName: props.questName}})
+        }
+        else if(props.typeOfButton === "participants"){
+            console.log(props.setParticipantsListWindowActive)
+            props.setParticipantsListWindowActive(true)
+        }
+        else if(props.typeOfButton === "share"){
+            navigator.clipboard.writeText(`http://localhost:3000/quest/${questid}`)
+            console.log("shared")
+            alert("Ссылка на квест скопирована!")
         }
         return
     }

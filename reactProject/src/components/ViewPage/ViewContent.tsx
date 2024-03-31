@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import MainHeader from "../mainPage/Header/mainHeader";
 import QuestHeader from "../QuestPageComponents/QuestHeader/QuestHeader";
 import ActionMenu from "../genericClasses/ActionMenu/ActionMenu";
@@ -11,6 +11,7 @@ import ViewList from "./ViewList/ViewList";
 const ViewContent = (props: any) => {
   const { userid } = useParams();
   const navigate = useNavigate();
+  const location = useLocation()
   const [isActionMenuOpen, setActionMenuOpen] = useState(false);
   const [leftPosition, setLeftPosition] = useState(0);
   const [topPosition, setTopPosition] = useState(0);
@@ -57,6 +58,7 @@ const ViewContent = (props: any) => {
           setActionMenuOpen={setActionMenuOpen}
           setLeftPosition={setLeftPosition}
           setTopPosition={setTopPosition}
+          questName={location.state.questName}
         />
       </div>
       <ViewList />

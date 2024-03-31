@@ -22,6 +22,10 @@ const ActionMenu = (props: any) => {
           setActionMenuOpen={props.setActionMenuOpen}
           setIsClarifyingWindowActive={props.setIsClarifyingWindowActive}
           setClarifyingWindowData={props.setClarifyingWindowData}
+          tasks={props.tasks}
+          deleteId={props.deleteId}
+          setTasks={props.setTasks}
+          setAddQuestWindowActive={props.setAddQuestWindowActive}
         />
       </div>
     </div>

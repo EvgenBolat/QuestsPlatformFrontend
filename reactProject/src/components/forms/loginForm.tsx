@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import "./loginForm.css";
 import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { error } from "console";
 
 const useValtidation = (value: any, validations: any) => {
   const [isEmpty, setEmpty] = useState(true);
@@ -20,6 +19,13 @@ const useValtidation = (value: any, validations: any) => {
           re.test(String(value).toLowerCase())
             ? setEmailError(false)
             : setEmailError(true);
+          if (re) {
+            if (String(value).toLowerCase().split("@")[1] !== "edu.hse.ru") {
+              setEmailError(true);
+            } else {
+              setEmailError(false);
+            }
+          }
           break;
       }
     }
@@ -42,7 +48,6 @@ const useValtidation = (value: any, validations: any) => {
 
 const useInput = (initialValue: any, validation: any) => {
   const [value, setValue] = useState(initialValue);
-
   const [isDirty, setDirty] = useState(false);
   const valid = useValtidation(value, validation);
   const onChange = (e: any) => {
@@ -65,24 +70,58 @@ const useInput = (initialValue: any, validation: any) => {
 const LoginForm = (props: any) => {
   const email = useInput("", { isEmpty: true, isEmail: false });
   const password = useInput("", { isEmpty: true });
+  const [service_id, setServiceId] = useState(
+    "ebc9eafe-cb45-11ee-8c0c-00f5f80cf8ae"
+  );
   const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const [o, setO] = useState(Math.floor(Math.random() * 100000000).toString());
+
   return (
     <div className="login">
       <form
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          // const response = fetch("httts://fddf/data", {
-          //   method: "POST",
-          //   body: JSON.stringify({ email: email, password: password }),
-          // })
-          //   .then((response) => response.json())
-          //   .catch((error) => console.log(error));
-          // setAuth(true);
-          // localStorage.setItem("auth", JSON.stringify(true));
-          // localStorage.setToken("token", JSON.stringify(response));
-          localStorage.setItem("auth", "true")
-          navigate("/user/3");
+          setO(Math.floor(Math.random() * 100000000).toString());
+          const response = await fetch(
+            "https://hse.projectswhynot.site/initiate_auth",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                email: email.value,
+                password: password.value,
+                service_id: service_id,
+              }),
+            }
+          )
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => {
+              console.log("ошибка: " + error);
+            });
+          const responce_2 = fetch("https://quests.projectswhynot.site/api/v1/user/validate", { method: "POST", body: JSON.stringify({session_hash: response}) })
+            .then((responce) => responce.json())
+            .catch((error) => console.log(error));
+          console.log(responce_2)
+          // localStorage.setItem("auth", "true");
+          // localStorage.setItem("id", "3");
+          // let questIdParticipation = localStorage.getItem(
+          //   "questIdParticipation"
+          // );
+          // let taskIdParticipation = localStorage.getItem("taskIdParticipation");
+          // if (
+          //   questIdParticipation &&
+          //   questIdParticipation !== "" &&
+          //   taskIdParticipation &&
+          //   taskIdParticipation !== ""
+          // ) {
+          //   navigate(`/setnpc/${questIdParticipation}/${taskIdParticipation}`);
+          // } else if (questIdParticipation && questIdParticipation !== "") {
+          //   localStorage.setItem("questIdParticipation", "");
+          //   navigate(`/user/3/quest/${questIdParticipation}`);
+          // } else {
+          //   navigate("/user/3");
+          // }
         }}
         className="main__form"
       >
@@ -97,6 +136,7 @@ const LoginForm = (props: any) => {
           placeholder="Адрес корпоративной почты"
         />{" "}
         <br />
+        <input id="nonce" name="nonce" hidden />
         <input
           value={password.value}
           onChange={(e) => password.onChange(e)}

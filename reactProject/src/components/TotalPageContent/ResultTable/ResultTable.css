@@ -1,0 +1,53 @@
+.resultElement{
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: row;
+    background-color: gray;
+    border-radius: 20px 5px 5px 20px;
+}
+
+.place{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: gray;
+    border-radius: 100px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+}
+
+.first .place{
+    background-color: rgb(255, 229, 99);
+}
+.resultPoints{
+    margin-left: 20px;
+    background-color: red;
+    border-radius: 5px;
+    padding-left: 5px;
+}
+.resultElementInfo{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    align-items: center;
+    width: 230px;
+    margin-right: 5px;
+}
+
+.resultUserInfo{
+    width: 150px;
+}
+
+.second .place{
+    background-color: rgb(241, 241, 241);
+}
+
+.third .place{
+    background-color: rgb(214, 111, 0);
+}
+
+.placeContainer{
+    position: relative;
+    margin-right: 10px;
+}

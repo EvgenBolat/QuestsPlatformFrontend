@@ -3,11 +3,9 @@ import ActionMenu from "../../../../../genericClasses/ActionMenu/ActionMenu";
 import "./TaskBlock.css";
 
 const TaskBlock = (props: any) => {
-  const [isActionMenuOpen, setActionMenuOpen] = useState(false);
-  const [leftPosition, setLeftPosition] = useState(0);
-  const [topPosition, setTopPosition] = useState(0);
   const handleClick = () => {
     props.setSimpleTaskWindowActive(true);
+    props.setDeleteID(props.data.id);
   };
   return (
     <div
@@ -20,18 +18,20 @@ const TaskBlock = (props: any) => {
       draggable={true}
     >
       <div onClick={handleClick} className="TaskBlock">
-        {props.data.name}
+        Задание № {props.data.task_num}
       </div>
       <button className="TaskBlockButton">
-        <div
+        <img
+          src={`${process.env.PUBLIC_URL}/img/ActionButton.svg`}
+          alt=""
           onClick={(e) => {
-            setActionMenuOpen(true);
-            setLeftPosition(e.clientX);
-            setTopPosition(e.clientY);
+            props.setActionMenuOpen(true);
+            props.setLeftPosition(e.clientX);
+            props.setTopPosition(e.clientY);
+            props.setDeleteID(props.data.id);
           }}
           className="ActionButton"
-        >
-        </div>
+        />
       </button>
     </div>
   );

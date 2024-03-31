@@ -38,9 +38,9 @@ const AddingImageArea = (props: any) => {
     }
   }
 
-  function changeSrcFromForm(fileList: any){
-    if(fileList != null){
-      changeSrc(fileList[0])
+  function changeSrcFromForm(fileList: any) {
+    if (fileList != null) {
+      changeSrc(fileList[0]);
     }
   }
 
@@ -55,11 +55,20 @@ const AddingImageArea = (props: any) => {
       {filepath === "" ? (
         <div>
           <div>вставить изображение</div>
-          <input type="file" name="" id="" accept="image/png, image/jpeg" onChange={(e) => changeSrcFromForm(e.target.files)} />
+          <input
+            type="file"
+            name=""
+            id=""
+            accept="image/png, image/jpeg"
+            onChange={(e) => changeSrcFromForm(e.target.files)}
+          />
         </div>
       ) : (
-        <div>
-          <img src={filepath} alt="" />
+        <div id="addingImagesElement">
+          <div id="addingImageContainer">
+            <img id="addingImage" src={filepath} alt="" />
+          </div>
+
           <button onClick={(e) => setFilePath("")}>сбросить</button>
         </div>
       )}
@@ -68,4 +77,3 @@ const AddingImageArea = (props: any) => {
 };
 
 export default AddingImageArea;
-

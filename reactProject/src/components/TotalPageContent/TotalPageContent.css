@@ -1,0 +1,13 @@
+#resultBody{
+    margin-top: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#resultHeader{
+    font-weight: bold;
+    font-size: 25px;
+    margin-bottom: 10px;
+}

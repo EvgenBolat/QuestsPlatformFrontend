@@ -4,7 +4,7 @@
 }
 
 #addQuestButton {
-    position: absolute;
+    position: fixed;
     right: 20px;
     bottom: 10px;
     cursor: pointer;

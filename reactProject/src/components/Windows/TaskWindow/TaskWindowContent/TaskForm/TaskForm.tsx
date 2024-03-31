@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import "./TaskForm.css";
+import { useParams } from "react-router-dom";
 
 const useValtidation = (value: any, validations: any) => {
   const [isEmpty, setEmpty] = useState(true);
-  const [emailError, setEmailError] = useState(false);
   const [inputValid, setInputValid] = useState(false);
   useEffect(() => {
     for (const validation in validations) {
@@ -11,28 +11,20 @@ const useValtidation = (value: any, validations: any) => {
         case "isEmpty":
           value ? setEmpty(false) : setEmpty(true);
           break;
-        case "isEmail":
-          const re =
-            /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-          re.test(String(value).toLowerCase())
-            ? setEmailError(false)
-            : setEmailError(true);
-          break;
       }
     }
   }, [value, validations]);
 
   useEffect(() => {
-    if (isEmpty || emailError) {
+    if (isEmpty) {
       setInputValid(false);
     } else {
       setInputValid(true);
     }
-  }, [isEmpty, emailError]);
+  }, [isEmpty]);
 
   return {
     isEmpty,
-    emailError,
     inputValid,
   };
 };
@@ -60,7 +52,7 @@ const useInput = (initialValue: any, validation: any) => {
 };
 
 const TaskForm = (props: any) => {
-  const [typeofTask, setTypeOfTask] = useState("");
+  const [typeofTask, setTypeOfTask] = useState(-1);
 
   const [filesArray, setFiles] = useState([""]);
 
@@ -72,41 +64,71 @@ const TaskForm = (props: any) => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(30);
 
+  const [valueTypeOfTask, setValueTypeOfTask] = useState(-1);
+
   const [question, setQuestion] = useState("");
   const [answerOnQuestion, setAnswerOnQuestion] = useState("");
 
-  const npcEmail = useInput("", { isEmpty: true, isEmail: false });
-
-  let filesLength = 0;
+  useEffect(() => {
+    props.task.task_type = typeofTask;
+    props.task.files = filesArray;
+    props.task.description = description;
+    props.task.question = question;
+    props.task.answer = answerOnQuestion;
+    props.task.min_points = minPoints;
+    props.task.max_points = maxPoints;
+    props.task.time = minutes * 60 + seconds;
+  }, [
+    typeofTask,
+    filesArray,
+    description,
+    minPoints,
+    maxPoints,
+    minutes,
+    seconds,
+    question,
+    answerOnQuestion,
+  ]);
 
   function readmultifiles(e: any) {
     let fileList: any = [];
-    let lengthofReaded = 0;
     const files = e.currentTarget.files;
-    filesLength = files.length;
     Object.keys(files).forEach((i) => {
       const file = files[i];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        var res = reader.result;
-        if (typeof res === "string") {
-          fileList.push(res);
-          ++lengthofReaded;
-        }
-        if (lengthofReaded === filesLength) {
-          setFiles(fileList);
-        }
-      };
-      reader.readAsDataURL(file);
+      fileList.push(file);
+      setFiles(fileList);
     });
   }
 
+  const {questid} = useParams()
+
+  const new_task_id = "33234"
+
   return (
     <div className="TaskForm">
-      {" "}
-      <form id="mainForm"
+      <form
+        id="mainForm"
         onSubmit={(e) => {
           e.preventDefault();
+          if (props.typeofTask === "simple") {
+            console.log("изменение задачи");
+          } else {
+            //отправка на сервер инфы
+            let newTasksList = props.tasks;
+            props.task.task_num = props.tasks.length;
+            let newTask = props.task;
+            console.log(newTasksList);
+            console.log(newTask);
+            if(typeofTask === 2){
+              navigator.clipboard.writeText(`http://localhost:3000/setnpc/${questid}/${new_task_id}`)
+              alert("Ссылка-приглашение для npc скопирована в буфер-обмена!")
+            }
+            let new_tasks = props.tasks;
+            new_tasks.push(newTask);
+            console.log(new_tasks);
+            props.setTasks(...props.tasks, newTask);
+            props.setTaskWindowActive(false);
+          }
         }}
       >
         <h1>Тип задачи:</h1>
@@ -114,17 +136,17 @@ const TaskForm = (props: any) => {
           name="tasktype"
           id="tasktype"
           onChange={(e) => {
-            setTypeOfTask(e.target.value);
+            setTypeOfTask(Number(e.target.value));
           }}
         >
           <option value="" selected hidden></option>
-          <option value="question">Oтвет на вопрос</option>
-          <option value="point">Дохождение до точки в реальном времени</option>
-          <option value="npc">Взаимодействие с героем вашего квеста</option>
+          <option value="0">Oтвет на вопрос</option>
+          <option value="1">Дохождение до точки в реальном времени</option>
+          <option value="2">Взаимодействие с героем вашего квеста</option>
         </select>
-        <h1 hidden={typeofTask !== "question"}>Вопрос:</h1>
+        <h1 hidden={typeofTask !== 0}>Вопрос:</h1>
         <input
-          hidden={typeofTask !== "question"}
+          hidden={typeofTask !== 0}
           type="text"
           name="questionVal"
           id="questionVal"
@@ -133,9 +155,9 @@ const TaskForm = (props: any) => {
             setQuestion(e.target.value);
           }}
         />
-        <h1 hidden={typeofTask !== "question"}>Правильный ответ на вопрос:</h1>
+        <h1 hidden={typeofTask !== 0}>Правильный ответ на вопрос:</h1>
         <input
-          hidden={typeofTask !== "question"}
+          hidden={typeofTask !== 0}
           type="text"
           name="questionAnswer"
           id="questionAnswer"
@@ -144,22 +166,9 @@ const TaskForm = (props: any) => {
             setAnswerOnQuestion(e.target.value);
           }}
         />
-
-        <h1 hidden={typeofTask !== "npc"}>
-          Введите электронную почту вашего героя:
-        </h1>
-        <input
-          hidden={typeofTask !== "npc"}
-          type="email"
-          name="npmcEmail"
-          id="npmcEmail"
-          value={npcEmail.value}
-          onChange={npcEmail.onChange}
-          onBlur={npcEmail.onBlur}
-        />
-        <h1 hidden={typeofTask === ""}>Описание задачи:</h1>
+        <h1 hidden={typeofTask === -1}>Описание задачи:</h1>
         <textarea
-          hidden={typeofTask === ""}
+          hidden={typeofTask === -1}
           name="descr"
           id="descr"
           value={description}
@@ -167,9 +176,9 @@ const TaskForm = (props: any) => {
             setDescription(e.target.value);
           }}
         ></textarea>
-        <h1 hidden={typeofTask === ""}>Минимальное кол-во баллов:</h1>
+        <h1 hidden={typeofTask === -1}>Минимальное кол-во баллов:</h1>
         <input
-          hidden={typeofTask === ""}
+          hidden={typeofTask === -1}
           type="number"
           name="minpoints"
           id="minpoints"
@@ -182,9 +191,9 @@ const TaskForm = (props: any) => {
             setMinPoints(Number(e.target.value));
           }}
         />
-        <h1 hidden={typeofTask === ""}>Максимальное кол-во баллов:</h1>
+        <h1 hidden={typeofTask === -1}>Максимальное кол-во баллов:</h1>
         <input
-          hidden={typeofTask === ""}
+          hidden={typeofTask === -1}
           type="number"
           name="maxpoints"
           id="maxpoints"
@@ -197,9 +206,9 @@ const TaskForm = (props: any) => {
             setMaxPoints(Number(e.target.value));
           }}
         />
-        <h1 hidden={typeofTask === ""}>Время на выполнение:</h1>
+        <h1 hidden={typeofTask === -1}>Время на выполнение:</h1>
         <input
-          hidden={typeofTask === ""}
+          hidden={typeofTask === -1}
           type="number"
           name="minutes"
           id="minutes"
@@ -212,9 +221,9 @@ const TaskForm = (props: any) => {
             }
           }}
         />
-        <span hidden={typeofTask === ""}>:</span>
+        <span hidden={typeofTask === -1}>:</span>
         <input
-          hidden={typeofTask === ""}
+          hidden={typeofTask === -1}
           type="number"
           name="second"
           id="seconds"
@@ -225,8 +234,8 @@ const TaskForm = (props: any) => {
             setSeconds(Number(e.target.value));
           }}
         />
-        <h1 hidden={typeofTask === ""}>Добавьте файлы, если это необходимо:</h1>
-        <label htmlFor="files" hidden={typeofTask === ""}>
+        <h1 hidden={typeofTask === -1}>Добавьте файлы, если это необходимо:</h1>
+        <label htmlFor="files" hidden={typeofTask === -1}>
           <img src={`${process.env.PUBLIC_URL}/img/document.svg`} alt="" />
         </label>
         <input
@@ -245,8 +254,17 @@ const TaskForm = (props: any) => {
           <div></div>
         )}
       </form>
-      <p id="emailError" hidden={!npcEmail.emailError || typeofTask !== "npc"}>Указана некорректная почта!</p>
-      <input hidden={typeofTask === ""} disabled={npcEmail.emailError} id="CreationTaskButton" type="submit" form="mainForm" value="Продолжить" />
+      <button hidden={typeofTask !== 1 || props.typeOfWindow !== "simple"} disabled={typeofTask !== 1 || props.typeOfWindow !== "simple"}>
+        Скачать QR-код
+      </button>
+      <input
+        hidden={typeofTask === -1}
+        disabled={typeofTask === 0 && question === ""}
+        id="CreationTaskButton"
+        type="submit"
+        form="mainForm"
+        value="Продолжить"
+      />
     </div>
   );
 };

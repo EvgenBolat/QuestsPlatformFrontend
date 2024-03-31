@@ -7,6 +7,10 @@ const BlockWindow = (props: any) => {
   return (
     <div className="BlockWindow">
       <BlockWindowContent
+        tasks={props.tasks}
+        changetasks={props.changetasks}
+        deleteId={props.deleteId}
+        setDeleteID={props.setDeleteID}
         className="BlockWindowContent"
         blockWindowID={props.blockWindowID}
         setActionMenuOpen={setActionMenuOpen}

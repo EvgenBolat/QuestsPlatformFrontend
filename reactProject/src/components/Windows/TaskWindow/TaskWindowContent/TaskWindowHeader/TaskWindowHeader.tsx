@@ -51,25 +51,18 @@ const TaskWindowHeader = (props: any) => {
     };
   };
 
-  const [className, setclassName] = useState("Flagfalse");
-  const name = useInput("", { isEmpty: true });
+  const [className, setclassName] = useState(props.task.vital ? "Flagtrue": "Flagfalse");
   return (
     <div className="TaskNameHeader">
       <form className="TaskNameHeaderForm" action="">
-        <input
-          type="text"
-          value={name.value}
-          placeholder="Задача"
-          name=""
-          id="1"
-          onChange={(e) => name.onChange(e)}
-          onBlur={(e) => name.onBlur(e)}
-        />
+        <div>Задача № {props.typeOfWindow === "simple" ? props.task.task_num : ""}</div>
       </form>
       <img
         onClick={(e) => {
-          props.setIsRequired(!props.isRequired);
-          setclassName("Flag" + !props.isRequired)
+          let ChangedTask = props.task
+          ChangedTask.vital = ! props.task.vital
+          props.setTask(ChangedTask)
+          setclassName("Flag" + ChangedTask.vital);
         }}
         src={`${process.env.PUBLIC_URL}/img/flag.svg`}
         alt="Pict"

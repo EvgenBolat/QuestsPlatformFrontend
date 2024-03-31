@@ -9,7 +9,7 @@
     flex-direction: row;
     background-color: green;
     margin-bottom: 10px;
-    width: 65vh;
+    width: 40vw;
     cursor: pointer;
 }
 
@@ -19,11 +19,12 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    width: 800px;
-    height: 200px;
+    width: 200px;
+    height: 220px;
     border-radius: 5px;
     margin-left: 10px;
     margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .QuestCard img{

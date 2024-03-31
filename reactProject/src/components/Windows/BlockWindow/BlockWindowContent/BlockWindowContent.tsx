@@ -8,17 +8,9 @@ import SaveTasksOrderButton from "./SaveTasksOrderButton/SaveTasksOrderButton";
 
 const BlockWindowContent = (props: any) => {
   //получаем с сервера данные
-  const [tasks, changetasks] = useState([
-    {
-      id: 1,
-      blockId: 1,
-      order: 0,
-      name: "l m i23irjsf fdfgdsdfffgjv sdvsvdds sdfjksdfkjsfdv",
-    },
-    { id: 2, blockId: 1, order: 1, name: "Покупка доллара2" },
-    { id: 3, blockId: 1, order: 2, name: "Покупка доллара3" },
-  ]);
+  const [typeofQuest, setTypeOfQuest] = useState(0)
   const { userid, questid } = useParams();
+  const [countOfTasks, setCountOfTasks] = useState(0)
   const [leftPosition, setLeftPosition] = useState(0);
   const [topPosition, setTopPosition] = useState(0);
   const [isSaveTasksOrderButtonActive, setSaveTasksOrderButtonActive] =
@@ -36,7 +28,7 @@ const BlockWindowContent = (props: any) => {
           topPosition={topPosition}
           useQuestData={props.useQuestData}
           blocks={props.blocks}
-          changetasks={changetasks}
+          changetasks={props.changetasks}
           blockWindowID={props.blockWindowID}
           actionMenuData={props.actionMenuData}
           setBlocks={props.setBlocks}
@@ -52,11 +44,15 @@ const BlockWindowContent = (props: any) => {
         setLeftPosition={setLeftPosition}
         setTopPosition={setTopPosition}
       />
+      <div><div>Напишите количество задач, необходимое для прохождения</div></div>
       <TasksList
+        setDeleteID={props.setDeleteID}
+        deleteId={props.deleteId}
         className="TasksList"
         setSimpleTaskWindowActive={props.setSimpleTaskWindowActive}
-        tasks={tasks}
-        changetasks={changetasks}
+        tasks={props.tasks}
+        actionMenuData={props.actionMenuData}
+        changetasks={props.changetasks}
         setSaveTasksOrderButtonActive={setSaveTasksOrderButtonActive}
       ></TasksList>
       {isSaveTasksOrderButtonActive ? (

@@ -1,11 +1,17 @@
 import { useState } from "react";
 import TaskBlock from "./TaskBlock/TaskBlock";
+import ActionMenu from "../../../../genericClasses/ActionMenu/ActionMenu";
 // import "./TasksList.css"
 
 const TasksList = (props: any) => {
+  console.log(props.tasks)
   const [tasks, setTasks] = useState(props.tasks);
 
-  const defaultCard = { id: -1, order: -1, name: "f" };
+  const [isActionMenuOpen, setActionMenuOpen] = useState(false);
+  const [leftPosition, setLeftPosition] = useState(0);
+  const [topPosition, setTopPosition] = useState(0);
+
+  const defaultCard = { id: -1, task_num: -1, name: "f" };
 
   const [currentCard, setCurrentCard] = useState(defaultCard);
 
@@ -23,7 +29,7 @@ const TasksList = (props: any) => {
   }
 
   const sortCard = (a: any, b: any) => {
-    return a.order > b.order ? 1 : -1;
+    return a.task_num > b.task_num ? 1 : -1;
   };
 
   function dropHandler(e: any, TaskBlock: any) {
@@ -32,10 +38,10 @@ const TasksList = (props: any) => {
     setTasks(
       tasks.map((c: any) => {
         if (c.id === TaskBlock.id) {
-          return { ...c, order: currentCard.order };
+          return { ...c, task_num: currentCard.task_num };
         }
         if (c.id === currentCard.id) {
-          return { ...c, order: TaskBlock.order };
+          return { ...c, task_num: TaskBlock.task_num };
         }
         return c;
       })
@@ -44,6 +50,19 @@ const TasksList = (props: any) => {
 
   return (
     <div className="TasksList">
+      {isActionMenuOpen ? (
+          <ActionMenu
+            setActionMenuOpen={setActionMenuOpen}
+            typeOfActionMenu="Task"
+            leftPosition={leftPosition}
+            topPosition={topPosition}
+            tasks={tasks}
+            setTasks={setTasks}
+            deleteId={props.deleteId}
+          />
+        ) : (
+          <div></div>
+        )}
       {tasks.sort(sortCard).map((task: any) => {
         return (
           <TaskBlock
@@ -54,6 +73,10 @@ const TasksList = (props: any) => {
             dragEnd={dragEndHandler}
             dragOver={dragOverHandler}
             drop={dropHandler}
+            setLeftPosition={setLeftPosition}
+            setTopPosition={setTopPosition}
+            setActionMenuOpen={setActionMenuOpen}
+            setDeleteID={props.setDeleteID}
           />
         );
       })}

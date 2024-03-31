@@ -1,0 +1,59 @@
+#ParticipantWindowContent{
+    background-color: blue;
+    color: white;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.participateButtonsContainer {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+#ChangedNameButton{
+    margin-right: 10px;
+}
+
+#DeleteTeamButton{
+    margin-left: 10px;
+}
+
+
+#actionWithTeam{
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+}
+
+.errorTeamText{
+    color: rgb(255, 47, 47);
+    margin-left: 10px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+#questNameInput{
+    margin-left: 10px;
+    width: 265px;
+    padding: 6px;
+    font-weight: bold;
+}
+
+#createTeamButton{
+    width: 80px;
+    padding-top: 3px;
+    font-weight: bold;
+    padding-bottom: 3px;
+    margin-right: 10px;
+}
+
+.CreateTeamButton{
+    justify-content: right;
+}
