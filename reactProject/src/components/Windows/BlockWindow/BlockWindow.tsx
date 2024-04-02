@@ -7,6 +7,7 @@ const BlockWindow = (props: any) => {
   return (
     <div className="BlockWindow">
       <BlockWindowContent
+        currentCard={props.currentCard}
         tasks={props.tasks}
         changetasks={props.changetasks}
         deleteId={props.deleteId}

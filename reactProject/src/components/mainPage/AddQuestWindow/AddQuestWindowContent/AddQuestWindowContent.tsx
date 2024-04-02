@@ -1,9 +1,12 @@
 import { useState } from "react";
 import "./AddQuestWindowContent.css";
 import AddingImageArea from "./AddingImage/AddingImageArea";
+import { useParams } from "react-router-dom";
+import { json } from "stream/consumers";
 
 const AddQuestWindowContent = (props: any) => {
   let startDate = new Date();
+  const { userid } = useParams();
   const [minStartDate] = useState(new Date(startDate));
   let endDate = new Date(startDate);
   endDate.setMinutes(endDate.getMinutes() + 5);
@@ -168,15 +171,39 @@ const AddQuestWindowContent = (props: any) => {
               setTypeOfQuest(Number(e.target.value));
             }}
           >
-            <option value="" selected hidden></option>
+            <option value="" selected hidden>
+              {" "}
+              Выберите режим квеста
+            </option>
             <option value="0">Одиночный</option>
             <option value="1">Командный</option>
           </select>
         </div>
-        <input
-          type="submit"
-          value={props.typeOfWindow === 0 ? "Создать" : "Сохранить изменения"}
-        />
+        <button
+          disabled={props.typeOfWindow === 0 && typeOfQuest === -1}
+          onClick={async (e) => {
+            let data = JSON.stringify({
+              auth_token: userid,
+              quest_name: name,
+              short: description,
+              quest_type: typeOfQuest,
+              start_time: start_date + " " + start_time,
+              end_time: end_date + " " + end_time,
+            });
+            console.log(data);
+            const send = await fetch(
+              "https://quests.projectswhynot.site/api/v1/quests/create",
+              {
+                method: "POST",
+                body: data,
+              }
+            ).then((responce) => responce.json());
+            props.setAddQuestWindowActive(false)
+            window.location.reload()
+          }}
+        >
+          {props.typeOfWindow === 0 ? "Создать" : "Сохранить изменения"}
+        </button>
       </div>
     </div>
   );

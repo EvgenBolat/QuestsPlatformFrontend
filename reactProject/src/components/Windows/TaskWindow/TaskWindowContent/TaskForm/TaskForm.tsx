@@ -52,22 +52,84 @@ const useInput = (initialValue: any, validation: any) => {
 };
 
 const TaskForm = (props: any) => {
-  const [typeofTask, setTypeOfTask] = useState(-1);
+  const [typeofTask, setTypeOfTask] = useState(props.task.task_type.toString());
 
   const [filesArray, setFiles] = useState([""]);
 
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(props.task.description);
 
-  const [minPoints, setMinPoints] = useState(1);
-  const [maxPoints, setMaxPoints] = useState(1);
+  const [minPoints, setMinPoints] = useState(props.task.min_points);
+  const [maxPoints, setMaxPoints] = useState(props.task.max_points);
 
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(30);
+  const [minutes, setMinutes] = useState(Math.floor(props.task.task_time / 60));
+  const [seconds, setSeconds] = useState(
+    Number(props.task.task_time - 60 * Math.floor(props.task.task_time / 60))
+  );
 
-  const [valueTypeOfTask, setValueTypeOfTask] = useState(-1);
+  const [question, setQuestion] = useState(props.task.question);
+  const [answerOnQuestion, setAnswerOnQuestion] = useState(props.task.answer);
 
-  const [question, setQuestion] = useState("");
-  const [answerOnQuestion, setAnswerOnQuestion] = useState("");
+  const { userid } = useParams();
+
+  useEffect(() => {
+    setTypeOfTask(props.task.task_type.toString());
+
+    setDescription(props.task.description);
+
+    setMinPoints(props.task.min_points);
+    setMaxPoints(props.task.max_points);
+
+    setMinutes(
+      Math.floor(props.task.task_time / 60)
+    );
+    setSeconds(
+      Number(props.task.task_time - 60 * Math.floor(props.task.task_time / 60))
+    );
+
+    setQuestion(props.task.question);
+    setAnswerOnQuestion(props.task.answer);
+  }, [props.task]);
+
+  const setNewTask = async () => {
+    let task = {
+      auth_token: userid,
+      task_num: props.tasks.length,
+      task_type: typeofTask,
+      task_time: minutes * 60 + seconds,
+      description: description,
+      max_points: maxPoints,
+      answer: answerOnQuestion,
+      question: question,
+      min_points: minPoints,
+      vital: Number(props.vital),
+    };
+    console.log(JSON.stringify(task));
+    const response = await fetch(
+      `https://quests.projectswhynot.site/api/v1/block/${props.currentCard.id}/task`,
+      {
+        method: "POST",
+        body: JSON.stringify(task),
+      }
+    )
+      .then((response) => response.json())
+      .catch((error) => console.log(error));
+    console.log(response);
+    if (response.status === "OK") {
+      let newTasksList = props.tasks;
+      props.task.task_num = props.tasks.length;
+      let newTask = props.task;
+      newTask.vital = props.vital;
+      newTask.task_id = response.message.task_id;
+      if (typeofTask === 2) {
+        navigator.clipboard.writeText(
+          `http://localhost:3000/setnpc/${questid}/${new_task_id}`
+        );
+        alert("Ссылка-приглашение для npc скопирована в буфер-обмена!");
+      }
+      props.setTasks([...props.tasks, task]);
+      props.setTaskWindowActive(false);
+    }
+  };
 
   useEffect(() => {
     props.task.task_type = typeofTask;
@@ -100,9 +162,9 @@ const TaskForm = (props: any) => {
     });
   }
 
-  const {questid} = useParams()
+  const { questid } = useParams();
 
-  const new_task_id = "33234"
+  const new_task_id = "33234";
 
   return (
     <div className="TaskForm">
@@ -110,24 +172,11 @@ const TaskForm = (props: any) => {
         id="mainForm"
         onSubmit={(e) => {
           e.preventDefault();
-          if (props.typeofTask === "simple") {
+          if (props.typeOfWindow === "simple") {
             console.log("изменение задачи");
+            console.log(typeofTask);
           } else {
-            //отправка на сервер инфы
-            let newTasksList = props.tasks;
-            props.task.task_num = props.tasks.length;
-            let newTask = props.task;
-            console.log(newTasksList);
-            console.log(newTask);
-            if(typeofTask === 2){
-              navigator.clipboard.writeText(`http://localhost:3000/setnpc/${questid}/${new_task_id}`)
-              alert("Ссылка-приглашение для npc скопирована в буфер-обмена!")
-            }
-            let new_tasks = props.tasks;
-            new_tasks.push(newTask);
-            console.log(new_tasks);
-            props.setTasks(...props.tasks, newTask);
-            props.setTaskWindowActive(false);
+            setNewTask();
           }
         }}
       >
@@ -138,6 +187,7 @@ const TaskForm = (props: any) => {
           onChange={(e) => {
             setTypeOfTask(Number(e.target.value));
           }}
+          value={typeofTask}
         >
           <option value="" selected hidden></option>
           <option value="0">Oтвет на вопрос</option>
@@ -176,14 +226,16 @@ const TaskForm = (props: any) => {
             setDescription(e.target.value);
           }}
         ></textarea>
-        <h1 hidden={typeofTask === -1}>Минимальное кол-во баллов:</h1>
+        <h1 hidden={typeofTask === -1 || !props.vital}>
+          Минимальное кол-во баллов:
+        </h1>
         <input
-          hidden={typeofTask === -1}
+          hidden={typeofTask === -1 || !props.vital}
           type="number"
           name="minpoints"
           id="minpoints"
           value={minPoints}
-          min={1}
+          min={props.vital ? Number(1) : Number(0)}
           onChange={(e) => {
             if (Number(e.target.value) > maxPoints) {
               setMaxPoints(Number(e.target.value));
@@ -254,7 +306,10 @@ const TaskForm = (props: any) => {
           <div></div>
         )}
       </form>
-      <button hidden={typeofTask !== 1 || props.typeOfWindow !== "simple"} disabled={typeofTask !== 1 || props.typeOfWindow !== "simple"}>
+      <button
+        hidden={typeofTask !== 1 || props.typeOfWindow !== "simple"}
+        disabled={typeofTask !== 1 || props.typeOfWindow !== "simple"}
+      >
         Скачать QR-код
       </button>
       <input

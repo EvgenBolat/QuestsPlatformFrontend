@@ -8,7 +8,10 @@ import "./TasksBlock.css"
 
 // }
 const TasksBlock = (props: any) => {
-    const classes = "TasksBlock " + props.className;
+    let classes = "TasksBlock " + props.className ;
+    if(props.isStarted){
+        classes += " isStarting"
+    }
     return (
         <button className="TaskBlockButton"
         onDragStart={(e) => props.dragStart(e , props.data)}
@@ -17,17 +20,19 @@ const TasksBlock = (props: any) => {
         onDragOver={(e) => props.dragOver(e)}
         onDrop={(e) => props.drop(e, props.data)}
         draggable={true}
+        disabled={props.isStarted}
         onClick={(e) =>{
             if(props.data.id === -1 || props.data.id === -2){
                 return
             }
+            props.setCurrentCard(props.data)
             props.setBlockWindowActive(true)
             props.setactionMenuData(props.data)
         }}
         >
         <Card className= {classes}>
-            <img draggable={false} className="BlockImage" src={`${process.env.PUBLIC_URL}/img/standartBlock.svg`} alt="there is block" />
-            <span className="BlockName">{props.data.name}</span>
+            <img draggable={false} className="BlockImage" src={props.data.block_type === 0 ?`${process.env.PUBLIC_URL}/img/standartBlock.svg` : `${process.env.PUBLIC_URL}/img/parallelBlock.svg`} alt="there is block" />
+            <span className="BlockName">{props.data.block_name}</span>
         </Card>
         </button>
     )

@@ -3,6 +3,19 @@ import "./CLarifyingWindowContent.css";
 
 const ClarifyingWindowContent = (props: any) => {
   const { userid, questid } = useParams();
+  const DeleteQuest = async () => {
+    const response = await fetch(`https://quests.projectswhynot.site/api/v1/quests/${questid}/delete`, {
+      method: "DELETE",
+      body: JSON.stringify({ auth_token: userid }),
+    })
+      .then((response) => response.json())
+      .catch((error) => console.log(error));
+      if(response.status === "OK"){
+        props.setIsClarifyingWindowActive(false);
+        navigate("/user/" + userid)
+        window.location.reload()
+      }
+  };
   const navigate = useNavigate()
   const Dublicate =
     props.data.typeOfWindow === "dublicateBlock"
@@ -42,9 +55,7 @@ const ClarifyingWindowContent = (props: any) => {
         }
       : () => {
           console.log("Удаление квеста: " + questid + ", " + userid);
-          props.setIsClarifyingWindowActive(false);
-          navigate("/user/" + userid)
-          window.location.reload()
+          DeleteQuest()
         };
 
   function Act() {

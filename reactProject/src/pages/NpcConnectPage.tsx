@@ -5,7 +5,8 @@ const NpcConnectPage = () => {
   const { questid, taskid } = useParams();
   useEffect(() => {
     if (isAuthenticated) {
-      console.log(taskid);
+      localStorage.removeItem("questIdParticipation")
+      localStorage.removeItem("taskIdParticipation")
       navigate(`/user/${token}/quest/${location.pathname.split("/")[2]}`, {
         replace: true,
       });

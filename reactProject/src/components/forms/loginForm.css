@@ -3,6 +3,33 @@
   padding: 0;
 }
 
+#ConfidenceBox{
+  display: flex;
+  margin-bottom: 10px;
+  margin-top: -10px;
+  margin-left: -10px;
+}
+
+#loginFormCase{
+  background-color: rgb(35, 74, 154);
+}
+
+#hseLogo{
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  margin-left: 380px;
+  margin-top: -15px;
+}
+
+#ConfidenceBox a{
+  color: white;
+  font-weight: bold;
+  font-size: 10px;
+  text-align: left;
+  margin-left: 2px;
+}
+
 .login {
   display: flex;
   display: -webkit-flex;
@@ -22,6 +49,8 @@
   border-radius: 10px;
   font-family: sans-serif;
   letter-spacing: 1px;
+  border: solid;
+  border-color: white;
 }
 
 .main__form input[type="email"],
@@ -35,7 +64,7 @@
 }
 
 .main__form input[type="password"] {
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }
 
 .main__form input[type="submit"] {

@@ -20,6 +20,29 @@ import ParticipantsListWindow from "../Windows/ParticipantsListWindow/Participan
 import AddQuestWindow from "../mainPage/AddQuestWindow/AddQuestWindow";
 
 const QuestPage = () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetch(
+        `https://quests.projectswhynot.site/api/v1/quests/${questid}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ auth_token: userid }),
+        }
+      )
+        .then((responce) => responce.json())
+        .catch((error) => console.log(error));
+      console.log(data);
+      if (data.status === "OK") {
+        if (data.message.role === -1) {
+          console.log("создатель");
+          setRole(-1);
+          setBlocks(data.message.blocks_list);
+          setQuestName(data.message.quest_name);
+        }
+      }
+    };
+    fetchData();
+  }, []);
   const location = useLocation();
   const navigation = useNavigate();
 
@@ -97,8 +120,8 @@ const QuestPage = () => {
       </div>
     );
   };
-  const [questName, setQuestName] = useState("dssdfdsf");
-  const [participation, setParticipation] = useState(false);
+  const [questName, setQuestName] = useState("");
+  const [role, setRole] = useState(-2);
   const [questData, setQuestData] = useState([
     {
       id: 1,
@@ -273,98 +296,18 @@ const QuestPage = () => {
       ],
     },
   ]);
+  const defaultCard = { id: -1, order: -1, name: "", type: "parallel" };
+
+  const [currentCard, setCurrentCard] = useState(defaultCard);
 
   const [tasks, setTasks] = useState([
-    {
-      id: 0,
-      task_type: 2,
-      task_num: 0,
-      state: 2,
-      vital: true,
-      description: "Найдите эльфа, и получите у него горшочек с золото",
-      question: "",
-      answer: "jfdfvkkhbsfhv",
-      files: [
-        `${process.env.PUBLIC_URL}/img/document.svg`,
-        `${process.env.PUBLIC_URL}/img/camera.svg`,
-        `${process.env.PUBLIC_URL}/img/openedEye.svg`,
-      ],
-      min_points: 2,
-      max_points: 4,
-      task_time: 160,
-    },
-    {
-      id: 1,
-      task_type: 2,
-      task_num: 1,
-      state: 2,
-      vital: true,
-      description: "Найдите эльфа, и получите у него горшочек с золото",
-      question: "",
-      answer: "jfdfvkkhbsfhv",
-      files: [
-        `${process.env.PUBLIC_URL}/img/document.svg`,
-        `${process.env.PUBLIC_URL}/img/camera.svg`,
-        `${process.env.PUBLIC_URL}/img/openedEye.svg`,
-      ],
-      min_points: 2,
-      max_points: 4,
-      task_time: 160,
-    },
-    {
-      id: 2,
-      task_type: 2,
-      task_num: 2,
-      state: 2,
-      vital: true,
-      description: "Найдите эльфа, и получите у него горшочек с золото",
-      question: "",
-      answer: "jfdfvkkhbsfhv",
-      files: [
-        `${process.env.PUBLIC_URL}/img/document.svg`,
-        `${process.env.PUBLIC_URL}/img/camera.svg`,
-        `${process.env.PUBLIC_URL}/img/openedEye.svg`,
-      ],
-      min_points: 2,
-      max_points: 4,
-      task_time: 160,
-    },
+    
   ]);
 
   const [isAddQuestWindowActive, setAddQuestWindowActive] = useState(false);
 
-  const [blocks, setBlocks] = useState([
-    {
-      id: 1,
-      order: 0,
-      name: "ksfvkjhdfvhjdvh",
-      type: "parallel",
-    },
-    {
-      id: 2,
-      order: 1,
-      name: "иава",
-      type: "parallel",
-    },
-    {
-      id: 3,
-      order: 2,
-      name: "Mike",
-      type: "parallel",
-    },
-    {
-      id: 4,
-      order: 3,
-      name: "Mike2",
-      type: "parallel",
-    },
-    {
-      id: 5,
-      order: 4,
-      name: "Mike3",
-      type: "parallel",
-    },
-  ]);
+
+  const [blocks, setBlocks] = useState([]);
 
   let changeBlocks: any = null;
 
@@ -503,7 +446,7 @@ const QuestPage = () => {
 
   const [isTeamCreator, setTeamCreator] = useState(false);
   const [teamName, setTeamName] = useState("");
-  if (participation === true) {
+  if (role === 0) {
     let timeArray = start_date.split(" ")[1].split(":");
     let dateArray = start_date.split(" ")[0].split(".");
     let date = new Date(
@@ -683,7 +626,7 @@ const QuestPage = () => {
         }
       </div>
     );
-  } else {
+  } else if (role === -1) {
     return (
       <div>
         {isClarifyingWindowActive ? (
@@ -725,6 +668,7 @@ const QuestPage = () => {
             typeOfWindow="creation"
             setTaskWindowActive={setCreationTaskWindowActive}
             useQuestData={useQuestData}
+            currentCard={currentCard}
             actionMenuData={actionMenuData}
             tasks={tasks}
             setTasks={setTasks}
@@ -738,6 +682,7 @@ const QuestPage = () => {
             setTaskWindowActive={setSimpleTaskWindowActive}
             typeOfWindow="simple"
             deleteId={deleteId}
+            currentCard={currentCard}
             useQuestData={useQuestData}
             actionMenuData={actionMenuData}
             tasks={tasks}
@@ -754,6 +699,7 @@ const QuestPage = () => {
             setCreationTaskWindowActive={setCreationTaskWindowActive}
             setSimpleTaskWindowActive={setSimpleTaskWindowActive}
             blockWindowID={blockWindowID}
+            currentCard={currentCard}
             tasks={tasks}
             changetasks={setTasks}
             useQuestData={useQuestData}
@@ -815,9 +761,12 @@ const QuestPage = () => {
           setBlocks={setBlocks}
           changeBlocks={changeBlocks}
           blocks={blocks}
+          currentCard={currentCard}
+          setCurrentCard={setCurrentCard}
         />
-        <CreationBlocksMenu />
+        <CreationBlocksMenu setCurrentCard={setCurrentCard} />
         <SaveBlockButton
+          blocks={blocks}
           isSaveButtonActive={isSaveButtonActive}
           setSaveButtonActive={setSaveButtonActive}
         />
@@ -827,6 +776,8 @@ const QuestPage = () => {
         />
       </div>
     );
+  } else {
+    return <div></div>;
   }
 };
 

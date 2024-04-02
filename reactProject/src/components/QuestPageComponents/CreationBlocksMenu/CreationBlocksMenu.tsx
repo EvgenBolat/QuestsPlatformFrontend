@@ -6,6 +6,7 @@ const CreationBlocksMenu = (props: any) => {
   const [isOpen, ChangeOpened] = useState(false);
 
   function dragStartHandler(e: any, taskBlock: any) {
+    props.setCurrentCard(taskBlock);
   }
   
   function dragEndHandler(e: any) {
@@ -32,7 +33,7 @@ const CreationBlocksMenu = (props: any) => {
         <div id="CreationMenuHeader">Блоки Задач</div>
         <TasksBlock
           className="Consistent"
-          data={{ name: "Название", newBlock: true, id: -1 }}
+          data={{ block_name: "Название", newBlock: true, id: -1, block_type: 0, min_tasks: 0 }}
           dragStart={dragStartHandler}
           dragEnd={dragEndHandler}
           dragOver={dragOverHandler}
@@ -42,7 +43,7 @@ const CreationBlocksMenu = (props: any) => {
         <span id="ConsistentName">Последовательный блок</span>
         <TasksBlock
           className="Parallel"
-          data={{ name: "Название",  newBlock: true, id: -2 }}
+          data={{ block_name: "Название",  newBlock: true, id: -2, block_type: 1, min_tasks: 0 }}
           dragStart={dragStartHandler}
           dragEnd={dragEndHandler}
           dragOver={dragOverHandler}

@@ -6,6 +6,7 @@ const TaskWindow = (props: any) => {
   return (
     <div className="TaskWindow">
       <TaskWindowContent
+        currentCard={props.currentCard}
         typeOfWindow={props.typeOfWindow}
         useQuestData={props.useQuestData}
         actionMenuData={props.actionMenuData}

@@ -10,6 +10,7 @@ const AddQuestWindow = (props: any) => {
         questList={props.questList}
         setQuestList={props.setQuestList}
         typeOfWindow={props.typeOfWindow}
+        setAddQuestWindowActive={props.setAddQuestWindowActive}
       />
       <button
         onClick={(e) => {

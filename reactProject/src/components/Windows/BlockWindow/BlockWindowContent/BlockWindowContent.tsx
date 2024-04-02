@@ -8,9 +8,9 @@ import SaveTasksOrderButton from "./SaveTasksOrderButton/SaveTasksOrderButton";
 
 const BlockWindowContent = (props: any) => {
   //получаем с сервера данные
-  const [typeofQuest, setTypeOfQuest] = useState(0)
+  const [typeofQuest, setTypeOfQuest] = useState(0);
   const { userid, questid } = useParams();
-  const [countOfTasks, setCountOfTasks] = useState(0)
+  const [countOfTasks, setCountOfTasks] = useState(0);
   const [leftPosition, setLeftPosition] = useState(0);
   const [topPosition, setTopPosition] = useState(0);
   const [isSaveTasksOrderButtonActive, setSaveTasksOrderButtonActive] =
@@ -41,11 +41,16 @@ const BlockWindowContent = (props: any) => {
       <BlockNameForm
         setActionMenuOpen={props.setActionMenuOpen}
         isActionMenuOpen={props.isActionMenuOpen}
+        currentCard={props.currentCard}
         setLeftPosition={setLeftPosition}
         setTopPosition={setTopPosition}
       />
-      <div><div>Напишите количество задач, необходимое для прохождения</div></div>
+      <div>
+        <div>Напишите количество задач, необходимое для прохождения</div>
+        <input type="number" min={0} id="" />
+      </div>
       <TasksList
+        currentCard={props.currentCard}
         setDeleteID={props.setDeleteID}
         deleteId={props.deleteId}
         className="TasksList"
@@ -62,9 +67,13 @@ const BlockWindowContent = (props: any) => {
       ) : (
         <div></div>
       )}
-      <button className="CreateTask" onClick={handleClick}>
-        <img src={`${process.env.PUBLIC_URL}/img/addQuestIcon.svg`} alt="" />
-      </button>
+      <img
+        draggable={false}
+        onClick={handleClick}
+        className="CreateTask"
+        src={`${process.env.PUBLIC_URL}/img/addQuestIcon.svg`}
+        alt=""
+      />
     </div>
   );
 };

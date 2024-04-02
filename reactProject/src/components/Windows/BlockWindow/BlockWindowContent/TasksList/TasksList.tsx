@@ -1,11 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskBlock from "./TaskBlock/TaskBlock";
 import ActionMenu from "../../../../genericClasses/ActionMenu/ActionMenu";
-// import "./TasksList.css"
+import { useParams } from "react-router-dom";
 
 const TasksList = (props: any) => {
+  const { userid, questid } = useParams();
   console.log(props.tasks)
-  const [tasks, setTasks] = useState(props.tasks);
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    const response = await fetch(
+      `https://quests.projectswhynot.site/api/v1/block/${props.currentCard.id}`,
+      {
+        method: "POST",
+        body: JSON.stringify({ auth_token: userid }),
+      }
+    )
+      .then((response) => response.json())
+      .catch((error) => console.log(error));
+    if (response.status === "OK") {
+      props.changetasks(response.message.tasks_list);
+      console.log(response.message.tasks_list);
+    }
+  };
 
   const [isActionMenuOpen, setActionMenuOpen] = useState(false);
   const [leftPosition, setLeftPosition] = useState(0);
@@ -34,9 +54,9 @@ const TasksList = (props: any) => {
 
   function dropHandler(e: any, TaskBlock: any) {
     e.preventDefault();
-    props.setSaveTasksOrderButtonActive(true)
-    setTasks(
-      tasks.map((c: any) => {
+    props.setSaveTasksOrderButtonActive(true);
+    props.changetasks(
+      props.tasks.map((c: any) => {
         if (c.id === TaskBlock.id) {
           return { ...c, task_num: currentCard.task_num };
         }
@@ -51,19 +71,19 @@ const TasksList = (props: any) => {
   return (
     <div className="TasksList">
       {isActionMenuOpen ? (
-          <ActionMenu
-            setActionMenuOpen={setActionMenuOpen}
-            typeOfActionMenu="Task"
-            leftPosition={leftPosition}
-            topPosition={topPosition}
-            tasks={tasks}
-            setTasks={setTasks}
-            deleteId={props.deleteId}
-          />
-        ) : (
-          <div></div>
-        )}
-      {tasks.sort(sortCard).map((task: any) => {
+        <ActionMenu
+          setActionMenuOpen={setActionMenuOpen}
+          typeOfActionMenu="Task"
+          leftPosition={leftPosition}
+          topPosition={topPosition}
+          tasks={props.tasks}
+          setTasks={props.changetasks}
+          deleteId={props.deleteId}
+        />
+      ) : (
+        <div></div>
+      )}
+      {props.tasks.sort(sortCard).map((task: any) => {
         return (
           <TaskBlock
             data={task}

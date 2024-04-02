@@ -51,7 +51,7 @@ const TaskWindowHeader = (props: any) => {
     };
   };
 
-  const [className, setclassName] = useState(props.task.vital ? "Flagtrue": "Flagfalse");
+  const [className, setclassName] = useState(props.vital ? "Flagtrue": "Flagfalse");
   return (
     <div className="TaskNameHeader">
       <form className="TaskNameHeaderForm" action="">
@@ -62,6 +62,7 @@ const TaskWindowHeader = (props: any) => {
           let ChangedTask = props.task
           ChangedTask.vital = ! props.task.vital
           props.setTask(ChangedTask)
+          props.setVital(!props.vital)
           setclassName("Flag" + ChangedTask.vital);
         }}
         src={`${process.env.PUBLIC_URL}/img/flag.svg`}

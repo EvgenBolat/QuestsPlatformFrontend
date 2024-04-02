@@ -51,7 +51,7 @@ const BlockNameForm = (props: any) => {
     };
   };
 
-  const name = useInput("", { isEmpty: true });
+  const name = useInput(props.currentCard.block_name, { isEmpty: true });
 
   return (
     <div className="TaskBlockName">
