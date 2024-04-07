@@ -198,7 +198,7 @@ const LoginForm = (props: any) => {
                 }}
                 value={isPrivacyComfirmed}
               />
-              <a href="http://localhost:3000/policy">
+              <a href="https://quests.projectswhynot.site/policy">
                 Я разделяю политику конфиденциальности "UniQuest" и даю согласие
                 на обработку персональных данных
               </a>
