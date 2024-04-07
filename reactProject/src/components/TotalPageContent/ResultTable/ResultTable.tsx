@@ -1,7 +1,7 @@
 import { JsxElement } from "typescript";
 import "./ResultTable.css";
 const ResultTable = (props: any) => {
-  let dataNew = [<div>dfdfdf</div>];
+  let dataNew = [<div></div>];
   if (props.result.quest_type === 1) {
     console.log(props.result.results)
     for (let i = 0; i < props.result.results.length; i++) {

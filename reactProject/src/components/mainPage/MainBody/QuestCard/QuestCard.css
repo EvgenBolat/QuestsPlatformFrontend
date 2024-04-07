@@ -9,7 +9,7 @@
     flex-direction: row;
     background-color: green;
     margin-bottom: 10px;
-    width: 40vw;
+    width: 482.8px;
     cursor: pointer;
 }
 
@@ -73,4 +73,9 @@
     font: inherit;
     color: inherit;
     background-color: transparent;
+    width: 482.8px;
+  }
+
+  .readDescription{
+    cursor: pointer;
   }

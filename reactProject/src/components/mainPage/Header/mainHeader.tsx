@@ -6,6 +6,7 @@ const MainHeader = (props:any) => {
   const navigate = useNavigate()
   return (
     <div className="header">
+      <img id="mainLogo" src={`${process.env.PUBLIC_URL}/img/mainLogo.svg`} alt="" />
       <img
       draggable={false}
         className="profile"

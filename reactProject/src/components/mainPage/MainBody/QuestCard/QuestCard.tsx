@@ -16,7 +16,7 @@ const QuestCard = (props:any) => {
             </div>
             <div className="QuestInfo">
                 <h1>{props.data.quest_name}</h1>
-                <textarea readOnly={true}>{props.data.short}</textarea>
+                <textarea className="readDescription" readOnly={true}>{props.data.short}</textarea>
                 <div className="QuestDate">
                     <div>Старт: {props.data.start_time}</div>
                     <div>Финал: {props.data.end_time}</div>

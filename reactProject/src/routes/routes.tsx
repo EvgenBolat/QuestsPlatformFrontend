@@ -10,6 +10,7 @@ import Login from "../pages/Login";
 import SharingPage from "../pages/SharingPage";
 import { useEffect, useState } from "react";
 import NpcConnectPage from "../pages/NpcConnectPage";
+import Policy from "../pages/Policy";
 
 export const useRoutes = () => {
   const [checkedId, setCheckedId] = useState(false);
@@ -40,6 +41,7 @@ export const useRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/quest/:questid" element={<SharingPage />} />
       <Route path="/setnpc/:questid/:taskid" element={<NpcConnectPage />} />
+      <Route path="/policy" element={<Policy/>} />
       <Route path="/" element={<Login />} />
       <Route path="*" element={<PrivateRoute />} />
     </Routes>

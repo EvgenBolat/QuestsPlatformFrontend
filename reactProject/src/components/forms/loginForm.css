@@ -12,6 +12,9 @@
 
 #loginFormCase{
   background-color: rgb(35, 74, 154);
+  width: 100%;
+  height: 100%;
+  position: fixed;
 }
 
 #hseLogo{
@@ -108,6 +111,13 @@
   font-size: 20px;
 }
 
+#loginLogo{
+  position: fixed;
+  left: calc(50% - 125px);
+  top: 20px;
+  width: 250px;
+}
+
 @media screen and (max-width: 500px) {
   .main__form {
     width: 70vw;
@@ -121,6 +131,20 @@
 
   .main__form h1 {
     margin-bottom: 15px;
+  }
+
+  #hseLogo{
+    margin-right: 30vw;
+    margin-top: -3vh;
+    position: absolute;
+    scale: 0.8;
+  }
+
+  #loginLogo{
+    position: fixed;
+    width: 70vw;
+    left: calc(50vw - 35vw);
+    z-index: 2;
   }
 
   .main__form input[type="email"],
