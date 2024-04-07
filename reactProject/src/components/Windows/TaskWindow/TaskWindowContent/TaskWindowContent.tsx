@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 
 const TaskWindowContent = (props: any) => {
   const { userid } = useParams();
+  const [isChanged, setChanged] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [vital, setVital] = useState(false);
   const [newTask, setNewTask] = useState({
@@ -48,17 +49,18 @@ const TaskWindowContent = (props: any) => {
       .catch((error) => console.log(error));
     if (response.status === "OK") {
       setTask(response.message);
-      setVital(response.message.vital)
+      setVital(response.message.vital);
     }
   };
   useEffect(() => {
-    fetchData();
+    if (props.typeOfWindow === "simple") {
+      fetchData();
+    }
   }, []);
   useEffect(() => {
-    console.log(task)
-  },[task])
+    console.log(task);
+  }, [task]);
   if (props.typeOfWindow === "simple") {
-    console.log("беды")
     return (
       <div className="TaskWindowContent">
         <TaskWindowHeader
@@ -69,14 +71,21 @@ const TaskWindowContent = (props: any) => {
           task={task}
           vital={vital}
           setVital={setVital}
+          setChanged={setChanged}
         />
         <TaskForm
           currentCard={props.currentCard}
           task={task}
+          setTask={setTask}
+          tasks={props.tasks}
+          setDeleteID={props.setDeleteID}
+          setCurrentCard={props.setCurrentCard}
           deleteId={props.deleteId}
           typeOfWindow={props.typeOfWindow}
           setTaskWindowActive={props.setTaskWindowActive}
           vital={vital}
+          isChanged={isChanged}
+          setChanged={setChanged}
         />
       </div>
     );
@@ -88,17 +97,21 @@ const TaskWindowContent = (props: any) => {
           setTask={setNewTask}
           vital={vital}
           setVital={setVital}
+          setChanged={setChanged}
         />
         <TaskForm
           currentCard={props.currentCard}
           tasks={props.tasks}
           setTasks={props.setTasks}
           task={newTask}
+          setDeleteID={props.setDeleteID}
           setTask={setNewTask}
           isRequired={isRequired}
           typeOfWindow={props.typeOfWindow}
           setTaskWindowActive={props.setTaskWindowActive}
           vital={vital}
+          isChanged={isChanged}
+          setChanged={setChanged}
         />
       </div>
     );

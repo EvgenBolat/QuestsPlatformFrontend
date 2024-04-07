@@ -12,6 +12,7 @@ const ClarifyingWindow = (props: any) => {
         data={props.data}
         setIsClarifyingWindowActive={props.setIsClarifyingWindowActive}
         setBlockWindowActive={props.setBlockWindowActive}
+        setTasks={props.setTasks}
       />
     </div>
   );

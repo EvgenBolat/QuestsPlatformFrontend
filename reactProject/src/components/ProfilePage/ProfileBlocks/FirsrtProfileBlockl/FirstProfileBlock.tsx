@@ -19,7 +19,7 @@ const FirstProfileBlock = () => {
       .catch((error) => console.log(error));
     if (response.status === "OK") {
       setAuth(false);
-      localStorage.removeItem("id");
+      localStorage.clear()
       localStorage.setItem("auth", JSON.stringify(false));
       window.location.reload();
     }

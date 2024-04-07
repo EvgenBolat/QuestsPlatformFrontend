@@ -5,13 +5,14 @@ import { useNavigate, useParams } from "react-router-dom"
 const QuestCard = (props:any) => {
     const {userid} = useParams()
     const navigate = useNavigate()
+    console.log(`https://quests.projectswhynot.site/api/v1/static/${props.data.quest_image}`)
     return (
         <button className="ButtonCard" onClick={(e) => {
             navigate("/user/" + userid + "/quest/" + props.data.id,{state: {questName: props.data.quest_name, participation: props.participating}})
         }}>
         <Card className="QuestCard" >
             <div className="Quest_image_container">
-                <img src={props.data.quest_image} alt="Quest" />
+                <img src={`https://quests.projectswhynot.site/api/v1/static/${props.data.quest_image}`} alt="Quest" />
             </div>
             <div className="QuestInfo">
                 <h1>{props.data.quest_name}</h1>

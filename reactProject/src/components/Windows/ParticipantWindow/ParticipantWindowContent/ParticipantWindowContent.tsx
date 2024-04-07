@@ -1,10 +1,12 @@
 import { useState } from "react";
 import "./ParticipantWindowContent.css";
+import { useParams } from "react-router-dom";
 
 const ParticipantWindowContent = (props: any) => {
   const [oldname, setOldName] = useState(props.teamName);
   const [name, setName] = useState(props.teamName);
   const [incorrectTeamNameError, setIncorrectTeamNameError] = useState(false);
+  const { userid, questid } = useParams();
 
   const [alreadyExistTeamNameError, setalreadyExistTeamNameError] =
     useState(false);
@@ -59,10 +61,26 @@ const ParticipantWindowContent = (props: any) => {
           hidden={props.typeOfParticipantWindow !== 1}
           id="DeleteTeamButton"
           onClick={(e) => {
-            props.setTeamCreator(false);
-            props.setInCommand(false);
-            props.setParticipantWindowActive(false);
-            props.setTeamName("");
+            const fetchData = async () => {
+              const response = await fetch(
+                `https://quests.projectswhynot.site/api/v1/quests/${questid}/removegroup`,
+                {
+                  method: "DELETE",
+                  body: JSON.stringify({
+                    auth_token: userid,
+                  }),
+                }
+              )
+                .then((response) => response.json())
+                .catch((error) => console.log(error));
+              if (response.status === "OK") {
+                props.setTeamCreator(false);
+                props.setInCommand(false);
+                props.setParticipantWindowActive(false);
+                props.setTeamName("");
+              }
+            };
+            fetchData();
           }}
         >
           Удалить
@@ -72,9 +90,26 @@ const ParticipantWindowContent = (props: any) => {
           disabled={oldname === name}
           id="ChangedNameButton"
           onClick={(e) => {
-            props.setTeamName(name);
-            setOldName(name);
-            props.setParticipantWindowActive(false);
+            const fetchData = async () => {
+              const response = await fetch(
+                `https://quests.projectswhynot.site/api/v1/quests/${questid}/changegroupname`,
+                {
+                  method: "PUT",
+                  body: JSON.stringify({
+                    auth_token: userid,
+                    group_name: name,
+                  }),
+                }
+              )
+                .then((response) => response.json())
+                .catch((error) => console.log(error));
+              if (response.status === "OK") {
+                props.setTeamName(name);
+                setOldName(name);
+                props.setParticipantWindowActive(false);
+              }
+            };
+            fetchData();
           }}
         >
           Изменить
@@ -84,17 +119,31 @@ const ParticipantWindowContent = (props: any) => {
           disabled={name === ""}
           id="createTeamButton"
           onClick={(e) => {
-            //TODO: добавить проверку с сервера
-            if (true) {
-              setClicked(true);
-              props.setTeamName(name);
-              props.setTeamCreator(true);
-              props.setInCommand(true);
-              props.setParticipantWindowActive(false);
-            } else {
-              setClicked(true);
-              setalreadyExistTeamNameError(true);
-            }
+            const fetchData = async () => {
+              const response = await fetch(
+                `https://quests.projectswhynot.site/api/v1/quests/${questid}/group`,
+                {
+                  method: "POST",
+                  body: JSON.stringify({
+                    auth_token: userid,
+                    group_name: name,
+                  }),
+                }
+              )
+                .then((response) => response.json())
+                .catch((error) => console.log(error));
+              if (response.status === "OK") {
+                setClicked(true);
+                props.setTeamName(name);
+                props.setTeamCreator(true);
+                props.setInCommand(true);
+                props.setParticipantWindowActive(false);
+              } else {
+                setClicked(true);
+                setalreadyExistTeamNameError(true);
+              }
+            };
+            fetchData();
           }}
         >
           Создать
@@ -102,15 +151,30 @@ const ParticipantWindowContent = (props: any) => {
         <button
           hidden={props.typeOfParticipantWindow !== 2}
           onClick={(e) => {
-            if (false) {
-              props.setInCommand(true);
-              props.setTeamName(name);
-              setName("");
-              props.setParticipantWindowActive(false);
-            } else {
-              setClicked(true);
-              setIncorrectTeamNameError(true);
-            }
+            const fetchData = async () => {
+              const response = await fetch(
+                `https://quests.projectswhynot.site/api/v1/quests/${questid}/joingroup`,
+                {
+                  method: "POST",
+                  body: JSON.stringify({
+                    auth_token: userid,
+                    group_name: name,
+                  }),
+                }
+              )
+                .then((response) => response.json())
+                .catch((error) => console.log(error));
+              if (response.status === "OK") {
+                props.setInCommand(true);
+                props.setTeamName(name);
+                setName("");
+                props.setParticipantWindowActive(false);
+              } else {
+                setClicked(true);
+                setIncorrectTeamNameError(true);
+              }
+            };
+            fetchData();
           }}
         >
           Войти

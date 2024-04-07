@@ -4,9 +4,6 @@ import "./MainBody.css";
 const MainBody = (props: any) => {
   return (
     <div className="mainBody">
-      {props.questList.created_quests.length === 0 && props.questList.created_quests.length === 0  ? (
-        <div>Пустые квесты</div>
-      ) : (
         <div>
           <QuestsList
             userid={props.userid}
@@ -22,7 +19,6 @@ const MainBody = (props: any) => {
             alt="something"
           />
         </div>
-      )}
     </div>
   );
 };

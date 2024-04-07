@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 const AddingImageArea = (props: any) => {
-  const [filepath, setFilePath] = useState("");
   const [file, setFile] = useState("");
   function dragStartHandler(e: any) {
     e.preventDefault();
@@ -20,7 +19,8 @@ const AddingImageArea = (props: any) => {
     let fileReader = new FileReader();
     fileReader.onload = function () {
       if (typeof fileReader.result == "string") {
-        setFilePath(fileReader.result);
+        props.setFilePath(fileReader.result);
+        props.setImageFile(file);
       }
     };
     fileReader.readAsDataURL(file);
@@ -35,27 +35,31 @@ const AddingImageArea = (props: any) => {
     console.log(file.type);
     if (file.type === "image/jpeg" || file.type === "image/png") {
       changeSrc(file);
+      props.setImageFile(file);
     }
   }
 
   function changeSrcFromForm(fileList: any) {
     if (fileList != null) {
       changeSrc(fileList[0]);
+      props.setImageFile(fileList[0]);
     }
   }
 
   return (
     <div
-      draggable={true}
+      draggable={!props.typeOfWindow}
       onDragStart={dragStartHandler}
       onDragEnd={dragEndHandler}
       onDragOver={dragOverHandler}
       onDrop={dropHandler}
     >
-      {filepath === "" ? (
+      {props.filepath === "" ? (
         <div>
           <div>вставить изображение</div>
           <input
+            hidden={props.typeOfWindow}
+            disabled={props.typeOfWindow}
             type="file"
             name=""
             id=""
@@ -66,10 +70,19 @@ const AddingImageArea = (props: any) => {
       ) : (
         <div id="addingImagesElement">
           <div id="addingImageContainer">
-            <img id="addingImage" src={filepath} alt="" />
+            <img id="addingImage" src={props.filepath} alt="" />
           </div>
 
-          <button onClick={(e) => setFilePath("")}>сбросить</button>
+          <button
+            hidden={props.typeOfWindow}
+            disabled={props.typeOfWindow}
+            onClick={(e) => {
+              props.setFilePath("");
+              props.setImageFile(undefined);
+            }}
+          >
+            сбросить
+          </button>
         </div>
       )}
     </div>

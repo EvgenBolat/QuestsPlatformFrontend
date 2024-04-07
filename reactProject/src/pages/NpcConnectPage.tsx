@@ -2,14 +2,37 @@ import { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const NpcConnectPage = () => {
-  const { questid, taskid } = useParams();
   useEffect(() => {
-    if (isAuthenticated) {
-      localStorage.removeItem("questIdParticipation")
-      localStorage.removeItem("taskIdParticipation")
-      navigate(`/user/${token}/quest/${location.pathname.split("/")[2]}`, {
-        replace: true,
-      });
+    if (isAuthenticated === true) {
+      const fetchData = async () => {
+        const data = await fetch(
+          `https://quests.projectswhynot.site/api/v1/quests/${localStorage.getItem(
+            "questIdParticipation"
+          )}/npcjoinquest`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              auth_token: localStorage.getItem("id"),
+              task_id: localStorage.getItem("taskIdParticipation"),
+            }),
+          }
+        )
+          .then((responce) => responce.json())
+          .catch((error) => console.log(error));
+        if (data.status === "OK") {
+          console.log(data);
+          localStorage.removeItem("questIdParticipation");
+          localStorage.removeItem("taskIdParticipation");
+          navigate(`/user/${token}/quest/${location.pathname.split("/")[2]}`, {
+            replace: true,
+          });
+        } else {
+          console.log(data);
+          navigate("/user/");
+        }
+      };
+      fetchData()
+      return
     } else {
       localStorage.setItem(
         "questIdParticipation",
@@ -20,8 +43,9 @@ const NpcConnectPage = () => {
         `${location.pathname.split("/")[3]}`
       );
       navigate("/login", { replace: true });
+      return
     }
-  });
+  },[]);
   const location = useLocation();
   const isAuthenticated = localStorage.getItem("auth") === "true";
   const token = localStorage.getItem("id");

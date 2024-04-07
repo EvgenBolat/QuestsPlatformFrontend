@@ -1,8 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./FinishScreen.css";
+import { useParams } from "react-router-dom";
 
 const FinishScreen = (props: any) => {
-  const userPoints = 305;
+  const { userid, questid } = useParams();
+  const [userPoints, setUserPoints] = useState(0);
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        `https://quests.projectswhynot.site/api/v1/quests/${questid}/points`,
+        {
+          method: "POST",
+          body: JSON.stringify({ auth_token: userid }),
+        }
+      )
+        .then((response) => response.json())
+        .catch((error) => console.log(error));
+      if (response.status === "OK") {
+        setUserPoints(response.message.points);
+      }
+    };
+    fetchData();
+  }, []);
   useEffect(() => {
     const balloonContainer = document.getElementById("balloon-container");
     function createBalloons(num: any) {
@@ -23,9 +42,12 @@ const FinishScreen = (props: any) => {
     }, 5000);
     createBalloons(10);
     setTimeout(() => {
-      props.setAnyTaskNoCompleted(false);
+      props.setTasksOvered(true);
+      props.setStartedAsking(true);
+      props.setAnyTaskNoCompleted(false)
+      props.setQuestWasPasted(true)
     }, 10000);
-  });
+  }, [userPoints]);
 
   function random(num: any) {
     return Math.floor(Math.random() * num);

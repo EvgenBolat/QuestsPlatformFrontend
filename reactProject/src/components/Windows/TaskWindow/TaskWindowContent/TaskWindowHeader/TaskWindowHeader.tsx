@@ -51,6 +51,11 @@ const TaskWindowHeader = (props: any) => {
     };
   };
 
+  useEffect(() => {
+    console.log(props.vital)
+    setclassName(props.vital ? "Flagtrue": "Flagfalse")
+  })
+
   const [className, setclassName] = useState(props.vital ? "Flagtrue": "Flagfalse");
   return (
     <div className="TaskNameHeader">
@@ -60,9 +65,10 @@ const TaskWindowHeader = (props: any) => {
       <img
         onClick={(e) => {
           let ChangedTask = props.task
-          ChangedTask.vital = ! props.task.vital
+          ChangedTask.vital = props.task.vital === 1 ? 0 : 1
           props.setTask(ChangedTask)
           props.setVital(!props.vital)
+          props.setChanged(true)
           setclassName("Flag" + ChangedTask.vital);
         }}
         src={`${process.env.PUBLIC_URL}/img/flag.svg`}

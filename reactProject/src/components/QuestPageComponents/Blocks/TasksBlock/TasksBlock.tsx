@@ -25,6 +25,7 @@ const TasksBlock = (props: any) => {
             if(props.data.id === -1 || props.data.id === -2){
                 return
             }
+            props.setBlockWindowID(props.data.id)
             props.setCurrentCard(props.data)
             props.setBlockWindowActive(true)
             props.setactionMenuData(props.data)

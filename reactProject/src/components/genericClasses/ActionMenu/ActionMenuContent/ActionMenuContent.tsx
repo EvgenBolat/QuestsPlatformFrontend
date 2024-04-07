@@ -1,6 +1,8 @@
+import { useParams } from "react-router-dom";
 import TaskBlock from "../../../Windows/BlockWindow/BlockWindowContent/TasksList/TaskBlock/TaskBlock";
 import "./ActionMenuContent.css";
 const ActionMenuContent = (props: any) => {
+  const { userid } = useParams();
   const className =
     "ActionMenuContent ActionMenuContent" + props.typeOfActionMenu;
   const style =
@@ -52,7 +54,7 @@ const ActionMenuContent = (props: any) => {
         Дублировать
       </button>
       <button
-        onClick={(e) => {
+        onClick={async (e) => {
           if (props.typeOfActionMenu !== "Task") {
             props.setClarifyingWindowData({
               typeOfWindow:
@@ -66,18 +68,28 @@ const ActionMenuContent = (props: any) => {
             });
             props.setIsClarifyingWindowActive(true);
           } else {
-            let newTasks: any = [];
-            console.log(props.deleteId);
-            props.tasks.forEach((el: any) => {
-              if (el.id !== props.deleteId) {
-                newTasks.push(el);
+            const response = await fetch(
+              `https://quests.projectswhynot.site/api/v1/task/${props.deleteId}/delete`,
+              {
+                method: "DELETE",
+                body: JSON.stringify({ auth_token: userid }),
               }
-            });
-            for (let i = 0; i < newTasks.length; i++) {
-              newTasks[i].order = i;
+            )
+              .then((response) => response.json())
+              .catch((error) => console.log(error));
+            if (response.status === "OK") {
+              let newTasks: any = [];
+              console.log(props.deleteId);
+              props.tasks.forEach((el: any) => {
+                if (el.id !== props.deleteId) {
+                  newTasks.push(el);
+                }
+              });
+              for (let i = 0; i < newTasks.length; i++) {
+                newTasks[i].order = i;
+              }
+              props.setTasks([...newTasks]);
             }
-            console.log(newTasks);
-            props.setTasks([...newTasks]);
           }
           props.setActionMenuOpen(false);
         }}

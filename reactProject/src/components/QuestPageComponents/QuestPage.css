@@ -118,3 +118,8 @@
 .exitToQuestButtonImage {
   cursor: pointer;
 }
+
+#npcQRCode{
+  display: flex;
+  justify-content: center;
+}

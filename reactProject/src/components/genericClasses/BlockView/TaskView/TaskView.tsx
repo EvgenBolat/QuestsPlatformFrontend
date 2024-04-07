@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 
 import "./taskView.css";
+import { useParams } from "react-router-dom";
 const TaskView = (props: any) => {
   const [isQrCodeScanningEnabled, setQrCodeScanningEnabled] = useState(false);
   const [asnwer, setAnswer] = useState("");
@@ -15,11 +16,15 @@ const TaskView = (props: any) => {
       if (pausedNow) {
         return;
       }
-      if (!props.viewMode) {
+      if (
+        !props.viewMode ||
+        (props.block_type && props.data.user_progress.status === 1)
+      ) {
         if (s === 0) {
           setTime([m - 1, 59]);
           pausedNow = true;
           setLastedSecond(lastedSecond + 1);
+          localStorage.setItem("lastedSecond", (lastedSecond + 1).toString());
         } else {
           setTime([m, s - 1]);
           setLastedSecond(lastedSecond + 1);
@@ -32,16 +37,34 @@ const TaskView = (props: any) => {
     }, [minutes, seconds]);
 
     useEffect(() => {
+      if (m < 0) {
+        setTime([m * -1, s]);
+      }
+      if (s < 0) {
+        setTime([m, s * -1]);
+      }
       if (m === 0 && s === 0) {
         let points = 0;
-        props.setAnyTaskNoCompleted(true)
+        if (!props.viewMode) {
+          props.setAnyTaskNoCompleted(true);
+        }
         if (props.data.vital) {
           points = 10 * props.data.min_points;
         }
-        console.log(points);
-        setTaskPassed(true);
+        if (!props.viewMode) {
+          props.changeTaskStatus(props.data.id, 2, points);
+          setTaskPassed(true);
+        }
         let questData = props.questData;
-        questData[props.block_num].tasks[props.data.task_num].state = 2;
+        console.log(props.viewMode);
+        if (props.viewMode) {
+          console.log(props.data);
+          questData.tasks_list[props.data.task_num].user_progress.status = 2;
+        } else {
+          questData[props.block_num].tasks_list[
+            props.data.task_num
+          ].user_progress.status = 2;
+        }
         props.setQuestData([...questData]);
         setLastedSecond(0);
         return;
@@ -61,14 +84,14 @@ const TaskView = (props: any) => {
 
   function triggerDownload() {
     var element = document.createElement("a");
-    element.setAttribute("href", props.data.files[0]);
-    let name = props.data.files[0].split("/").pop();
-    element.setAttribute("download", name);
     element.style.display = "none";
-    document.body.appendChild(element);
-    for (let i = 0; i < props.data.files.length; i++) {
-      element.setAttribute("href", props.data.files[i]);
-      element.setAttribute("download", props.data.files[i].split("/").pop());
+    let files = props.data.images.split(" ");
+    for (let i = 0; i < files.length - 1; i++) {
+      element.setAttribute(
+        "href",
+        `https://quests.projectswhynot.site/api/v1/static/${files[i]}`
+      );
+      element.setAttribute("download", files[i].split("/").pop());
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
@@ -93,6 +116,7 @@ const TaskView = (props: any) => {
     };
 
     const qrCodeSucess = (decodedText: any) => {
+      console.log(decodedText);
       setAnswer(decodedText);
       setQrCodeScanningEnabled(false);
     };
@@ -106,7 +130,6 @@ const TaskView = (props: any) => {
           qrCodeSucess,
           () => {}
         );
-        setAnswer("");
       } else {
         qrScannerStop();
       }
@@ -117,13 +140,10 @@ const TaskView = (props: any) => {
     };
   }, [isQrCodeScanningEnabled]);
 
-  // useEffect(() => {
-  //   console.log(asnwer);
-  // }, [asnwer]);
   return (
     <div className="TaskView">
       <h1 id="taskName">Задача № {props.data.task_num + 1}</h1>
-      <div>
+      <div hidden={props.data.user_progress.status === 2}>
         <h1 id="descrHeader">Описание к задаче:</h1>
         <textarea
           readOnly
@@ -145,7 +165,7 @@ const TaskView = (props: any) => {
             readOnly
             hidden={
               props.data.task_type !== 0 ||
-              (props.block_type && props.data.state === 0)
+              (props.block_type && props.data.user_progress.status === 0)
             }
             name=""
             value={props.data.question}
@@ -153,7 +173,7 @@ const TaskView = (props: any) => {
           <p
             hidden={
               props.data.task_type !== 0 ||
-              (props.block_type && props.data.state === 0)
+              (props.block_type && props.data.user_progress.status === 0)
             }
           >
             Ваш ответ:
@@ -161,7 +181,7 @@ const TaskView = (props: any) => {
           <input
             hidden={
               props.data.task_type !== 0 ||
-              (props.block_type && props.data.state === 0)
+              (props.block_type && props.data.user_progress.status === 0)
             }
             type="text"
             name=""
@@ -197,7 +217,7 @@ const TaskView = (props: any) => {
           <img
             hidden={
               props.data.task_type === 0 ||
-              (props.block_type && props.data.state === 0)
+              (props.block_type && props.data.user_progress.status === 0)
             }
             className="startButton"
             draggable={false}
@@ -212,7 +232,7 @@ const TaskView = (props: any) => {
           <p
             hidden={
               props.data.task_type === 0 ||
-              (props.block_type && props.data.state === 0)
+              (props.block_type && props.data.user_progress.status === 0)
             }
             id="openCameraText"
           >
@@ -221,8 +241,8 @@ const TaskView = (props: any) => {
         </form>
         <p
           hidden={
-            props.data.files.length === 0 ||
-            (props.block_type && props.data.state === 0)
+            props.data.images === "defaultImage.png" ||
+            (props.block_type && props.data.user_progress.status === 0)
           }
           id="filesHeaderText"
         >
@@ -230,8 +250,8 @@ const TaskView = (props: any) => {
         </p>
         <img
           hidden={
-            props.data.files.length === 0 ||
-            (props.block_type && props.data.state === 0)
+            props.data.images === "defaultImage.png" ||
+            (props.block_type && props.data.user_progress.status === 0)
           }
           id="filesDownloadButton"
           onClick={(e) => {
@@ -247,16 +267,21 @@ const TaskView = (props: any) => {
           Данная Задача является обязательной
         </p>
         <p
-          hidden={props.block_type && props.data.state === 0}
+          hidden={props.block_type && props.data.user_progress.status === 0}
           className="simpleTaskText"
         >
           У вас осталось:
         </p>
-        <h1 hidden={props.block_type && props.data.state === 0} id="taskTime">
+        <h1
+          hidden={
+            props.block_type === 0 && props.data.user_progress.status === 0
+          }
+          id="taskTime"
+        >
           {CountDown(
             Math.floor(props.data.task_time / 60),
             Math.floor(props.data.task_time % 60),
-            props.data.state !== 1
+            props.data.user_progress.status !== 1
           )}
         </h1>
         <p hidden={props.data.vital} className="simpleTaskText maxPoints">
@@ -264,7 +289,7 @@ const TaskView = (props: any) => {
         </p>
         <p className="simpleTaskText" hidden={!props.data.vital}>
           При выполнении задания позднее{" "}
-          {props.block_type && props.data.state === 0
+          {props.block_type && props.data.user_progress.status === 0
             ? "указанного времени"
             : ""}{" "}
           вы получите лишь:
@@ -289,20 +314,23 @@ const TaskView = (props: any) => {
           id="sendAnswer"
           type="submit"
           value={
-            props.block_type && props.data.state === 0
+            props.block_type && props.data.user_progress.status === 0
               ? "Принять задание"
               : "Ответить"
           }
           form="taskform"
           onClick={(e) => {
             e.preventDefault();
-            if (props.data.state === 0) {
+            if (props.data.user_progress.status === 0) {
               let blocks = props.questData;
               for (let i = 0; i < blocks.length; i++) {
                 if (blocks[i].id === props.blockId) {
-                  for (let j = 0; j < blocks[i].tasks.length; j++) {
-                    if (blocks[i].tasks[j].id === props.data.id) {
-                      blocks[i].tasks[j].state = 1;
+                  for (let j = 0; j < blocks[i].tasks_list.length; j++) {
+                    if (blocks[i].tasks_list[j].id === props.data.id) {
+                      blocks[i].tasks_list[j].user_progress.status = 1;
+                      if (!props.viewMode) {
+                        props.changeTaskStatus(props.data.id, 1, 0);
+                      }
                       props.setData([...blocks]);
                       break;
                     }
@@ -310,43 +338,81 @@ const TaskView = (props: any) => {
                   break;
                 }
               }
-            } else if (!props.viewMode) {
+            } else if (props.data.user_progress.status === 1) {
               setAnswerButtonClicked(true);
-              if (asnwer === props.data.answer) {
-                let questData = props.questData;
-                questData[props.block_num].tasks[props.data.task_num].state = 2;
-                props.setQuestData([...questData]);
-                let points = 0;
-                if (props.data.vital) {
-                  points = Math.round(
-                    10 *
-                      (props.data.min_points +
+              if (props.viewMode === false) {
+                console.log(asnwer);
+                console.log(props.data.answer);
+                if (asnwer === props.data.answer) {
+                  let questData = props.questData;
+                  questData[props.block_num].tasks_list[
+                    props.data.task_num
+                  ].user_progress.status = 2;
+                  props.setQuestData([...questData]);
+                  let points = 0;
+                  if (props.data.vital) {
+                    points = Math.round(
+                      10 *
+                        (props.data.min_points +
+                          Number(
+                            (
+                              ((props.data.max_points - props.data.min_points) *
+                                (props.data.task_time -
+                                  Number(
+                                    localStorage.getItem("lastedSecond")
+                                  ))) /
+                              props.data.task_time
+                            ).toFixed(2)
+                          ))
+                    );
+                    if (!props.viewMode) {
+                      props.changeTaskStatus(props.data.id, 2, points);
+                    }
+                  } else {
+                    points = Math.round(
+                      10 *
+                        props.data.max_points *
                         Number(
                           (
-                            ((props.data.max_points - props.data.min_points) *
-                              (props.data.task_time - lastedSecond)) /
+                            (props.data.task_time -
+                              Number(localStorage.getItem("lastedSecond"))) /
                             props.data.task_time
                           ).toFixed(2)
-                        ))
-                  );
-                } else {
-                  points = Math.round(
-                    10 *
-                      props.data.max_points *
-                      Number(
-                        (
-                          (props.data.task_time - lastedSecond) /
-                          props.data.task_time
-                        ).toFixed(2)
-                      )
-                  );
+                        )
+                    );
+                    if (points < 0) {
+                      points = 0;
+                    }
+                    if (!props.viewMode) {
+                      props.changeTaskStatus(props.data.id, 2, points);
+                      setLastedSecond(0);
+                    }
+                    localStorage.setItem("lastedSecond", "0");
+                  }
                 }
-                console.log(points);
+              } else {
+                let questData = props.questData;
+                console.log(props.block_num);
+                // console.log(
+                //   `Таска: ${questData.tasks_list[props.data.task_num]}`
+                // );
+                questData.tasks_list[
+                  props.data.task_num
+                ].user_progress.status = 2;
+                props.setQuestData([...questData]);
               }
             }
           }}
         />
       </div>
+      <img
+        hidden={
+          props.data.user_progress.status === 0 ||
+          props.data.user_progress.status === 1
+        }
+        src={`${process.env.PUBLIC_URL}/img/PassedTask.svg`}
+        alt=""
+      />
     </div>
   );
 };

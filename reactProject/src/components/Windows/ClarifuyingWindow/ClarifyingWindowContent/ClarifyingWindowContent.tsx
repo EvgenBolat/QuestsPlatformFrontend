@@ -4,45 +4,92 @@ import "./CLarifyingWindowContent.css";
 const ClarifyingWindowContent = (props: any) => {
   const { userid, questid } = useParams();
   const DeleteQuest = async () => {
-    const response = await fetch(`https://quests.projectswhynot.site/api/v1/quests/${questid}/delete`, {
-      method: "DELETE",
-      body: JSON.stringify({ auth_token: userid }),
-    })
+    const response = await fetch(
+      `https://quests.projectswhynot.site/api/v1/quests/${questid}/delete`,
+      {
+        method: "DELETE",
+        body: JSON.stringify({ auth_token: userid }),
+      }
+    )
       .then((response) => response.json())
       .catch((error) => console.log(error));
-      if(response.status === "OK"){
-        props.setIsClarifyingWindowActive(false);
-        navigate("/user/" + userid)
-        window.location.reload()
-      }
+    if (response.status === "OK") {
+      props.setIsClarifyingWindowActive(false);
+      navigate("/user/" + userid);
+      window.location.reload();
+    }
   };
-  const navigate = useNavigate()
+  const DeleteBlock = async () => {
+    const response = await fetch(
+      `https://quests.projectswhynot.site/api/v1/block/${props.data.current.id}/delete`,
+      {
+        method: "DELETE",
+        body: JSON.stringify({ auth_token: userid }),
+      }
+    )
+      .then((response) => response.json())
+      .catch((error) => console.log(error));
+    if (response.status === "OK") {
+      console.log("ok");
+      props.setTasks([])
+    }
+  };
+  const navigate = useNavigate();
   const Dublicate =
     props.data.typeOfWindow === "dublicateBlock"
       ? () => {
-          //посылаем серваку команду дублирования по айди
-          let blocks = [...props.data.blocks];
-
-          blocks.splice(props.data.current.order + 1, 0, {
-            id: props.data.current.id,
-            order: props.data.current.order,
-            name: props.data.current.name,
-            type: props.data.current.type,
-          });
-          for (let i = props.data.current.order + 1; i < blocks.length; i++) {
-            blocks[i].order = i;
-          }
-          props.data.setBlocks(blocks);
-          props.setIsClarifyingWindowActive(false);
+          const fetchData = async () => {
+            const response = await fetch(
+              `https://quests.projectswhynot.site/api/v1/quests/${questid}/duplicateblock`,
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  auth_token: userid,
+                  block_id: props.data.current.id,
+                }),
+              }
+            )
+              .then((response) => response.json())
+              .catch((error) => console.log(error));
+            if (response.status === "OK") {
+              let blocks = [...props.data.blocks];
+              console.log(props.data.current)
+              blocks.push({
+                id: response.message.block_id,
+                order: props.data.blocks.length,
+                name: props.data.current.block_name,
+                type: props.data.current.block_type,
+              });
+              props.data.setBlocks(blocks);
+              props.setIsClarifyingWindowActive(false);
+            }
+          };
+          fetchData();
         }
       : () => {
-          console.log("Дублирование квеста: " + questid + ", " + userid);
-          props.setIsClarifyingWindowActive(false);
+          const fetchData = async () => {
+            const response = await fetch(
+              `https://quests.projectswhynot.site/api/v1/quests/${questid}/duplicate`,
+              {
+                method: "POST",
+                body: JSON.stringify({
+                  auth_token: userid,
+                }),
+              }
+            )
+              .then((response) => response.json())
+              .catch((error) => console.log(error));
+            if (response.status === "OK") {
+              props.setIsClarifyingWindowActive(false);
+              navigate("user/");
+            }
+          };
+          fetchData();
         };
   const Delete =
     props.data.typeOfWindow === "deleteBlock"
       ? () => {
-          //посылаем серваку команду удаления по айди
+          DeleteBlock();
           let blocks = [...props.data.blocks];
           blocks.splice(props.data.current.order, 1);
           for (let i = props.data.current.order; i < blocks.length; i++) {
@@ -55,7 +102,7 @@ const ClarifyingWindowContent = (props: any) => {
         }
       : () => {
           console.log("Удаление квеста: " + questid + ", " + userid);
-          DeleteQuest()
+          DeleteQuest();
         };
 
   function Act() {

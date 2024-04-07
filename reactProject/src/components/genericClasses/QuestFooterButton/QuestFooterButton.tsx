@@ -19,7 +19,7 @@ const QuestFooterButton = (props: any) => {
             props.setParticipantsListWindowActive(true)
         }
         else if(props.typeOfButton === "share"){
-            navigator.clipboard.writeText(`http://localhost:3000/quest/${questid}`)
+            navigator.clipboard.writeText(`https://quests.projectswhynot.site/quest/${questid}`) // `http://localhost:3000/quest/${questid}`
             console.log("shared")
             alert("Ссылка на квест скопирована!")
         }

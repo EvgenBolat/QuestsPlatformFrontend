@@ -1,13 +1,53 @@
 import { useParams } from "react-router-dom";
 import TasksList from "./TasksList/TasksList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./BlockWindowContent.css";
 import BlockNameForm from "./BlockNameForm/BlockNameForm";
 import ActionMenu from "../../../genericClasses/ActionMenu/ActionMenu";
 import SaveTasksOrderButton from "./SaveTasksOrderButton/SaveTasksOrderButton";
 
 const BlockWindowContent = (props: any) => {
-  //получаем с сервера данные
+  const [maxTasks, setMaxTasks] = useState(0);
+  const [minTasks, setMinTasks] = useState(0);
+  useEffect(() => {
+    if (props.currentCard.block_type === 1) {
+      const fetchTasks = async () => {
+        const response = await fetch(
+          `https://quests.projectswhynot.site/api/v1/block/${props.currentCard.id}`,
+          {
+            method: "POST",
+            body: JSON.stringify({ auth_token: userid }),
+          }
+        )
+          .then((response) => response.json())
+          .catch((error) => console.log(error));
+        if (response.status === "OK") {
+          console.log(response.message.min_tasks);
+          setMinTasks(response.message.min_tasks);
+        }
+      };
+      fetchTasks();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (props.currentCard.block_type === 1) {
+      let count = 0;
+      if (props.tasks.length) {
+        for (let i = 0; i < props.tasks.length; i++) {
+          if (props.tasks[i].vital == 0) {
+            ++count;
+          }
+        }
+      }
+      if (maxTasks !== count) {
+        setMaxTasks(count);
+      }
+      if (minTasks > count) {
+        setMinTasks(count);
+      }
+    }
+  });
   const [typeofQuest, setTypeOfQuest] = useState(0);
   const { userid, questid } = useParams();
   const [countOfTasks, setCountOfTasks] = useState(0);
@@ -45,9 +85,38 @@ const BlockWindowContent = (props: any) => {
         setLeftPosition={setLeftPosition}
         setTopPosition={setTopPosition}
       />
-      <div>
+      <div hidden={props.currentCard.block_type !== 1}>
         <div>Напишите количество задач, необходимое для прохождения</div>
-        <input type="number" min={0} id="" />
+        <input
+          type="number"
+          min={0}
+          value={minTasks}
+          onChange={(e) => {
+            setMinTasks(Number(e.target.value));
+          }}
+          onBlur={async (e) => {
+            const response = await fetch(
+              `https://quests.projectswhynot.site/api/v1/block/${props.currentCard.id}`,
+              {
+                method: "PUT",
+                body: JSON.stringify({
+                  auth_token: userid,
+                  block_name: props.currentCard.block_name,
+                  block_num: props.currentCard.block_num,
+                  block_type: props.currentCard.block_type,
+                  min_tasks: minTasks,
+                }),
+              }
+            )
+              .then((response) => response.json())
+              .catch((error) => console.log(error));
+            if (response.status === "OK") {
+              console.log("ok");
+            }
+          }}
+          max={maxTasks}
+          id=""
+        />
       </div>
       <TasksList
         currentCard={props.currentCard}
@@ -63,6 +132,8 @@ const BlockWindowContent = (props: any) => {
       {isSaveTasksOrderButtonActive ? (
         <SaveTasksOrderButton
           setSaveTasksOrderButtonActive={setSaveTasksOrderButtonActive}
+          tasks={props.tasks}
+          blockWindowID={props.blockWindowID}
         />
       ) : (
         <div></div>

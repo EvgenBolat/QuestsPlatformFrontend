@@ -2,16 +2,17 @@ import "./TaskWindow.css";
 import TaskWindowContent from "./TaskWindowContent/TaskWindowContent";
 
 const TaskWindow = (props: any) => {
-  console.log(props.deleteId)
   return (
     <div className="TaskWindow">
       <TaskWindowContent
         currentCard={props.currentCard}
         typeOfWindow={props.typeOfWindow}
         useQuestData={props.useQuestData}
+        setCurrentCard={props.setCurrentCard}
         actionMenuData={props.actionMenuData}
         deleteId={props.deleteId}
         tasks={props.tasks}
+        setDeleteID={props.setDeleteID}
         setTaskWindowActive={props.setTaskWindowActive}
         setTasks={props.setTasks}
       />

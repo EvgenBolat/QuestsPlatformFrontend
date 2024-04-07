@@ -19,7 +19,7 @@ const Blocks = (props: any) => {
     // e.target.style.background = 'rgb(0, 91, 179)'
   }
   const fetchData = async (taskBlock: any, currentCard: any) => {
-    let previosindex = props.blocks.indexOf(TasksBlock);
+    let previosindex = props.blocks.indexOf(taskBlock);
     const response = await fetch(
       `https://quests.projectswhynot.site/api/v1/quests/${questid}/block`,
       {
@@ -29,7 +29,7 @@ const Blocks = (props: any) => {
           block_type: currentCard.block_type,
           block_num: previosindex + 1,
           min_tasks: 0,
-          block_name: "Блок",
+          block_name: "Блок № " + (previosindex + 1),
         }),
       }
     )
@@ -76,6 +76,7 @@ const Blocks = (props: any) => {
   };
 
   const BuildBlocks = () => {
+    console.log(props.blocks)
     if (props.blocks.length !== 0) {
       console.log(props.blocks);
       let array = props.blocks.sort(sortCard).map((el: any) => {
@@ -85,6 +86,7 @@ const Blocks = (props: any) => {
               setCurrentCard={props.setCurrentCard}
               data={el}
               last={false}
+              setBlockWindowID={props.setBlockWindowID}
               taskBlockId={el.id}
               dragStart={dragStartHandler}
               dragEnd={dragEndHandler}
@@ -108,6 +110,7 @@ const Blocks = (props: any) => {
           data={props.blocks.at(-1)}
           last={true}
           setCurrentCard={props.setCurrentCard}
+          setBlockWindowID={props.setBlockWindowID}
           key={props.blocks.at(-1)?.task_num}
           dragStart={dragStartHandler}
           dragEnd={dragEndHandler}
@@ -126,6 +129,7 @@ const Blocks = (props: any) => {
             data={{ name: "стартовый блок", block_type: 0 }}
             isStarted={true}
             last={false}
+            setBlockWindowID={props.setBlockWindowID}
             taskBlockId={"-1"}
             dragStart={dragStartHandler}
             dragEnd={dragEndHandler}

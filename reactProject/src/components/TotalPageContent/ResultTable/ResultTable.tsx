@@ -3,7 +3,8 @@ import "./ResultTable.css";
 const ResultTable = (props: any) => {
   let dataNew = [<div>dfdfdf</div>];
   if (props.result.quest_type === 1) {
-    for (let i = 0; i < props.result.data.length; i++) {
+    console.log(props.result.results)
+    for (let i = 0; i < props.result.results.length; i++) {
       if (i === 0) {
         dataNew[0] = (
           <div className="resultElement first">
@@ -12,10 +13,10 @@ const ResultTable = (props: any) => {
             </div>
             <div className="resultElementInfo">
               <div className="resultUserInfo">
-                {props.result.data[i].team_name}
+                {props.result.results[i].group_name}
               </div>
               <div className="resultPoints">
-                {props.result.data[i].participants[0].points} оч.
+                {props.result.results[i].points} оч.
               </div>
             </div>
           </div>
@@ -28,10 +29,10 @@ const ResultTable = (props: any) => {
             </div>
             <div className="resultElementInfo">
               <div className="resultUserInfo">
-                {props.result.data[i].team_name}
+                {props.result.results[i].group_name}
               </div>
               <div className="resultPoints">
-                {props.result.data[i].participants[0].points} оч.
+                {props.result.results[i].points} оч.
               </div>
             </div>
           </div>
@@ -44,10 +45,10 @@ const ResultTable = (props: any) => {
             </div>
             <div className="resultElementInfo">
               <div className="resultUserInfo">
-                {props.result.data[i].team_name}
+                {props.result.results[i].team_name}
               </div>
               <div className="resultPoints">
-                {props.result.data[i].participants[0].points} оч.
+                {props.result.results[i].participants[0].points} оч.
               </div>
             </div>
           </div>
@@ -60,10 +61,10 @@ const ResultTable = (props: any) => {
             </div>
             <div className="resultElementInfo">
               <div className="resultUserInfo">
-                {props.result.data[i].team_name}
+                {props.result.results[i].team_name}
               </div>
               <div className="resultPoints">
-                {props.result.data[i].participants[0].points} оч.
+                {props.result.results[i].participants[0].points} оч.
               </div>
             </div>
           </div>
@@ -71,7 +72,7 @@ const ResultTable = (props: any) => {
       }
     }
   } else {
-    for (let i = 0; i < props.result.data.length; i++) {
+    for (let i = 0; i < props.result.results.length; i++) {
       if (i === 0) {
         dataNew[0] = (
           <div className="resultElement first">
@@ -79,9 +80,9 @@ const ResultTable = (props: any) => {
               <div className="place">1</div>
             </div>
             <div className="resultElementInfo">
-              <div className="resultUserInfo">{props.result.data[i].user_info}</div>
+              <div className="resultUserInfo">{`${props.result.results[i].last_name} ${props.result.results[i].first_name}`}</div>
               <div className="resultPoints">
-                {props.result.data[i].points} оч.
+                {props.result.results[i].points} оч.
               </div>
             </div>
           </div>
@@ -93,9 +94,9 @@ const ResultTable = (props: any) => {
               <div className="place">2</div>
             </div>
             <div className="resultElementInfo">
-              <div className="resultUserInfo">{props.result.data[i].user_info}</div>
+              <div className="resultUserInfo">{`${props.result.results[i].last_name} ${props.result.results[i].first_name}`}</div>
               <div className="resultPoints">
-                {props.result.data[i].points} оч.
+                {props.result.results[i].points} оч.
               </div>
             </div>
           </div>
@@ -107,9 +108,9 @@ const ResultTable = (props: any) => {
               <div className="place">3</div>
             </div>
             <div className="resultElementInfo">
-              <div className="resultUserInfo">{props.result.data[i].user_info}</div>
+              <div className="resultUserInfo">{`${props.result.results[i].last_name} ${props.result.results[i].first_name}`}</div>
               <div className="resultPoints">
-                {props.result.data[i].points} оч.
+                {props.result.results[i].points} оч.
               </div>
             </div>
           </div>
@@ -121,9 +122,9 @@ const ResultTable = (props: any) => {
               <div className="place">{i + 1}</div>
             </div>
             <div className="resultElementInfo">
-              <div className="resultUserInfo">{props.result.data[i].user_info}</div>
+              <div className="resultUserInfo">{`${props.result.results[i].last_name} ${props.result.results[i].first_name}`}</div>
               <div className="resultPoints">
-                {props.result.data[i].points} оч.
+                {props.result.results[i].points} оч.
               </div>
             </div>
           </div>

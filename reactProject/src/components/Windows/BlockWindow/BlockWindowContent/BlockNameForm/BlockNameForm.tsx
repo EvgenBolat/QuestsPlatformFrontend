@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import "./BlockNameForm.css";
+import { useParams } from "react-router-dom";
 
 const BlockNameForm = (props: any) => {
+  const { userid } = useParams();
   const useValtidation = (value: any, validations: any) => {
     const [isEmpty, setEmpty] = useState(true);
     const [inputValid, setInputValid] = useState(false);
@@ -38,8 +40,27 @@ const BlockNameForm = (props: any) => {
       setValue(e.target.value);
     };
 
-    const onBlur = (e: any) => {
+    const onBlur = async (e: any) => {
       setDirty(true);
+      const response = await fetch(
+        `https://quests.projectswhynot.site/api/v1/block/${props.currentCard.id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            auth_token: userid,
+            block_name: name.value,
+            block_num: props.currentCard.block_num,
+            block_type: props.currentCard.block_type,
+            min_tasks: props.currentCard.min_tasks,
+          }),
+        }
+      )
+        .then((response) => response.json())
+        .catch((error) => console.log(error));
+      if (response.status === "OK") {
+        console.log("ok");
+      }
+      console.log(response)
     };
 
     return {
@@ -56,12 +77,24 @@ const BlockNameForm = (props: any) => {
   return (
     <div className="TaskBlockName">
       <form className="BlockNameForm" action="">
-        <input type="text" value={name.value} placeholder="Название" name="" id="1"
-        onChange={(e) => name.onChange(e)}
-        onBlur={(e) => name.onBlur(e)}
-         />
+        <input
+          type="text"
+          value={name.value}
+          placeholder="Название"
+          name=""
+          id="1"
+          onChange={(e) => name.onChange(e)}
+          onBlur={(e) => name.onBlur(e)}
+        />
       </form>
-      <button onClick={(e) =>{props.setActionMenuOpen(true); props.setLeftPosition(e.clientX); props.setTopPosition(e.clientY)}} className="ActionButton">
+      <button
+        onClick={(e) => {
+          props.setActionMenuOpen(true);
+          props.setLeftPosition(e.clientX);
+          props.setTopPosition(e.clientY);
+        }}
+        className="ActionButton"
+      >
         <img src={`${process.env.PUBLIC_URL}/img/ActionButton.svg`} alt="" />
       </button>
     </div>

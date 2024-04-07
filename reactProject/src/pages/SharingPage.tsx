@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const SharingPage = () => {
   let couner = 0;
-  console.log(localStorage.getItem("id"));
   const addParticapant = async () => {
     localStorage.removeItem("questIdParticipation");
     const response = await fetch(
@@ -17,9 +16,13 @@ const SharingPage = () => {
     )
       .then((response) => response.json())
       .catch((error) => console.log(error));
-    console.log(response);
     if (response.status === "OK") {
-      console.log("ok");
+      console.log(
+        `/user/${localStorage.getItem("id")}/quest/${
+          location.pathname.split("/")[2]
+        }`
+      );
+      console.log("переход")
       localStorage.removeItem("questIdParticipation");
       navigate(
         `/user/${localStorage.getItem("id")}/quest/${
@@ -44,6 +47,7 @@ const SharingPage = () => {
         "questIdParticipation",
         `${location.pathname.split("/")[2]}`
       );
+      console.log(`Ставлю айди квеста для участия обычному участнику: ${localStorage.getItem("questIdParticipation")}`)
       navigate("/login", { replace: true });
     }
   }, []);

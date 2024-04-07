@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import AddQuestWindow from "./AddQuestWindow/AddQuestWindow";
 import ProfileWindow from "./Header/ProFileWindow/ProFileWindow";
 import { useParams } from "react-router-dom";
-import { error } from "console";
 
 const MainPage = (props: any) => {
   const { userid } = useParams();

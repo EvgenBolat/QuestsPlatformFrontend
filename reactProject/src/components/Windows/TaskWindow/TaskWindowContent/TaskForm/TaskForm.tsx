@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import "./TaskForm.css";
 import { useParams } from "react-router-dom";
 
+var QRCode = require("qrcode-svg");
+
 const useValtidation = (value: any, validations: any) => {
   const [isEmpty, setEmpty] = useState(true);
   const [inputValid, setInputValid] = useState(false);
@@ -52,9 +54,39 @@ const useInput = (initialValue: any, validation: any) => {
 };
 
 const TaskForm = (props: any) => {
+  function convertPng(svg: any, size: any, name: any) {
+    let canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    let img = new Image();
+    img.width = size;
+    img.height = size;
+    let a = document.createElement("a");
+    a.download = name;
+    img.onload = function () {
+      canvas.getContext("2d")!.drawImage(img, 0, 0);
+      a.href = canvas.toDataURL("image/png");
+      a.click();
+      img.remove();
+      canvas.remove();
+      a.remove();
+    };
+    img.src = "data:image/svg+xml," + encodeURIComponent(svg);
+  }
+
+  function generateRandomString(length: any) {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
   const [typeofTask, setTypeOfTask] = useState(props.task.task_type.toString());
 
-  const [filesArray, setFiles] = useState([""]);
+  const [filesArray, setFiles] = useState<File[]>();
 
   const [description, setDescription] = useState(props.task.description);
 
@@ -71,6 +103,35 @@ const TaskForm = (props: any) => {
 
   const { userid } = useParams();
 
+  console.log(props.tasks.findIndex( (el: any) => el.id === props.task.id));
+
+  const changeTask = async () => {
+    let task = {
+      auth_token: userid,
+      task_num: props.task.task_num,
+      task_time: minutes * 60 + seconds,
+      description: description,
+      max_points: maxPoints,
+      answer: answerOnQuestion,
+      question: question,
+      min_points: minPoints,
+      vital: Number(props.vital),
+    };
+    const response = await fetch(
+      `https://quests.projectswhynot.site/api/v1/task/${props.deleteId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(task),
+      }
+    )
+      .then((response) => response.json())
+      .catch((error) => console.log(error));
+      if(response.status === "OK"){
+        let new_tasks = props.tasks
+        new_tasks[props.tasks.findIndex( (el: any) => el.id === props.task.id)].vital =  props.vital
+      }
+  };
+
   useEffect(() => {
     setTypeOfTask(props.task.task_type.toString());
 
@@ -79,9 +140,8 @@ const TaskForm = (props: any) => {
     setMinPoints(props.task.min_points);
     setMaxPoints(props.task.max_points);
 
-    setMinutes(
-      Math.floor(props.task.task_time / 60)
-    );
+
+    setMinutes(Math.floor(props.task.task_time / 60));
     setSeconds(
       Number(props.task.task_time - 60 * Math.floor(props.task.task_time / 60))
     );
@@ -91,42 +151,84 @@ const TaskForm = (props: any) => {
   }, [props.task]);
 
   const setNewTask = async () => {
-    let task = {
-      auth_token: userid,
-      task_num: props.tasks.length,
-      task_type: typeofTask,
-      task_time: minutes * 60 + seconds,
-      description: description,
-      max_points: maxPoints,
-      answer: answerOnQuestion,
-      question: question,
-      min_points: minPoints,
-      vital: Number(props.vital),
-    };
-    console.log(JSON.stringify(task));
+    let formData = new FormData();
+    let random = "";
+    if (typeofTask === "1" || typeofTask === "2") {
+      random = generateRandomString(15);
+    }
+    if (userid) {
+      formData.append("auth_token", userid);
+      formData.append("task_type", typeofTask);
+      formData.append("task_num", props.tasks.length);
+      formData.append("task_time", (minutes * 60 + seconds).toString());
+      formData.append("description", description);
+      formData.append("max_points", maxPoints.toString());
+      console.log(typeofTask)
+      if (typeofTask === "0") {
+        formData.append("answer", answerOnQuestion);
+      } else if (typeofTask === "1" || typeofTask === "2") {
+        formData.append("answer", random);
+      }
+      formData.append("question", question);
+      formData.append("min_points", minPoints.toString());
+      formData.append("vital", Number(props.vital).toString());
+    }
+    if (filesArray && filesArray.length > 0) {
+      formData.append("files_length", filesArray.length.toString());
+      for (let i = 0; i < filesArray.length; i++) {
+        formData.append(`file_${i}`, filesArray[i], filesArray[i].name);
+      }
+    } else {
+      formData.append("files_length", "1");
+      let url = `${process.env.PUBLIC_URL}/img/defaultImage.png`;
+      let file = await fetch(url)
+        .then((r) => r.blob())
+        .then(
+          (blobFile) =>
+            new File([blobFile], "defaultImage.png", { type: "image/png" })
+        );
+      formData.append("file_0", file, file.name);
+    }
     const response = await fetch(
       `https://quests.projectswhynot.site/api/v1/block/${props.currentCard.id}/task`,
       {
         method: "POST",
-        body: JSON.stringify(task),
+        body: formData,
       }
     )
       .then((response) => response.json())
       .catch((error) => console.log(error));
-    console.log(response);
     if (response.status === "OK") {
-      let newTasksList = props.tasks;
       props.task.task_num = props.tasks.length;
       let newTask = props.task;
       newTask.vital = props.vital;
       newTask.task_id = response.message.task_id;
-      if (typeofTask === 2) {
+      props.setTask(newTask)
+      props.setDeleteID(response.message.task_id)
+      if (typeofTask === "1") {
+        convertPng(
+          new QRCode({
+            content: random,
+            padding: 4,
+            width: 512,
+            height: 512,
+            color: "#000000",
+            background: "#ffffff",
+            ecl: "M",
+          }).svg(),
+          512,
+          "Answer.png"
+        );
+      }
+      if (typeofTask === "2") {
         navigator.clipboard.writeText(
-          `http://localhost:3000/setnpc/${questid}/${new_task_id}`
+          `https://quests.projectswhynot.site/setnpc/${questid}/${response.message.task_id}` // `http://localhost:3000/setnpc/${questid}/${response.message.task_id}`
         );
         alert("Ссылка-приглашение для npc скопирована в буфер-обмена!");
       }
-      props.setTasks([...props.tasks, task]);
+      props.setTasks([...props.tasks, newTask]);
+      let currentCard2 = props.currrentCard
+      console.log(currentCard2)
       props.setTaskWindowActive(false);
     }
   };
@@ -155,16 +257,14 @@ const TaskForm = (props: any) => {
   function readmultifiles(e: any) {
     let fileList: any = [];
     const files = e.currentTarget.files;
-    Object.keys(files).forEach((i) => {
+    for (let i = 0; i < e.currentTarget.files.length; i++) {
       const file = files[i];
       fileList.push(file);
-      setFiles(fileList);
-    });
+    }
+    setFiles(fileList);
   }
 
   const { questid } = useParams();
-
-  const new_task_id = "33234";
 
   return (
     <div className="TaskForm">
@@ -173,8 +273,7 @@ const TaskForm = (props: any) => {
         onSubmit={(e) => {
           e.preventDefault();
           if (props.typeOfWindow === "simple") {
-            console.log("изменение задачи");
-            console.log(typeofTask);
+            changeTask();
           } else {
             setNewTask();
           }
@@ -184,36 +283,39 @@ const TaskForm = (props: any) => {
         <select
           name="tasktype"
           id="tasktype"
+          disabled={props.typeOfWindow === "simple"}
           onChange={(e) => {
-            setTypeOfTask(Number(e.target.value));
+            setTypeOfTask(e.target.value);
           }}
           value={typeofTask}
         >
-          <option value="" selected hidden></option>
+          <option value="-1" selected hidden></option>
           <option value="0">Oтвет на вопрос</option>
           <option value="1">Дохождение до точки в реальном времени</option>
           <option value="2">Взаимодействие с героем вашего квеста</option>
         </select>
-        <h1 hidden={typeofTask !== 0}>Вопрос:</h1>
+        <h1 hidden={typeofTask !== "0"}>Вопрос:</h1>
         <input
-          hidden={typeofTask !== 0}
+          hidden={typeofTask !== "0"}
           type="text"
           name="questionVal"
           id="questionVal"
           value={question}
           onChange={(e) => {
             setQuestion(e.target.value);
+            props.setChanged(true);
           }}
         />
-        <h1 hidden={typeofTask !== 0}>Правильный ответ на вопрос:</h1>
+        <h1 hidden={typeofTask !== "0"}>Правильный ответ на вопрос:</h1>
         <input
-          hidden={typeofTask !== 0}
+          hidden={typeofTask !== "0"}
           type="text"
           name="questionAnswer"
           id="questionAnswer"
           value={answerOnQuestion}
           onChange={(e) => {
             setAnswerOnQuestion(e.target.value);
+            props.setChanged(true);
           }}
         />
         <h1 hidden={typeofTask === -1}>Описание задачи:</h1>
@@ -224,6 +326,7 @@ const TaskForm = (props: any) => {
           value={description}
           onChange={(e) => {
             setDescription(e.target.value);
+            props.setChanged(true);
           }}
         ></textarea>
         <h1 hidden={typeofTask === -1 || !props.vital}>
@@ -241,6 +344,7 @@ const TaskForm = (props: any) => {
               setMaxPoints(Number(e.target.value));
             }
             setMinPoints(Number(e.target.value));
+            props.setChanged(true);
           }}
         />
         <h1 hidden={typeofTask === -1}>Максимальное кол-во баллов:</h1>
@@ -256,6 +360,7 @@ const TaskForm = (props: any) => {
               setMinPoints(Number(e.target.value));
             }
             setMaxPoints(Number(e.target.value));
+            props.setChanged(true);
           }}
         />
         <h1 hidden={typeofTask === -1}>Время на выполнение:</h1>
@@ -271,6 +376,7 @@ const TaskForm = (props: any) => {
             if (Number(e.target.value) === 0) {
               setSeconds(30);
             }
+            props.setChanged(true);
           }}
         />
         <span hidden={typeofTask === -1}>:</span>
@@ -284,6 +390,7 @@ const TaskForm = (props: any) => {
           value={seconds}
           onChange={(e) => {
             setSeconds(Number(e.target.value));
+            props.setChanged(true);
           }}
         />
         <h1 hidden={typeofTask === -1}>Добавьте файлы, если это необходимо:</h1>
@@ -298,9 +405,10 @@ const TaskForm = (props: any) => {
           multiple
           onChange={(e) => {
             readmultifiles(e);
+            props.setChanged(true);
           }}
         />
-        {filesArray.length > 0 && filesArray[0] !== "" ? (
+        {filesArray && filesArray.length > 0 && filesArray[0] ? (
           <p>Загруженно файлов: {filesArray.length}</p>
         ) : (
           <div></div>
@@ -314,7 +422,10 @@ const TaskForm = (props: any) => {
       </button>
       <input
         hidden={typeofTask === -1}
-        disabled={typeofTask === 0 && question === ""}
+        disabled={
+          (typeofTask === "0" && (question === "" || answerOnQuestion === "")) ||
+          (props.typeOfWindow === "simple" && !props.isChanged)
+        }
         id="CreationTaskButton"
         type="submit"
         form="mainForm"

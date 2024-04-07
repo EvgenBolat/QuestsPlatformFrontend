@@ -18,8 +18,11 @@ import FinishScreen from "./FinishScreen/FinishScreen";
 import ParticipantWindow from "../Windows/ParticipantWindow/ParticipantWindow";
 import ParticipantsListWindow from "../Windows/ParticipantsListWindow/ParticipantsListWindow";
 import AddQuestWindow from "../mainPage/AddQuestWindow/AddQuestWindow";
+import QRCode from "react-qr-code";
 
 const QuestPage = () => {
+  const [start_date, setStart_date] = useState("");
+  const [end_time, setEndTime] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetch(
@@ -31,13 +34,42 @@ const QuestPage = () => {
       )
         .then((responce) => responce.json())
         .catch((error) => console.log(error));
-      console.log(data);
       if (data.status === "OK") {
         if (data.message.role === -1) {
-          console.log("создатель");
           setRole(-1);
           setBlocks(data.message.blocks_list);
           setQuestName(data.message.quest_name);
+        } else if (data.message.role === 1) {
+          setRole(1);
+          setQuestName(data.message.quest_name);
+          setStart_date(data.message.start_time);
+          setEndTime(data.message.end_time);
+          setNpcAnswer(data.message.npc_task.answer);
+        } else if (data.message.role === 0) {
+          setRole(0);
+          setQuestType(data.message.quest_type);
+          setQuestName(data.message.quest_name);
+          setStart_date(data.message.start_time);
+          setEndTime(data.message.end_time);
+          setQuestData(data.message.blocks_list);
+          if (data.message.quest_type === 1) {
+            const data2 = await fetch(
+              `https://quests.projectswhynot.site/api/v1/quests/${questid}/checkgroup`,
+              {
+                method: "POST",
+                body: JSON.stringify({ auth_token: userid }),
+              }
+            )
+              .then((responce) => responce.json())
+              .catch((error) => console.log(error));
+            if (data2.status === "OK") {
+              setInCommand(true);
+              setTeamName(data2.message.group.group_name);
+              if (data2.message.group.leader_id === data2.message.user_id) {
+                setTeamCreator(true);
+              }
+            }
+          }
         }
       }
     };
@@ -72,225 +104,114 @@ const QuestPage = () => {
 
   const [isSaveButtonActive, setSaveButtonActive] = useState(false);
 
-  const [questType, setQuestType] = useState(1);
+  const [questType, setQuestType] = useState(-1);
 
-  const CountDown = (days = 0, hours = 0, minutes = 0, seconds = 0) => {
-    const [paused, setPaused] = useState(false);
-    const [over, setOver] = useState(false);
-    const [[d, h, m, s], setTime] = useState([days, hours, minutes, seconds]);
+  const [[d, h, m, s], setTime] = useState([0, 0, 0, 0]);
+  const [paused, setPaused] = useState(false);
+  const [over, setOver] = useState(false);
 
-    const tick = () => {
-      if (paused || over) return;
-
-      if ((h === 0 && m === 0 && s === 0) || d < 0 || h < 0 || m < 0 || s < 0) {
-        setOver(true);
-        setStartQuest(true);
-      } else if (h === 0 && m === 0 && s === 0) {
-        setTime([d - 1, 23, 59, 59]);
-      } else if (m === 0 && s === 0) {
-        setTime([d, h - 1, 59, 59]);
-      } else if (s === 0) {
-        setTime([d, h, m - 1, 59]);
-      } else {
-        setTime([d, h, m, s - 1]);
+  useEffect(() => {
+    if (role === 0 || role === 1) {
+      let timeArray = start_date.split(" ")[1].split(":");
+      let dateArray = start_date.split(" ")[0].split("-");
+      let date = new Date(
+        Number(dateArray[0]),
+        Number(dateArray[1]) - 1,
+        Number(dateArray[2]),
+        Number(timeArray[0]),
+        Number(timeArray[1])
+      );
+      let currentDate = new Date();
+      let days = Math.trunc((+date - +currentDate) / (60 * 60 * 24 * 1000));
+      if (days === -0) {
+        days = 0;
       }
-    };
-
-    useEffect(() => {
-      const timerID = setInterval(() => tick(), 1000);
-      return () => clearInterval(timerID);
-    });
-
-    useEffect(() => {
-      if (days < 0 || hours < 0 || minutes < 0 || seconds < 0) {
-        setStartQuest(true);
+      let hours = Math.trunc(
+        (+date - +currentDate - days * 60 * 60 * 24 * 1000) / (60 * 60 * 1000)
+      );
+      if (hours === -0) {
+        hours = 0;
       }
-    }, [days, hours, minutes, seconds]);
+      let minutes = Math.trunc(
+        (+date -
+          +currentDate -
+          days * 60 * 60 * 24 * 1000 -
+          hours * 60 * 60 * 1000) /
+          (60 * 1000)
+      );
+      if (minutes === -0) {
+        minutes = 0;
+      }
+      let seconds = Math.trunc(
+        (+date -
+          +currentDate -
+          days * 60 * 60 * 24 * 1000 -
+          hours * 60 * 60 * 1000 -
+          minutes * 60 * 1000) /
+          1000
+      );
+      if (seconds === -0) {
+        seconds = 0;
+      }
+      console.log(start_date);
+      console.log(days, hours, minutes, seconds);
+      setTime([days, hours, minutes, seconds]);
+    }
+  }, [start_date]);
 
-    return startQuest ? (
-      <div></div>
-    ) : (
-      <div id="questStartDataCounter">
-        <div>До начала квеста осталось:</div>
-        {`${d.toString().padStart(2, "0")} д. ${h
-          .toString()
-          .padStart(2, "0")} ч. ${m.toString().padStart(2, "0")} м. ${s
-          .toString()
-          .padStart(2, "0")} с.`}
-      </div>
-    );
+  useEffect(() => {
+    const timerID = setInterval(() => tick(d, h, m, s), 1000);
+    return () => clearInterval(timerID);
+  });
+
+  const tick = (d: any, h: any, m: any, s: any) => {
+    if (paused || over) return;
+    if ((h === 0 && m === 0 && s === 0) || d < 0 || h < 0 || m < 0 || s < 0) {
+      console.log("все нулевые");
+      setOver(true);
+      setStartQuest(true);
+    } else if (h === 0 && m === 0 && s === 0) {
+      setTime([d - 1, 23, 59, 59]);
+    } else if (m === 0 && s === 0) {
+      setTime([d, h - 1, 59, 59]);
+    } else if (s === 0) {
+      setTime([d, h, m - 1, 59]);
+    } else {
+      setTime([d, h, m, s - 1]);
+    }
   };
+
+  const [npcAnswer, setNpcAnswer] = useState("");
+
+  useEffect(() => {
+    if (d < 0 || h < 0 || m < 0 || s < 0) {
+      setStartQuest(true);
+    }
+  }, [d, h, m, s]);
+
   const [questName, setQuestName] = useState("");
   const [role, setRole] = useState(-2);
   const [questData, setQuestData] = useState([
     {
-      id: 1,
+      id: "",
       block_type: 0,
-      block_name: "fdfdf",
+      block_name: "",
       block_num: 0,
+      min_tasks: 0,
       vits: 0,
-      tasks: [
+      tasks_list: [
         {
-          id: 0,
-          task_type: 2,
-          task_num: 0,
-          state: 2,
-          vital: true,
-          description: "Найдите эльфа, и получите у него горшочек с золото",
-          question: "",
-          answer: "jfdfvkkhbsfhv",
-          files: [
-            `${process.env.PUBLIC_URL}/img/document.svg`,
-            `${process.env.PUBLIC_URL}/img/camera.svg`,
-            `${process.env.PUBLIC_URL}/img/openedEye.svg`,
-          ],
-          npc_email: "Vika@hse.edu.ru",
-          min_points: 2,
-          max_points: 4,
-          task_time: 160,
-        },
-        {
-          id: 1,
+          id: "",
           task_type: 0,
-          task_num: 1,
-          state: 2,
-          vital: false,
-          description: "Ну вы придурки, если ответите неправильно",
-          question: "how old are you?",
-          answer: "14",
-          files: [],
-          npc_email: "",
-          min_points: 2,
-          max_points: 4,
-          task_time: 30,
-        },
-        {
-          id: 2,
-          task_type: 1,
-          task_num: 2,
-          state: 2,
-          files: [],
-          vital: true,
-          description: "Ура, картинОчка",
-          question: "",
-          answer: "3i4ujfhbbshdbfvcf",
-          npc_email: "",
-          min_points: 2,
-          max_points: 4,
-          task_time: 160,
-        },
-      ],
-    },
-    {
-      id: 2,
-      block_name: "Gold",
-      min_tasks: 2,
-      block_type: 1,
-      block_num: 1,
-      vits: 0,
-      tasks: [
-        {
-          id: 0,
-          task_type: 2,
           task_num: 0,
-          state: 2,
-          vital: true,
-          files: [],
-          description: "Найдите эльфа, и получите у него горшочек с золото",
-          question: "",
-          answer: "",
-          npc_email: "Vika@hse.edu.ru",
-          min_points: 2,
-          max_points: 4,
-          task_time: 160,
-        },
-        {
-          id: 1,
-          task_type: 0,
-          task_num: 1,
-          state: 2,
+          user_progress: { status: 0, points: 0 },
           vital: false,
-          files: [],
-          description: "Ну вы придурки, если ответите неправильно",
-          question: "how old are you?",
-          answer: "14",
-          correct_answer: "",
-          npc_email: "",
-          min_points: 2,
-          max_points: 4,
-          task_time: 180,
-        },
-        {
-          id: 2,
-          task_type: 1,
-          task_num: 2,
-          vital: false,
-          state: 2,
-          description: "Ура, картинОчка",
+          description: "",
           question: "",
           answer: "",
-          correct_answer: "3i4ujfhbbshdbfvcf",
-          npc_email: "",
           files: [],
-          min_points: 2,
-          max_points: 4,
-          task_time: 160,
-        },
-      ],
-    },
-    {
-      id: 3,
-      block_name: "JFDkds",
-      block_type: 0,
-      block_num: 2,
-      vits: 0,
-      tasks: [
-        {
-          id: 0,
-          task_type: 2,
-          task_num: 0,
-          state: 2,
-          vital: true,
-          files: [],
-          description: "Найдите эльфа, и получите у него горшочек с золото",
-          question: "",
-          answer: "",
-          correct_answer: "jfdfvkkhbsfhv",
-          npc_email: "Vika@hse.edu.ru",
-          min_points: 2,
-          max_points: 4,
-          task_time: 160,
-        },
-        {
-          id: 1,
-          task_type: 0,
-          task_num: 1,
-          state: 2,
-          files: [],
-          vital: false,
-          description: "Ну вы придурки, если ответите неправильно",
-          question: "how old are you?",
-          answer: "14",
-          correct_answer: "",
-          npc_email: "",
-          min_points: 2,
-          max_points: 4,
-          task_time: 180,
-        },
-        {
-          id: 2,
-          task_type: 1,
-          task_num: 2,
-          state: 2,
-          vital: true,
-          files: [],
-          description: "Ура, картинОчка",
-          question: "",
-          answer: "",
-          correct_answer: "3i4ujfhbbshdbfvcf",
-          npc_email: "",
-          min_points: 2,
-          max_points: 4,
+          min_points: 1,
+          max_points: 1,
           task_time: 30,
         },
       ],
@@ -300,12 +221,9 @@ const QuestPage = () => {
 
   const [currentCard, setCurrentCard] = useState(defaultCard);
 
-  const [tasks, setTasks] = useState([
-    
-  ]);
+  const [tasks, setTasks] = useState([]);
 
   const [isAddQuestWindowActive, setAddQuestWindowActive] = useState(false);
-
 
   const [blocks, setBlocks] = useState([]);
 
@@ -315,6 +233,25 @@ const QuestPage = () => {
 
   const [actionMenuData, setactionMenuData] = useState(null);
 
+  const changeTaskStatus = async (task_id: any, status: any, points: any) => {
+    const response = await fetch(
+      `https://quests.projectswhynot.site/api/v1/task/${task_id}/giveans`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          auth_token: userid,
+          status: status,
+          points: points,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .catch((error) => console.log(error));
+    if (response.status === "OK") {
+      console.log("статус изменён");
+    }
+  };
+
   function useQuestData() {
     return [
       [taskId, setTaskId],
@@ -323,121 +260,203 @@ const QuestPage = () => {
   }
 
   const [isQuestCompletedByAllPlayers, setQuestCompletedByAllPlayer] =
-    useState(true);
+    useState(false);
 
   const [typeOfParticipantWindow, setTypeOfParticipantWindow] = useState(0);
+  const [isAnyTaskNoCompleted, setAnyTaskNoCompleted] = useState(false);
+  const [startedAsking, setStartedAsking] = useState(false);
+
+  const [isTasksOvered, setTasksOvered] = useState(false);
+
+  const [isQuestWasPasted, setQuestWasPasted] = useState(false);
+
+  useEffect(() => {
+    let interlvalid = setInterval(() => {}, 1000000000000);
+    if (!isQuestCompletedByAllPlayers && startedAsking) {
+      interlvalid = setInterval(async () => {
+        const response = await fetch(
+          `https://quests.projectswhynot.site/api/v1/quests/${questid}/checkfinish`,
+          {
+            method: "GET",
+          }
+        )
+          .then((response) => response.json())
+          .catch((error) => console.log(error));
+        if (response.status === "OK") {
+          if (response.message === true) {
+            console.log(response.message);
+            setQuestCompletedByAllPlayer(true);
+            console.log(isQuestCompletedByAllPlayers);
+          }
+        }
+        console.log("проверка начата");
+      }, 30000);
+    }
+    if (isQuestCompletedByAllPlayers) {
+      clearInterval(interlvalid);
+    }
+  }, [startedAsking]);
 
   const [blockWindowID, setBlockWindowID] = useState(null);
-
-  const [isAnyTaskNoCompleted, setAnyTaskNoCompleted] = useState(false);
 
   const [isInCommand, setInCommand] = useState(false);
 
   const getCurrentTask = () => {
     if (startQuest) {
-      if (questType && !isInCommand) {
-        navigate(`/user/${userid}/`);
-        return;
-      }
-      for (let blockNum = 0; blockNum < questData.length; blockNum++) {
-        for (
-          let taskNum = 0;
-          taskNum < questData[blockNum].tasks.length;
-          taskNum++
-        ) {
-          if (questData[blockNum].tasks[taskNum].state === 1) {
-            return (
-              <div className="taskParticipating">
-                <TaskView
-                  blockId={questData[blockNum].id}
-                  block_num={blockNum}
-                  viewMode={false}
-                  questData={questData}
-                  data={questData[blockNum].tasks[taskNum]}
-                  setQuestData={setQuestData}
-                  setAnyTaskNoCompleted={setAnyTaskNoCompleted}
-                />
-              </div>
-            );
-          }
+      if (role === 1) {
+        return (
+          <div id="npcQRCode">
+            <QRCode value={npcAnswer} />
+          </div>
+        );
+      } else if (role === 0) {
+        if (questType && !isInCommand) {
+          navigate(`/user/${userid}/`);
+          return;
         }
-      }
-      for (let blockNum = 0; blockNum < questData.length; blockNum++) {
-        if (questData[blockNum].block_type === 1) {
-          let countOfCompletedVital = 0;
-          let countOfVital = 0;
-          let countOfCompletedSimple = 0;
-          questData[blockNum].tasks.forEach(function (task: any) {
-            if (task.vital) {
-              countOfVital += 1;
-              if (task.state === 2) {
-                countOfCompletedVital += 1;
-              }
-            } else if (task.state === 2) {
-              countOfCompletedSimple += 1;
-            }
-          });
-          if (
-            countOfCompletedVital !== countOfVital ||
-            countOfCompletedSimple !== questData[blockNum].min_tasks
-          ) {
-            return (
-              <div className="taskParticipating">
-                <BlockView
-                  setData={setQuestData}
-                  questData={questData}
-                  viewMode={false}
-                  length={questData[blockNum].tasks.length}
-                  data={questData[blockNum]}
-                  key={questData[blockNum].id}
-                  blockId={questData[blockNum].id}
-                />
-              </div>
-            );
-          }
-        } else {
+        let timeArray = end_time.split(" ")[1].split(":");
+        let dateArray = end_time.split(" ")[0].split("-");
+        let date = new Date(
+          Number(dateArray[0]),
+          Number(dateArray[1]) - 1,
+          Number(dateArray[2]),
+          Number(timeArray[0]),
+          Number(timeArray[1])
+        );
+        let currentDate = new Date();
+        if (currentDate > date) {
+          console.log("Время финиша наступило");
+          let url = `/user/${userid}/quest/${questid}/total`;
+          navigate(url);
+          return <div></div>;
+        }
+        for (let blockNum = 0; blockNum < questData.length; blockNum++) {
           for (
             let taskNum = 0;
-            taskNum < questData[blockNum].tasks.length;
+            taskNum < questData[blockNum].tasks_list.length;
             taskNum++
           ) {
             if (
-              questData[blockNum].tasks[taskNum].state === 0 &&
-              questData[blockNum].block_type === 0
+              questData[blockNum].tasks_list[taskNum].user_progress.status === 1
             ) {
-              questData[blockNum].tasks[taskNum].state = 1;
-              setQuestData([...questData]);
+              console.log("отображаю задание");
+              return (
+                <div className="taskParticipating">
+                  <TaskView
+                    changeTaskStatus={changeTaskStatus}
+                    blockId={questData[blockNum].id}
+                    block_num={blockNum}
+                    viewMode={false}
+                    questData={questData}
+                    data={questData[blockNum].tasks_list[taskNum]}
+                    setQuestData={setQuestData}
+                    setAnyTaskNoCompleted={setAnyTaskNoCompleted}
+                    setQuestWasPasted={setQuestWasPasted}
+                  />
+                </div>
+              );
+            }
+          }
+        }
+        for (let blockNum = 0; blockNum < questData.length; blockNum++) {
+          if (questData[blockNum].block_type === 1) {
+            let countOfCompletedVital = 0;
+            let countOfVital = 0;
+            let countOfCompletedSimple = 0;
+            questData[blockNum].tasks_list.forEach(function (task: any) {
+              if (task.vital) {
+                countOfVital += 1;
+                if (task.user_progress.status === 2) {
+                  countOfCompletedVital += 1;
+                }
+              } else if (task.user_progress.status === 2) {
+                countOfCompletedSimple += 1;
+              }
+            });
+            if (
+              countOfCompletedVital !== countOfVital
+              // || countOfCompletedSimple !== questData[blockNum].min_tasks
+            ) {
+              return (
+                <div className="taskParticipating">
+                  <BlockView
+                    setData={setQuestData}
+                    questData={questData}
+                    changeTaskStatus={changeTaskStatus}
+                    remaining={
+                      countOfCompletedSimple - questData[blockNum].min_tasks > 0
+                        ? countOfCompletedSimple - questData[blockNum].min_tasks
+                        : 0
+                    }
+                    viewMode={false}
+                    length={questData[blockNum].tasks_list.length}
+                    data={questData[blockNum]}
+                    key={questData[blockNum].id}
+                    blockId={questData[blockNum].id}
+                    setQuestWasPasted={setQuestWasPasted}
+                  />
+                </div>
+              );
+            }
+          } else {
+            for (
+              let taskNum = 0;
+              taskNum < questData[blockNum].tasks_list.length;
+              taskNum++
+            ) {
+              if (
+                questData[blockNum].tasks_list[taskNum].user_progress.status ===
+                  0 &&
+                questData[blockNum].block_type === 0
+              ) {
+                changeTaskStatus(
+                  questData[blockNum].tasks_list[taskNum].id,
+                  1,
+                  0
+                );
+                questData[blockNum].tasks_list[
+                  taskNum
+                ].user_progress.status = 1;
+                setQuestData([...questData]);
+                return <div></div>;
+              }
+            }
+          }
+        }
+        if (!isQuestWasPasted) {
+          console.log("Иду на экран финиша");
+          return (
+            <FinishScreen
+              setQuestWasPasted={setQuestWasPasted}
+              setStartedAsking={setStartedAsking}
+              setAnyTaskNoCompleted={setAnyTaskNoCompleted}
+              setTasksOvered={setTasksOvered}
+            />
+          );
+        } else {
+          if (!isQuestCompletedByAllPlayers) {
+            console.log("Ожидаю других игроков");
+            return (
+              <div id="waitingBody">
+                Ожидайте завершение квеста другими игроками
+              </div>
+            );
+          } else {
+            if (questType === 1 && !isInCommand) {
+              navigate(`/user/${userid}/`);
+              return <div></div>;
+            } else {
+              let url = `/user/${userid}/quest/${questid}/total`;
+              navigate(url);
               return <div></div>;
             }
           }
         }
-      }
-      if (isAnyTaskNoCompleted) {
-        return <FinishScreen setAnyTaskNoCompleted={setAnyTaskNoCompleted} />;
       } else {
-        if (!isQuestCompletedByAllPlayers) {
-          return (
-            <div id="waitingBody">
-              Ожидайте завершение квеста другими игроками
-            </div>
-          );
-        } else {
-          if (questType === 1 && !isInCommand) {
-            navigate(`/user/${userid}/`);
-            return <div></div>;
-          } else {
-            let url = `/user/${userid}/quest/${questid}/total`;
-            navigate(url);
-            return <div></div>;
-          }
-        }
+        return <div></div>;
       }
-    } else {
-      return <div></div>;
     }
   };
-
-  const start_date = "30.03.2024 20:43";
 
   const [deleteId, setDeleteID] = useState("");
 
@@ -446,40 +465,8 @@ const QuestPage = () => {
 
   const [isTeamCreator, setTeamCreator] = useState(false);
   const [teamName, setTeamName] = useState("");
-  if (role === 0) {
-    let timeArray = start_date.split(" ")[1].split(":");
-    let dateArray = start_date.split(" ")[0].split(".");
-    let date = new Date(
-      Number(dateArray[2]),
-      Number(dateArray[1]) - 1,
-      Number(dateArray[0]),
-      Number(timeArray[0]),
-      Number(timeArray[1])
-    );
-    let currentDate = new Date();
-    let days = Math.floor((+date - +currentDate) / (60 * 60 * 24 * 1000));
-    let hours = Math.floor(
-      Math.floor(+date - +currentDate - days * 60 * 60 * 24 * 1000) /
-        (60 * 60 * 1000)
-    );
-    let minutes = Math.floor(
-      Math.floor(
-        +date -
-          +currentDate -
-          days * 60 * 60 * 24 * 1000 -
-          hours * 60 * 60 * 1000
-      ) /
-        (60 * 1000)
-    );
-    let seconds = Math.floor(
-      Math.floor(
-        +date -
-          +currentDate -
-          days * 60 * 60 * 24 * 1000 -
-          hours * 60 * 60 * 1000 -
-          minutes * 60 * 1000
-      ) / 1000
-    );
+
+  if (role === 0 || role === 1) {
     return (
       <div>
         {isParticipantsListWindowActive ? (
@@ -549,9 +536,20 @@ const QuestPage = () => {
               <div></div>
             )}
             <div hidden={startQuest} id="CounterQuestPage">
-              {CountDown(days, hours, minutes, seconds)}
+              {startQuest ? (
+                <div></div>
+              ) : (
+                <div id="questStartDataCounter">
+                  <div>До начала квеста осталось:</div>
+                  {`${d.toString().padStart(2, "0")} д. ${h
+                    .toString()
+                    .padStart(2, "0")} ч. ${m
+                    .toString()
+                    .padStart(2, "0")} м. ${s.toString().padStart(2, "0")} с.`}
+                </div>
+              )}
             </div>
-            <div id="comandBlock">
+            <div id="comandBlock" hidden={role === 1}>
               <div
                 id="NotParticipantDescription"
                 hidden={questType === 0 || isInCommand}
@@ -609,9 +607,22 @@ const QuestPage = () => {
                 </button>
                 {!isTeamCreator && isInCommand ? (
                   <button
-                    onClick={(e) => {
-                      setInCommand(false);
-                      setTeamName("");
+                    onClick={async (e) => {
+                      const response = await fetch(
+                        `https://quests.projectswhynot.site/api/v1/quests/${questid}/quitgroup`,
+                        {
+                          method: "DELETE",
+                          body: JSON.stringify({
+                            auth_token: userid,
+                          }),
+                        }
+                      )
+                        .then((response) => response.json())
+                        .catch((error) => console.log(error));
+                      if (response.status === "OK") {
+                        setInCommand(false);
+                        setTeamName("");
+                      }
                     }}
                   >
                     Выйти
@@ -627,6 +638,8 @@ const QuestPage = () => {
       </div>
     );
   } else if (role === -1) {
+    console.log(blocks);
+    console.log(tasks);
     return (
       <div>
         {isClarifyingWindowActive ? (
@@ -634,6 +647,7 @@ const QuestPage = () => {
             data={ClarifuyingWindowData}
             setIsClarifyingWindowActive={setIsClarifyingWindowActive}
             setBlockWindowActive={setBlockWindowActive}
+            setTasks={setTasks}
           />
         ) : (
           <div></div>
@@ -669,6 +683,8 @@ const QuestPage = () => {
             setTaskWindowActive={setCreationTaskWindowActive}
             useQuestData={useQuestData}
             currentCard={currentCard}
+            setDeleteID={setDeleteID}
+            setCurrentCard={setCurrentCard}
             actionMenuData={actionMenuData}
             tasks={tasks}
             setTasks={setTasks}
@@ -683,6 +699,7 @@ const QuestPage = () => {
             typeOfWindow="simple"
             deleteId={deleteId}
             currentCard={currentCard}
+            setCurrentCard={setCurrentCard}
             useQuestData={useQuestData}
             actionMenuData={actionMenuData}
             tasks={tasks}
