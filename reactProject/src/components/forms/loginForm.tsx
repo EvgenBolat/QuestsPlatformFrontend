@@ -20,7 +20,7 @@ const useValtidation = (value: any, validations: any) => {
             ? setEmailError(false)
             : setEmailError(true);
           if (re) {
-            if (String(value).toLowerCase().split("@")[1] !== "edu.hse.ru") {
+            if (String(value).toLowerCase().split("@")[1] !== "edu.hse.ru" && String(value).toLowerCase().split("@")[1] !== "hse.ru") {
               setEmailError(true);
             } else {
               setEmailError(false);
