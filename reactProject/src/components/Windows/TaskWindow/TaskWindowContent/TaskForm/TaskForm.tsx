@@ -101,9 +101,7 @@ const TaskForm = (props: any) => {
   const [question, setQuestion] = useState(props.task.question);
   const [answerOnQuestion, setAnswerOnQuestion] = useState(props.task.answer);
 
-  const { userid } = useParams();
-
-  console.log(props.tasks.findIndex( (el: any) => el.id === props.task.id));
+  const userid = localStorage.getItem("id")
 
   const changeTask = async () => {
     let task = {
@@ -163,7 +161,6 @@ const TaskForm = (props: any) => {
       formData.append("task_time", (minutes * 60 + seconds).toString());
       formData.append("description", description);
       formData.append("max_points", maxPoints.toString());
-      console.log(typeofTask)
       if (typeofTask === "0") {
         formData.append("answer", answerOnQuestion);
       } else if (typeofTask === "1" || typeofTask === "2") {
@@ -202,7 +199,7 @@ const TaskForm = (props: any) => {
       props.task.task_num = props.tasks.length;
       let newTask = props.task;
       newTask.vital = props.vital;
-      newTask.task_id = response.message.task_id;
+      newTask.id = response.message.task_id;
       props.setTask(newTask)
       props.setDeleteID(response.message.task_id)
       if (typeofTask === "1") {
@@ -228,7 +225,6 @@ const TaskForm = (props: any) => {
       }
       props.setTasks([...props.tasks, newTask]);
       let currentCard2 = props.currrentCard
-      console.log(currentCard2)
       props.setTaskWindowActive(false);
     }
   };

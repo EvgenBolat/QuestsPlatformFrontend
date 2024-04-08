@@ -2,7 +2,6 @@ import "./AddQuestWindow.css";
 import AddQuestWindowContent from "./AddQuestWindowContent/AddQuestWindowContent";
 
 const AddQuestWindow = (props: any) => {
-  console.log(props.typeOfWindow)
   return (
     <div className="AddQuestWindow">
       <AddQuestWindowContent

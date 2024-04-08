@@ -3,7 +3,8 @@ import "./SaveBlockButton.css";
 import { useParams } from "react-router-dom";
 
 const SaveBlockButton = (props: any) => {
-  const {userid, questid} = useParams()
+  const { questid} = useParams()
+  const userid = localStorage.getItem("id")
   const fetchBlocks = async () =>{
     const response = await fetch(
       `https://quests.projectswhynot.site/api/v1/quests/${questid}/blocks`,
@@ -14,12 +15,11 @@ const SaveBlockButton = (props: any) => {
           blocks_list: props.blocks
         }),
       })
-      console.log(response)
   }
   return (
     <div
       className="SaveBlockButton"
-      style={props.isSaveButtonActive ? { left: -80 } : {}}
+      style={props.isSaveButtonActive ? { left: -70 } : {}}
       onClick={(e) => {
         fetchBlocks()
         props.setSaveButtonActive(false);

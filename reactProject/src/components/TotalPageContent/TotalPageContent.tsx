@@ -16,7 +16,8 @@ const TotapPageContent = (props: any) => {
     useState(false);
   const [ClarifuyingWindowData, setClarifyingWindowData] = useState(null);
   const navigate = useNavigate();
-  const {userid,questid} = useParams()
+  const {questid} = useParams()
+  const userid = localStorage.getItem("id")
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(`https://quests.projectswhynot.site/api/v1/quests/${questid}/results`, {
@@ -26,10 +27,8 @@ const TotapPageContent = (props: any) => {
         .then((response) => response.json())
         .catch((error) => console.log(error));
         if(response.status === "OK"){
-          console.log(response.message)
           setResult(response.message)
         }
-        console.log(response.message)
     };
     fetchData()
   },[]);
@@ -59,7 +58,7 @@ const TotapPageContent = (props: any) => {
         <button
           className="exitToQuestButton"
           onClick={(e) => {
-            navigate("/user/" + userid);
+            navigate("/user");
           }}
         >
           <img

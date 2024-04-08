@@ -52,7 +52,6 @@ const TaskWindowHeader = (props: any) => {
   };
 
   useEffect(() => {
-    console.log(props.vital)
     setclassName(props.vital ? "Flagtrue": "Flagfalse")
   })
 

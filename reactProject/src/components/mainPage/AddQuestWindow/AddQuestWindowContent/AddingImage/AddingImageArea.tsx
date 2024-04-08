@@ -32,7 +32,6 @@ const AddingImageArea = (props: any) => {
       return;
     }
     let file = e.dataTransfer.files[0];
-    console.log(file.type);
     if (file.type === "image/jpeg" || file.type === "image/png") {
       changeSrc(file);
       props.setImageFile(file);

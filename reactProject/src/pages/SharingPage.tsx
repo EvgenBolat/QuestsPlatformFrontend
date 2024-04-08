@@ -25,7 +25,7 @@ const SharingPage = () => {
       console.log("переход")
       localStorage.removeItem("questIdParticipation");
       navigate(
-        `/user/${localStorage.getItem("id")}/quest/${
+        `/user/quest/${
           location.pathname.split("/")[2]
         }`,
         {

@@ -76,7 +76,6 @@ const QuestPage = () => {
     fetchData();
   }, []);
   const location = useLocation();
-  const navigation = useNavigate();
 
   const [isClarifyingWindowActive, setIsClarifyingWindowActive] =
     useState(false);
@@ -153,8 +152,6 @@ const QuestPage = () => {
       if (seconds === -0) {
         seconds = 0;
       }
-      console.log(start_date);
-      console.log(days, hours, minutes, seconds);
       setTime([days, hours, minutes, seconds]);
     }
   }, [start_date]);
@@ -167,7 +164,6 @@ const QuestPage = () => {
   const tick = (d: any, h: any, m: any, s: any) => {
     if (paused || over) return;
     if ((h === 0 && m === 0 && s === 0) || d < 0 || h < 0 || m < 0 || s < 0) {
-      console.log("все нулевые");
       setOver(true);
       setStartQuest(true);
     } else if (h === 0 && m === 0 && s === 0) {
@@ -284,12 +280,9 @@ const QuestPage = () => {
           .catch((error) => console.log(error));
         if (response.status === "OK") {
           if (response.message === true) {
-            console.log(response.message);
             setQuestCompletedByAllPlayer(true);
-            console.log(isQuestCompletedByAllPlayers);
           }
         }
-        console.log("проверка начата");
       }, 30000);
     }
     if (isQuestCompletedByAllPlayers) {
@@ -311,7 +304,7 @@ const QuestPage = () => {
         );
       } else if (role === 0) {
         if (questType && !isInCommand) {
-          navigate(`/user/${userid}/`);
+          navigate(`/user`);
           return;
         }
         let timeArray = end_time.split(" ")[1].split(":");
@@ -325,8 +318,7 @@ const QuestPage = () => {
         );
         let currentDate = new Date();
         if (currentDate > date) {
-          console.log("Время финиша наступило");
-          let url = `/user/${userid}/quest/${questid}/total`;
+          let url = `/user/quest/${questid}/total`;
           navigate(url);
           return <div></div>;
         }
@@ -339,7 +331,6 @@ const QuestPage = () => {
             if (
               questData[blockNum].tasks_list[taskNum].user_progress.status === 1
             ) {
-              console.log("отображаю задание");
               return (
                 <div className="taskParticipating">
                   <TaskView
@@ -424,7 +415,6 @@ const QuestPage = () => {
           }
         }
         if (!isQuestWasPasted) {
-          console.log("Иду на экран финиша");
           return (
             <FinishScreen
               setQuestWasPasted={setQuestWasPasted}
@@ -435,7 +425,6 @@ const QuestPage = () => {
           );
         } else {
           if (!isQuestCompletedByAllPlayers) {
-            console.log("Ожидаю других игроков");
             return (
               <div id="waitingBody">
                 Ожидайте завершение квеста другими игроками
@@ -443,10 +432,10 @@ const QuestPage = () => {
             );
           } else {
             if (questType === 1 && !isInCommand) {
-              navigate(`/user/${userid}/`);
+              navigate(`/user`);
               return <div></div>;
             } else {
-              let url = `/user/${userid}/quest/${questid}/total`;
+              let url = `/user/quest/${questid}/total`;
               navigate(url);
               return <div></div>;
             }
@@ -460,7 +449,8 @@ const QuestPage = () => {
 
   const [deleteId, setDeleteID] = useState("");
 
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
   const navigate = useNavigate();
 
   const [isTeamCreator, setTeamCreator] = useState(false);
@@ -638,8 +628,6 @@ const QuestPage = () => {
       </div>
     );
   } else if (role === -1) {
-    console.log(blocks);
-    console.log(tasks);
     return (
       <div>
         {isClarifyingWindowActive ? (

@@ -3,7 +3,8 @@ import "./ParticipantsListWindowContent.css";
 import { useParams } from "react-router-dom";
 
 const ParticipantsListWindowContent = (props: any) => {
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
   useEffect(() => {
     if (!props.AsParticipants) {
       const fetchData = async () => {
@@ -17,7 +18,6 @@ const ParticipantsListWindowContent = (props: any) => {
           .then((response) => response.json())
           .catch((error) => console.log(error));
         if (response.status === "OK") {
-          console.log(response.message.participants);
           setData(response.message.participants);
         }
       };
@@ -56,7 +56,6 @@ const ParticipantsListWindowContent = (props: any) => {
   const [blockData, setBlockData] = useState(buildParticipants());
 
   function buildParticipants() {
-    console.log(data);
     let counter = 0;
     let newData =
       data.length && data.length > 0 ? (
@@ -144,7 +143,6 @@ const ParticipantsListWindowContent = (props: any) => {
       ) : (
         <div></div>
       );
-    console.log(newData);
     return newData;
   }
 

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import useAuth from "../../../../hooks/useAuth";
 
 const FirstProfileBlock = () => {
-  const { userid } = useParams();
+  const userid = localStorage.getItem("id")
   const { setAuth } = useAuth();
 
   const logout = async () => {

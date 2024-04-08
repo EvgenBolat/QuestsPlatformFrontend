@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 
 import "./taskView.css";
-import { useParams } from "react-router-dom";
 const TaskView = (props: any) => {
   const [isQrCodeScanningEnabled, setQrCodeScanningEnabled] = useState(false);
   const [asnwer, setAnswer] = useState("");
@@ -56,9 +55,7 @@ const TaskView = (props: any) => {
           setTaskPassed(true);
         }
         let questData = props.questData;
-        console.log(props.viewMode);
         if (props.viewMode) {
-          console.log(props.data);
           questData.tasks_list[props.data.task_num].user_progress.status = 2;
         } else {
           questData[props.block_num].tasks_list[
@@ -116,7 +113,6 @@ const TaskView = (props: any) => {
     };
 
     const qrCodeSucess = (decodedText: any) => {
-      console.log(decodedText);
       setAnswer(decodedText);
       setQrCodeScanningEnabled(false);
     };
@@ -341,8 +337,6 @@ const TaskView = (props: any) => {
             } else if (props.data.user_progress.status === 1) {
               setAnswerButtonClicked(true);
               if (props.viewMode === false) {
-                console.log(asnwer);
-                console.log(props.data.answer);
                 if (asnwer === props.data.answer) {
                   let questData = props.questData;
                   questData[props.block_num].tasks_list[
@@ -392,10 +386,6 @@ const TaskView = (props: any) => {
                 }
               } else {
                 let questData = props.questData;
-                console.log(props.block_num);
-                // console.log(
-                //   `Таска: ${questData.tasks_list[props.data.task_num]}`
-                // );
                 questData.tasks_list[
                   props.data.task_num
                 ].user_progress.status = 2;

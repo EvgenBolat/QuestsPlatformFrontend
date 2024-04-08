@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const Blocks = (props: any) => {
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
 
   function dragStartHandler(e: any, taskBlock: any) {
     props.setCurrentCard(taskBlock);
@@ -53,7 +54,6 @@ const Blocks = (props: any) => {
   function dropHandler(e: any, TasksBlock: any) {
     e.preventDefault();
     props.setSaveButtonActive(true);
-    console.log(props.currentCard.id);
     if (props.currentCard.id === -1 || props.currentCard.id === -2) {
       fetchData(TasksBlock, props.currentCard);
     } else {
@@ -76,9 +76,7 @@ const Blocks = (props: any) => {
   };
 
   const BuildBlocks = () => {
-    console.log(props.blocks)
     if (props.blocks.length !== 0) {
-      console.log(props.blocks);
       let array = props.blocks.sort(sortCard).map((el: any) => {
         return (
           <div className="Element" key={el.task_num}>

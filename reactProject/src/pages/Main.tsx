@@ -6,24 +6,7 @@ const Main = () => {
     const [checkedId, setCheckedId] = useState(false);
     const location = useLocation().pathname.split("/");
     const navigate = useNavigate();
-    useEffect(() => {
-      if (
-        localStorage.getItem("id") &&
-        localStorage.getItem("id") !== null &&
-        localStorage.getItem("id") !== "" &&
-        userid !== localStorage.getItem("id")
-      ) {
-        let array = location;
-        let id = localStorage.getItem("id");
-        let index = location.indexOf("user");
-        if (index !== -1 && id !== null) {
-          array.splice(index + 1, 1, id);
-          let stringURL = array.join("/");
-          navigate(stringURL, { replace: true });
-        }
-      }
-    }, [checkedId]);
-    const { userid } = useParams()
+    const userid = localStorage.getItem("id")
     return (
         <MainPage userid={userid}/>
     )

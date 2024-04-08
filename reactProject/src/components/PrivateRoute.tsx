@@ -13,33 +13,16 @@ import NpcConnectPage from "../pages/NpcConnectPage";
 // Определяем функциональный компонент PrivateRoute
 export const PrivateRoute = (props: any) => {
   const [checkedId, setCheckedId] = useState(false);
-  const {userid} = useParams()
+  const userid = localStorage.getItem("id")
   const location = useLocation().pathname.split("/");
   const navigate = useNavigate();
-  useEffect(() => {
-    if (
-      localStorage.getItem("id") &&
-      localStorage.getItem("id") !== null &&
-      localStorage.getItem("id") !== "" &&
-      userid !== localStorage.getItem("id")
-    ) {
-      let array = location;
-      let id = localStorage.getItem("id");
-      let index = location.indexOf("user");
-      if (index !== -1 && id !== null) {
-        array.splice(index + 1, 1, id);
-        let stringURL = array.join("/");
-        navigate(stringURL, { replace: true });
-      }
-    }
-  }, [checkedId]);
   const isAuthenticated = localStorage.getItem("auth") === "true";
   return isAuthenticated === true ? (
     <Routes>
-      <Route path="/user/:userid" element={<Main />} />
+      <Route path="/user" element={<Main />} />
       <Route path="/quest/:questid" element={<SharingPage />} />
       <Route path="/setnpc/:questid/:taskid" element={<NpcConnectPage />} />
-      <Route path="/user/:userid">
+      <Route path="/user">
         <Route path="quest/:questid" element={<Quest />} />
 
         <Route path="quest/:questid">
@@ -50,7 +33,7 @@ export const PrivateRoute = (props: any) => {
         <Route path="profile" element={<Profile />} />
       </Route>
       <Route path="/logout" element={<Logout />} />
-      <Route path="*" element={<Navigate to="/user/:userid" replace />} />
+      <Route path="*" element={<Navigate to="/user" replace />} />
     </Routes>
   ) : (
     <Navigate to="/login" state={{}} />

@@ -2,7 +2,6 @@ import QuestCard from "../QuestCard/QuestCard";
 import "./QuestsList.css";
 
 const QuestsList = (props: any) => {
-  console.log(props.questList.created_quests.length)
   return (
     <div>
       {props.questList.created_quests && props.questList.created_quests.length > 0 ? (

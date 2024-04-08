@@ -6,7 +6,8 @@ import ProfileWindow from "./Header/ProFileWindow/ProFileWindow";
 import { useParams } from "react-router-dom";
 
 const MainPage = (props: any) => {
-  const { userid } = useParams();
+  const userid = localStorage.getItem("id");
+  const [isUpdated, setUpdated] = useState(false);
   const [isAddQuestWindowActive, setAddQuestWindowActive] = useState(false);
   const [isProfileWindowActive, setProfileWindowActive] = useState(false);
   const [questList, setQuestList] = useState({
@@ -14,19 +15,25 @@ const MainPage = (props: any) => {
     participated_quest: [],
   });
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch("https://quests.projectswhynot.site/api/v1/quests", {
-        method: "POST",
-        body: JSON.stringify({ auth_token: userid }),
-      })
-        .then((response) => response.json())
-        .catch((error) => console.log(error));
-        if(response.status === "OK"){
-          setQuestList(response.message)
+    if (!isUpdated) {
+      const fetchData = async () => {
+        const response = await fetch(
+          "https://quests.projectswhynot.site/api/v1/quests",
+          {
+            method: "POST",
+            body: JSON.stringify({ auth_token: userid }),
+          }
+        )
+          .then((response) => response.json())
+          .catch((error) => console.log(error));
+        if (response.status === "OK") {
+          setQuestList(response.message);
         }
-    };
-    fetchData();
-  }, []);
+      };
+      fetchData();
+      setUpdated(true)
+    }
+  }, [isUpdated]);
   return (
     <div>
       {isAddQuestWindowActive ? (

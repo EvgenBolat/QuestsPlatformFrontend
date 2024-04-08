@@ -3,7 +3,7 @@ import "./BlockNameForm.css";
 import { useParams } from "react-router-dom";
 
 const BlockNameForm = (props: any) => {
-  const { userid } = useParams();
+  const userid = localStorage.getItem("id")
   const useValtidation = (value: any, validations: any) => {
     const [isEmpty, setEmpty] = useState(true);
     const [inputValid, setInputValid] = useState(false);

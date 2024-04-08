@@ -6,7 +6,8 @@ const ParticipantWindowContent = (props: any) => {
   const [oldname, setOldName] = useState(props.teamName);
   const [name, setName] = useState(props.teamName);
   const [incorrectTeamNameError, setIncorrectTeamNameError] = useState(false);
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
 
   const [alreadyExistTeamNameError, setalreadyExistTeamNameError] =
     useState(false);
@@ -15,7 +16,6 @@ const ParticipantWindowContent = (props: any) => {
   const [clicked, setClicked] = useState(false);
   if (props.typeOfParticipantWindow === 0) {
     className += " CreateTeamButton";
-    console.log(className);
   }
   return (
     <div id="ParticipantWindowContent">

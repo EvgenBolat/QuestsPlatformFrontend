@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./mainHeader.css";
 
 const MainHeader = (props:any) => {
-  const {userid} = useParams()
+  const userid = localStorage.getItem("id")
   const navigate = useNavigate()
   return (
     <div className="header">

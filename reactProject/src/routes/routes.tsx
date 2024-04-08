@@ -15,27 +15,10 @@ import Policy from "../pages/Policy";
 export const useRoutes = () => {
   const [checkedId, setCheckedId] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    if (
-      localStorage.getItem("id") &&
-      localStorage.getItem("id") !== null &&
-      localStorage.getItem("id") !== "" &&
-      userid !== localStorage.getItem("id")
-    ) {
-      let array = location;
-      let id = localStorage.getItem("id");
-      let index = location.indexOf("user");
-      if (index !== -1 && id !== null) {
-        array.splice(index + 1, 1, id);
-        let stringURL = array.join("/");
-        navigate(stringURL, { replace: true });
-      }
-    }
-  }, [checkedId]);
 
   const isAuthenticated = localStorage.getItem("auth") === "true";
   const location = useLocation().pathname.split("/");
-  const { userid } = useParams();
+  const userid = localStorage.getItem("id");
   return isAuthenticated === false ? (
     <Routes>
       <Route path="/login" element={<Login />} />

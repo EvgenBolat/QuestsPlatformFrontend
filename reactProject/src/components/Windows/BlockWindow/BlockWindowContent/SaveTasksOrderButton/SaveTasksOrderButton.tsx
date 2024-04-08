@@ -3,17 +3,11 @@ import "./SaveTasksOrderButton.css";
 import { useParams } from "react-router-dom";
 
 const SaveTasksOrderButton = (props: any) => {
-  const { userid } = useParams();
+  const userid = localStorage.getItem("id")
   return (
     <div
       className="SaveTasksOrderButton"
       onClick={(e) => {
-        console.log(
-          JSON.stringify({
-            auth_token: userid,
-            tasks_list: props.tasks,
-          })
-        );
         const changeTasksOrder = async () => {
           const response = await fetch(
             `https://quests.projectswhynot.site/api/v1/block/${props.blockWindowID}/tasks`,

@@ -8,7 +8,8 @@ const AddQuestWindowContent = (props: any) => {
   const [filepath, setFilePath] = useState("");
   const navigate = useNavigate();
   let startDate = new Date();
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
   const [minStartDate] = useState(new Date(startDate));
   let endDate = new Date(startDate);
   endDate.setMinutes(endDate.getMinutes() + 5);
@@ -231,7 +232,6 @@ const AddQuestWindowContent = (props: any) => {
                 formData.append("quest_type", `${typeOfQuest}`);
                 formData.append("start_time", start_date + " " + start_time);
                 formData.append("end_time", end_date + " " + end_time);
-                console.log(formData);
               }
               if (imageFile) {
                 formData.append("image", imageFile, imageFile?.name);
@@ -264,7 +264,6 @@ const AddQuestWindowContent = (props: any) => {
                 formData.append("short", description);
                 formData.append("start_time", start_date + " " + start_time);
                 formData.append("end_time", end_date + " " + end_time);
-                console.log(formData);
                 setHaveChanges(false);
                 const sendChanges = await fetch(
                   `https://quests.projectswhynot.site/api/v1/quests/${questid}`,

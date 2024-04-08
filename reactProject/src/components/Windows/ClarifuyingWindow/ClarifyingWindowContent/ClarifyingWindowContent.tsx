@@ -2,7 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./CLarifyingWindowContent.css";
 
 const ClarifyingWindowContent = (props: any) => {
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
   const DeleteQuest = async () => {
     const response = await fetch(
       `https://quests.projectswhynot.site/api/v1/quests/${questid}/delete`,
@@ -15,7 +16,7 @@ const ClarifyingWindowContent = (props: any) => {
       .catch((error) => console.log(error));
     if (response.status === "OK") {
       props.setIsClarifyingWindowActive(false);
-      navigate("/user/" + userid);
+      navigate("/user");
       window.location.reload();
     }
   };
@@ -30,7 +31,6 @@ const ClarifyingWindowContent = (props: any) => {
       .then((response) => response.json())
       .catch((error) => console.log(error));
     if (response.status === "OK") {
-      console.log("ok");
       props.setTasks([])
     }
   };
@@ -53,7 +53,6 @@ const ClarifyingWindowContent = (props: any) => {
               .catch((error) => console.log(error));
             if (response.status === "OK") {
               let blocks = [...props.data.blocks];
-              console.log(props.data.current)
               blocks.push({
                 id: response.message.block_id,
                 order: props.data.blocks.length,
@@ -81,7 +80,7 @@ const ClarifyingWindowContent = (props: any) => {
               .catch((error) => console.log(error));
             if (response.status === "OK") {
               props.setIsClarifyingWindowActive(false);
-              navigate("user/");
+              navigate("/user");
             }
           };
           fetchData();
@@ -95,13 +94,11 @@ const ClarifyingWindowContent = (props: any) => {
           for (let i = props.data.current.order; i < blocks.length; i++) {
             blocks[i].order = i;
           }
-          console.log(blocks);
           props.data.setBlocks(blocks);
           props.setIsClarifyingWindowActive(false);
           props.setBlockWindowActive(false);
         }
       : () => {
-          console.log("Удаление квеста: " + questid + ", " + userid);
           DeleteQuest();
         };
 

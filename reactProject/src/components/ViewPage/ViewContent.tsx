@@ -10,7 +10,8 @@ import ViewList from "./ViewList/ViewList";
 import AddQuestWindow from "../mainPage/AddQuestWindow/AddQuestWindow";
 
 const ViewContent = (props: any) => {
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
   const navigate = useNavigate();
   const location = useLocation();
   const [isActionMenuOpen, setActionMenuOpen] = useState(false);
@@ -46,7 +47,6 @@ const ViewContent = (props: any) => {
       )
         .then((responce) => responce.json())
         .catch((error) => console.log(error));
-      console.log(data);
       if (data.status === "OK") {
         setDataFromServer(data.message.blocks_list);
         set_quest_name(data.message.quest_name)

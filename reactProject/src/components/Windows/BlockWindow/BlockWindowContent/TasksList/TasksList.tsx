@@ -4,8 +4,8 @@ import ActionMenu from "../../../../genericClasses/ActionMenu/ActionMenu";
 import { useParams } from "react-router-dom";
 
 const TasksList = (props: any) => {
-  const { userid, questid } = useParams();
-  console.log(props.tasks)
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
 
   useEffect(() => {
     fetchTasks();
@@ -23,7 +23,6 @@ const TasksList = (props: any) => {
       .catch((error) => console.log(error));
     if (response.status === "OK") {
       props.changetasks(response.message.tasks_list);
-      console.log(response.message.tasks_list);
     }
   };
 

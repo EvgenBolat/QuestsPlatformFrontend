@@ -4,7 +4,6 @@ import "./ViewList.css";
 import { useEffect, useState } from "react";
 
 const ViewList = (props: any) => {
-  console.log(props.datafromServer)
   return (
     <div className="viewList">
       {props.datafromServer.length ? (

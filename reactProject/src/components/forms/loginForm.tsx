@@ -137,16 +137,13 @@ const LoginForm = (props: any) => {
                     questIdParticipation !== null &&
                     taskIdParticipation !== null
                   ) {
-                    console.log("npc");
                     navigate(
                       `/setnpc/${questIdParticipation}/${taskIdParticipation}`
                     );
                   } else if (questIdParticipation !== null) {
-                    console.log("страница присоединения обычного участника");
                     navigate(`/quest/${questIdParticipation}`);
                   } else {
-                    console.log("не пошло на страницу присоединения");
-                    navigate(`/user/${data2.message.auth_token}`);
+                    navigate(`/user`);
                   }
                 } else {
                   console.log("error");

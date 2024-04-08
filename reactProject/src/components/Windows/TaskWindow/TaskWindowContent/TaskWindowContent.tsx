@@ -5,12 +5,12 @@ import TaskWindowHeader from "./TaskWindowHeader/TaskWindowHeader";
 import { useParams } from "react-router-dom";
 
 const TaskWindowContent = (props: any) => {
-  const { userid } = useParams();
+  const userid = localStorage.getItem("id")
   const [isChanged, setChanged] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [vital, setVital] = useState(false);
   const [newTask, setNewTask] = useState({
-    task_id: "-1",
+    id: "-1",
     task_type: -1,
     task_num: 0,
     state: 0,
@@ -24,7 +24,7 @@ const TaskWindowContent = (props: any) => {
     task_time: 30,
   });
   const [task, setTask] = useState({
-    task_id: "-1",
+    id: "-1",
     task_type: 2,
     task_num: 0,
     state: 0,
@@ -57,9 +57,6 @@ const TaskWindowContent = (props: any) => {
       fetchData();
     }
   }, []);
-  useEffect(() => {
-    console.log(task);
-  }, [task]);
   if (props.typeOfWindow === "simple") {
     return (
       <div className="TaskWindowContent">

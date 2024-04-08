@@ -22,7 +22,6 @@ const BlockWindowContent = (props: any) => {
           .then((response) => response.json())
           .catch((error) => console.log(error));
         if (response.status === "OK") {
-          console.log(response.message.min_tasks);
           setMinTasks(response.message.min_tasks);
         }
       };
@@ -49,7 +48,8 @@ const BlockWindowContent = (props: any) => {
     }
   });
   const [typeofQuest, setTypeOfQuest] = useState(0);
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
   const [countOfTasks, setCountOfTasks] = useState(0);
   const [leftPosition, setLeftPosition] = useState(0);
   const [topPosition, setTopPosition] = useState(0);

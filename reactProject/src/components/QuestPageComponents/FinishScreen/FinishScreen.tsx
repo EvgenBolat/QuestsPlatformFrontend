@@ -3,7 +3,8 @@ import "./FinishScreen.css";
 import { useParams } from "react-router-dom";
 
 const FinishScreen = (props: any) => {
-  const { userid, questid } = useParams();
+  const { questid } = useParams();
+  const userid = localStorage.getItem("id")
   const [userPoints, setUserPoints] = useState(0);
   useEffect(() => {
     const fetchData = async () => {

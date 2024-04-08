@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import TaskBlock from "../../../Windows/BlockWindow/BlockWindowContent/TasksList/TaskBlock/TaskBlock";
 import "./ActionMenuContent.css";
 const ActionMenuContent = (props: any) => {
-  const { userid } = useParams();
+  const userid  = localStorage.getItem("id");
   const className =
     "ActionMenuContent ActionMenuContent" + props.typeOfActionMenu;
   const style =
@@ -21,7 +21,6 @@ const ActionMenuContent = (props: any) => {
           top: `${props.topPosition + 5}px`,
         };
 
-  console.log(props.typeOfActionMenu);
   return (
     <div style={style} className={className}>
       <button
@@ -79,7 +78,6 @@ const ActionMenuContent = (props: any) => {
               .catch((error) => console.log(error));
             if (response.status === "OK") {
               let newTasks: any = [];
-              console.log(props.deleteId);
               props.tasks.forEach((el: any) => {
                 if (el.id !== props.deleteId) {
                   newTasks.push(el);
