@@ -9,6 +9,7 @@ import View from "../pages/View";
 import SharingPage from "../pages/SharingPage";
 import { useEffect, useState } from "react";
 import NpcConnectPage from "../pages/NpcConnectPage";
+import HelpPage from "../pages/HelpPage";
 
 // Определяем функциональный компонент PrivateRoute
 export const PrivateRoute = (props: any) => {
@@ -24,12 +25,11 @@ export const PrivateRoute = (props: any) => {
       <Route path="/setnpc/:questid/:taskid" element={<NpcConnectPage />} />
       <Route path="/user">
         <Route path="quest/:questid" element={<Quest />} />
-
         <Route path="quest/:questid">
           <Route path="total" element={<Total />} />
           <Route path="view" element={<View />} />
         </Route>
-
+        <Route path="help" element={<HelpPage />} />
         <Route path="profile" element={<Profile />} />
       </Route>
       <Route path="/logout" element={<Logout />} />

@@ -7,7 +7,7 @@ const ProfileWindowContent = (props: any) => {
     return (
       <div className="ProfileWindowContent">
         <button onClick={() => {navigate("/user/profile")}}>Профиль</button>
-        <button>Настройки</button>
+        <button onClick={() => {navigate("/user/help")}}>Помощь</button>
       </div>
     );
   };
