@@ -81,3 +81,26 @@
   .readDescription{
     cursor: pointer;
   }
+
+  @media screen and (max-device-width: 500px){
+    .QuestCard{
+        width: 90vw;
+    }
+
+    .QuestInfo h1{
+        width: 60vw;
+    }
+    
+    .QuestInfo textarea{
+        width: 60vw;
+        height: 20vh;
+    }
+
+    .Quest_image_container{
+        height: 20vh;
+    }
+
+    .QuestDate{
+        font-size: 15px;
+    }
+  }

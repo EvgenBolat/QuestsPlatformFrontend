@@ -97,7 +97,7 @@ const AddQuestWindowContent = (props: any) => {
             }}
             type="text"
             name="name"
-            max={62}
+            max={44}
             id="QuestName"
             placeholder="Название квеста"
           />{" "}

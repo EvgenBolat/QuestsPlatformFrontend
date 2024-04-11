@@ -81,6 +81,7 @@ const BlockNameForm = (props: any) => {
           type="text"
           value={name.value}
           placeholder="Название"
+          max={15}
           name=""
           id="1"
           onChange={(e) => name.onChange(e)}
