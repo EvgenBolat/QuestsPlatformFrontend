@@ -11,24 +11,26 @@ const BlockView = (props: any) => {
             {props.data.block_num + 1}/{props.length}
           </span>
         </div>
-        {props.data.tasks_list.length ? (
-          props.data.tasks_list.map((el: any) => {
-            return (
-              <TaskView
-                questData={el}
-                block_num={props.data.block_num}
-                blockId={props.blockId}
-                viewMode={props.viewMode}
-                setData={props.setData}
-                data={el}
-                key={el.id}
-                setQuestWasPasted={props.setQuestWasPasted}
-              />
-            );
-          })
-        ) : (
-          <div></div>
-        )}
+        <div id="TasksListView">
+          {props.data.tasks_list.length ? (
+            props.data.tasks_list.map((el: any) => {
+              return (
+                <TaskView
+                  questData={el}
+                  block_num={props.data.block_num}
+                  blockId={props.blockId}
+                  viewMode={props.viewMode}
+                  setData={props.setData}
+                  data={el}
+                  key={el.id}
+                  setQuestWasPasted={props.setQuestWasPasted}
+                />
+              );
+            })
+          ) : (
+            <div></div>
+          )}
+        </div>
       </div>
     );
   } else {
@@ -44,11 +46,11 @@ const BlockView = (props: any) => {
           </span>
         </div>
         <div>
-          <div>
+          <div className="remainingCountHeader">
             Вам необходимо выполнить следующее количество из предложенных задач,
             помимо обязательных
           </div>
-          <div>{props.remaining}</div>
+          <div className="remainingCountHeader">{props.viewMode? props.remaining : props.data.min_tasks}</div>
         </div>
         <Flickity
           className="Slider"

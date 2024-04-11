@@ -1,9 +1,19 @@
 .TaskWindowContent{
-    background-color: blue;
+    background-color: rgb(17, 45, 105);
     min-width: 300px;
     min-height: 400px;
     border-radius: 10px;
     display: flex;
     display: -webkit-flex;
     flex-direction: column;
+}
+
+.TaskFormContainer{
+    display: flex;
+}
+
+@media screen and (max-width: 500px) {
+    .TaskWindowContent{
+        width: 90vw;
+    }
 }

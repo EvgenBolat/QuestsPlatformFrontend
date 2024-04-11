@@ -1,3 +1,37 @@
 .FirstProfileBlock{
     padding-top: 100px;
 }
+
+#FirstNameProfile{
+    font-size: 50px;
+    font-weight: bold;
+}
+#LastNameProfile{
+    font-size: 45px;
+    font-weight: bold;
+}
+
+#MiddleNameProfile{
+    font-size: 40px;
+    font-weight: bold;
+}
+
+#roleBlock{
+    margin-top: 50px;
+}
+
+#roleHeader{
+    font-weight: bold;
+    font-size: 30px;
+}
+#roleValue{
+    font-style: italic;
+    margin-top: 5px;
+    margin-bottom: 50px;
+    font-size: 20px;
+}
+
+#LogoutButton{
+    width: 100px;
+    margin-left: 5px;
+}

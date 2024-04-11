@@ -50,15 +50,15 @@ const FirstProfileBlock = () => {
   return (
     <div className="FirstProfileBlock">
       <div>
-        <div>{data.last_name}</div>
-        <div>{data.first_name}</div>
-        <div>{data.patronym}</div>
+        <div id="FirstNameProfile">{data.last_name}</div>
+        <div id="LastNameProfile">{data.first_name}</div>
+        <div id="MiddleNameProfile">{data.patronym}</div>
       </div>
-      <div>
-        <div>Роль:</div>
-        <div>{data.role}</div>
+      <div id="roleBlock">
+        <div id="roleHeader">Роль:</div>
+        <div id="roleValue">{data.role}</div>
       </div>
-      <button onClick={async (e) => { await logout()}}>Выйти</button>
+      <button id="LogoutButton" onClick={async (e) => { await logout()}}>Выйти</button>
     </div>
   );
 };

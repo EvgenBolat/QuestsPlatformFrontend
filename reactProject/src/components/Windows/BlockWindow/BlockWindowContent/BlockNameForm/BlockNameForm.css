@@ -14,7 +14,8 @@
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
-    background-color: blueviolet;
+    border-radius: 5px;
+    background-color: rgb(35, 74, 154);
 }
 
 
@@ -26,8 +27,18 @@
     text-align: center;
     background-color: transparent;
     border: 0px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 10px 0px 10px 0px;
 }
 
 .BlockNameForm input:focus{
     outline: none;
+}
+
+@media screen and (max-width: 500px) {
+    .BlockNameForm input{
+        width: 80vw;
+    }
 }

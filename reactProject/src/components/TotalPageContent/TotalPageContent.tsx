@@ -47,7 +47,7 @@ const TotapPageContent = (props: any) => {
   return (
     <div>
       <div className="Headers">
-        <MainHeader setProfileWindowActive={setProfileWindowActive} />
+        <MainHeader setProfileWindowActive={setProfileWindowActive} additionClass="quest" />
         <QuestHeader
           setActionMenuOpen={setActionMenuOpen}
           setLeftPosition={setLeftPosition}

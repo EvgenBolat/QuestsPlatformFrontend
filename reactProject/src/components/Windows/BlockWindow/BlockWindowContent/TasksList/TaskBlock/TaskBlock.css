@@ -15,7 +15,7 @@
 }
 
 .TaskBlock{
-    padding: 5px;
+    padding-top: 2px;
     text-align: center;
     word-break: normal;
     text-align: center;
@@ -25,7 +25,7 @@
 
 .TaskBlockObject{
     position: relative;
-    background-color: aqua;
+    background-color: rgb(35, 74, 154);
     border-radius: 5px;
     width: 300px;
     margin-bottom: 8px;

@@ -5,7 +5,7 @@ import TaskWindowHeader from "./TaskWindowHeader/TaskWindowHeader";
 import { useParams } from "react-router-dom";
 
 const TaskWindowContent = (props: any) => {
-  const userid = localStorage.getItem("id")
+  const userid = localStorage.getItem("id");
   const [isChanged, setChanged] = useState(false);
   const [isRequired, setIsRequired] = useState(false);
   const [vital, setVital] = useState(false);
@@ -70,20 +70,22 @@ const TaskWindowContent = (props: any) => {
           setVital={setVital}
           setChanged={setChanged}
         />
-        <TaskForm
-          currentCard={props.currentCard}
-          task={task}
-          setTask={setTask}
-          tasks={props.tasks}
-          setDeleteID={props.setDeleteID}
-          setCurrentCard={props.setCurrentCard}
-          deleteId={props.deleteId}
-          typeOfWindow={props.typeOfWindow}
-          setTaskWindowActive={props.setTaskWindowActive}
-          vital={vital}
-          isChanged={isChanged}
-          setChanged={setChanged}
-        />
+        <div>
+          <TaskForm
+            currentCard={props.currentCard}
+            task={task}
+            setTask={setTask}
+            tasks={props.tasks}
+            setDeleteID={props.setDeleteID}
+            setCurrentCard={props.setCurrentCard}
+            deleteId={props.deleteId}
+            typeOfWindow={props.typeOfWindow}
+            setTaskWindowActive={props.setTaskWindowActive}
+            vital={vital}
+            isChanged={isChanged}
+            setChanged={setChanged}
+          />
+        </div>
       </div>
     );
   } else {
@@ -96,20 +98,22 @@ const TaskWindowContent = (props: any) => {
           setVital={setVital}
           setChanged={setChanged}
         />
-        <TaskForm
-          currentCard={props.currentCard}
-          tasks={props.tasks}
-          setTasks={props.setTasks}
-          task={newTask}
-          setDeleteID={props.setDeleteID}
-          setTask={setNewTask}
-          isRequired={isRequired}
-          typeOfWindow={props.typeOfWindow}
-          setTaskWindowActive={props.setTaskWindowActive}
-          vital={vital}
-          isChanged={isChanged}
-          setChanged={setChanged}
-        />
+        <div className="TaskFormContainer">
+          <TaskForm
+            currentCard={props.currentCard}
+            tasks={props.tasks}
+            setTasks={props.setTasks}
+            task={newTask}
+            setDeleteID={props.setDeleteID}
+            setTask={setNewTask}
+            isRequired={isRequired}
+            typeOfWindow={props.typeOfWindow}
+            setTaskWindowActive={props.setTaskWindowActive}
+            vital={vital}
+            isChanged={isChanged}
+            setChanged={setChanged}
+          />
+        </div>
       </div>
     );
   }

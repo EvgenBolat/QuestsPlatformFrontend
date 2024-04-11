@@ -97,7 +97,8 @@ const AddQuestWindowContent = (props: any) => {
             }}
             type="text"
             name="name"
-            id="name"
+            max={62}
+            id="QuestName"
             placeholder="Название квеста"
           />{" "}
           <br />
@@ -108,7 +109,7 @@ const AddQuestWindowContent = (props: any) => {
               setHaveChanges(true);
             }}
             name="description"
-            id="description"
+            id="descriptionArea"
             placeholder="Описание"
           />{" "}
           <br />
@@ -202,10 +203,10 @@ const AddQuestWindowContent = (props: any) => {
         <div className="chooseTypeOfQuest">
           <div>Режим:</div>
           <select
-            name="tasktype"
+            name="questtype"
             value={typeOfQuest}
             disabled={props.typeOfWindow === 1}
-            id="tasktype"
+            id="questType"
             onChange={(e) => {
               setTypeOfQuest(Number(e.target.value));
             }}

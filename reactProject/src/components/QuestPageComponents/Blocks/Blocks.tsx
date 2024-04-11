@@ -11,6 +11,10 @@ const Blocks = (props: any) => {
     props.setCurrentCard(taskBlock);
   }
 
+  function dragStartStartHandler(e: any, taskBlock: any){
+    e.preventDefault();
+  }
+
   function dragEndHandler(e: any) {
     // e.target.style.background = 'rgb(0, 133, 255)'
   }
@@ -79,13 +83,14 @@ const Blocks = (props: any) => {
     if (props.blocks.length !== 0) {
       let array = props.blocks.sort(sortCard).map((el: any) => {
         return (
-          <div className="Element" key={el.task_num}>
+          <div className="Element" key={el.id}>
             <TasksBlock
               setCurrentCard={props.setCurrentCard}
               data={el}
               last={false}
               setBlockWindowID={props.setBlockWindowID}
               taskBlockId={el.id}
+              key={el.id}
               dragStart={dragStartHandler}
               dragEnd={dragEndHandler}
               dragOver={dragOverHandler}
@@ -109,7 +114,7 @@ const Blocks = (props: any) => {
           last={true}
           setCurrentCard={props.setCurrentCard}
           setBlockWindowID={props.setBlockWindowID}
-          key={props.blocks.at(-1)?.task_num}
+          key={props.blocks.at(-1)?.id}
           dragStart={dragStartHandler}
           dragEnd={dragEndHandler}
           dragOver={dragOverHandler}
@@ -129,10 +134,11 @@ const Blocks = (props: any) => {
             last={false}
             setBlockWindowID={props.setBlockWindowID}
             taskBlockId={"-1"}
-            dragStart={dragStartHandler}
+            dragStart={dragStartStartHandler}
             dragEnd={dragEndHandler}
             dragOver={dragOverHandler}
             drop={dropHandler}
+            key={-1}
             setactionMenuData={props.setactionMenuData}
             isBlockWindowActive={props.isBlockWindowActive}
             setBlockWindowActive={props.setBlockWindowActive}

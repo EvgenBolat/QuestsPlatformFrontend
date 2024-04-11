@@ -3,7 +3,6 @@ import MainHeader from "./Header/mainHeader";
 import { useEffect, useState } from "react";
 import AddQuestWindow from "./AddQuestWindow/AddQuestWindow";
 import ProfileWindow from "./Header/ProFileWindow/ProFileWindow";
-import { useParams } from "react-router-dom";
 
 const MainPage = (props: any) => {
   const userid = localStorage.getItem("id");
@@ -33,7 +32,7 @@ const MainPage = (props: any) => {
       fetchData();
       setUpdated(true)
     }
-  }, [isUpdated]);
+  }, []);
   return (
     <div>
       {isAddQuestWindowActive ? (

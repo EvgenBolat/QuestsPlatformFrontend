@@ -22,6 +22,7 @@ const CreationBlocksMenu = (props: any) => {
   return (
     <div className="CreationMenu" style={!isOpen ? { right: -120 } : {}}>
       <img
+      draggable={false}
         onClick={(e) => {
           ChangeOpened(!isOpen);
         }}

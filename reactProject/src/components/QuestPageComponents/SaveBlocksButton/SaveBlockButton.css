@@ -13,15 +13,18 @@
   justify-content: center;
   align-items: center;
   transform: rotate(-90deg);
-  background-color: rgb(0, 133, 255);
+  background-color: rgb(17, 45, 105);
   cursor: pointer;
   width: 170px;
   height: 50px;
 }
 
 .SaveBlockButtonBody {
-  background-color: rgb(47, 122, 193);
+  background-color: rgb(35, 74, 154);
   padding: 5px 8px 5px 8px;
+  margin-top: 7px;
+  font-weight: bold;
+  font-size: 15px;
   color: white;
   border-radius: 10px;
 }

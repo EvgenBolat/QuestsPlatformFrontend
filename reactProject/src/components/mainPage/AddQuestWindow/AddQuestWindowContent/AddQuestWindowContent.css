@@ -7,7 +7,7 @@
   color: white;
   padding: 20px;
   border-radius: 10px;
-  background-color: blue;
+  background-color: rgb(17, 45, 105);
 }
 
 #addingImage {
@@ -28,6 +28,11 @@
   margin-top: 20px;
 }
 
+.chooseTypeOfQuest div{
+  font-weight: bold;
+  margin-right: 5px;
+}
+
 #addingImagesElement {
   margin-top: -21px;
   margin-right: 5px;
@@ -41,6 +46,16 @@
 
 textarea {
   resize: none;
+}
+#QuestName{
+  width: 220px;
+  margin-bottom: 10px;
+  padding: 5px 0px 5px 0px;
+}
+#descriptionArea{
+  height: 70px;
+  width: 220px;
+  padding: 5px 0px 5px 0px;
 }
 
 .lowerButtons {
@@ -56,4 +71,19 @@ textarea {
   display: flex;
   display: -webkit-flex;
   flex-direction: row;
+}
+
+#questType{
+  width: 200px;
+}
+
+@media screen and (max-width: 500px){
+  #addingImageContainer{
+    width: 40vw;
+    height: 220px;
+  }
+
+  #questType{
+    width: 50vw;
+  }
 }

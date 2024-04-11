@@ -3,12 +3,13 @@
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(80, 135, 255);
+    background-color: rgb(35, 74, 154);
     width: 500px;
     max-width: 500px;
     border-radius: 10px;
     margin-left: 5px;
     margin-right: 5px;
+    margin-top: 5px;
 }
 
 .TaskNameHeader img{
@@ -41,6 +42,19 @@
     /* cursor: text; */
 }
 
+#taskHeaderName{
+    font-weight: bold;
+}
+
 .TaskNameHeaderForm input:focus{
     outline: none;
+}
+
+@media screen and (max-width: 500px) {
+    .TaskNameHeader{
+        width: 88vw;
+    }
+    .TaskNameHeaderForm div{
+        width: 60vw;
+    }
 }

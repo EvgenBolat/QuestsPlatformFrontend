@@ -14,7 +14,7 @@ const ActionMenuContent = (props: any) => {
       : props.typeOfActionMenu === "Quest"
       ? {
           left: `${props.leftPosition - 120}px`,
-          top: `${props.topPosition + 5}px`,
+          top: `${props.topPosition}px`,
         }
       : {
           left: `${props.leftPosition - 120}px`,

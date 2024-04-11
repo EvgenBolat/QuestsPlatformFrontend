@@ -14,6 +14,7 @@ const MainBody = (props: any) => {
             onClick={() => {
               props.setAddQuestWindowActive(true);
             }}
+            draggable={false}
             id="addQuestButton"
             src={`${process.env.PUBLIC_URL}/img/addQuestIcon.svg`}
             alt="something"

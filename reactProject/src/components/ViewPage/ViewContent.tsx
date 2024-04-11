@@ -92,6 +92,7 @@ const ViewContent = (props: any) => {
         <ProfileWindow
           isProfileWindowActive={isProfileWindowActive}
           setProfileWindowActive={setProfileWindowActive}
+          additionClassName="View"
         />
       ) : (
         <div></div>

@@ -25,3 +25,22 @@
   top: -2px;
   width: 100px;
 }
+
+#mainLogo_quest{
+  position: absolute;
+  width: 80px;
+  left: calc(50vw - 40px);
+  margin-top: 10px;
+}
+
+@media screen and (max-width: 500px) {
+  #mainLogo_quest{
+    position: absolute;
+    width: 10vh;
+    left: calc(50vw - 5vh);
+    margin-top: 2vh;
+  }
+  .profile{
+    width: 6vh;
+  }
+}

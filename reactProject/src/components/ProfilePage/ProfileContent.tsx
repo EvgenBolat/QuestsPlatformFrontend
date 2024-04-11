@@ -4,7 +4,6 @@ import "./ProfileContent.css"
 import useAuth from "../../hooks/useAuth";
 
 const ProfileContent = () => {
-    const { setAuth } = useAuth();
     return (
         <div>
             <ProfileHeader />

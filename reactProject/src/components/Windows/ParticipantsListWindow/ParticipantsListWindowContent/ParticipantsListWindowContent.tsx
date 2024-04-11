@@ -153,7 +153,7 @@ const ParticipantsListWindowContent = (props: any) => {
   return (
     <div id="ParticipantsListWindowContent">
       <div id="ParticipantsListHeader">Список участников</div>
-      <div>{blockData}</div>
+      <div id="ParticipantsList">{blockData}</div>
     </div>
   );
 };

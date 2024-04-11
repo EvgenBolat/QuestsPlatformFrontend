@@ -23,3 +23,9 @@
     margin-top: -250px;
     margin-left: -18px;
 }
+
+@media screen and (max-width: 500px){
+    .AddQuestExitButton{
+        margin-left: -20px;
+    }
+}

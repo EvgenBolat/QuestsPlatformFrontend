@@ -120,9 +120,9 @@ const ClarifyingWindowContent = (props: any) => {
           : "квест"}
         ?
       </h1>
-      <div>
-        <button>Нет</button>
-        <button onClick={(e) => Act()}>Да</button>
+      <div id="ClarifyingButtons">
+        <button id="NoClarifying">Нет</button>
+        <button id="YesClarifying" onClick={(e) => Act()}>Да</button>
       </div>
     </div>
   );

@@ -16,22 +16,28 @@ https://flickity.metafizzy.co
 #blockHeader_View{
   text-align: center;
   font-size: 20px;
-  background-color: blue;
+  background-color: rgb(17, 45, 105);
+  min-width: 492px;
   margin-bottom: 10px;
   border-radius: 5px;
   color: white;
   display: flex;
   justify-content: right;
   align-items: center;
+  font-weight: bold;
+  font-size: 25px;
 }
 
 .blockView{
   margin-bottom: 20px;
 }
+.remainingCountHeader{
+  text-align: center;
+}
 
 #blockCounter{
   position: absolute;
-  background-color: #19f;
+  background-color: rgb(35, 74, 154);
   padding-left: 5px;
   padding-right: 5px;
   height: 23.5px;
@@ -185,4 +191,48 @@ https://flickity.metafizzy.co
 
 .flickity-page-dots .dot.is-selected {
   opacity: 1;
+}
+
+@media screen and (max-device-width: 500px) {
+  #blockHeader_View{
+    width: 60vw;
+  }
+  #TasksListView{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    margin-left: calc(50vw - 35vw);
+  }
+  .Slider{
+    position: relative;
+    margin-left: 10vw;
+    width: 100vw;
+  }
+  .blockView{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100vw;
+  }
+
+  .flickity-viewport {
+    overflow: hidden;
+    position: relative;
+    width: 100vw;
+  }
+
+  .flickity-slider {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 5vw;
+  }
+  .remainingCountHeader{
+    text-align: center;
+    margin-left: 30vw;
+  }
+  
 }

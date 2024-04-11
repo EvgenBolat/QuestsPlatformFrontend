@@ -342,6 +342,7 @@ const TaskView = (props: any) => {
                   questData[props.block_num].tasks_list[
                     props.data.task_num
                   ].user_progress.status = 2;
+                  setAnswer("");
                   props.setQuestData([...questData]);
                   let points = 0;
                   if (props.data.vital) {
@@ -386,7 +387,7 @@ const TaskView = (props: any) => {
                 }
               } else {
                 let questData = props.questData;
-                questData.tasks_list[
+                questData[props.block_num].tasks_list[
                   props.data.task_num
                 ].user_progress.status = 2;
                 props.setQuestData([...questData]);

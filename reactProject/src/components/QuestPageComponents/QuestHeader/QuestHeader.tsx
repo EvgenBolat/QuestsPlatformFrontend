@@ -19,6 +19,7 @@ const QuestHeader = (props: any) => {
             }}
           >
             <img
+            draggable={false}
               src={`${process.env.PUBLIC_URL}/img/ActionButton.svg`}
               alt=""
             />

@@ -213,6 +213,25 @@ const QuestPage = () => {
       ],
     },
   ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        `https://quests.projectswhynot.site/api/v1/quests/${questid}/points`,
+        {
+          method: "POST",
+          body: JSON.stringify({ auth_token: userid }),
+        }
+      )
+        .then((response) => response.json())
+        .catch((error) => console.log(error));
+      if (response.status === "OK") {
+        setQuestWasPasted(response.message);
+        setQuestCompletedByAllPlayer(response.message);
+      }
+    };
+    fetchData();
+  }, []);
   const defaultCard = { id: -1, order: -1, name: "", type: "parallel" };
 
   const [currentCard, setCurrentCard] = useState(defaultCard);
@@ -283,7 +302,7 @@ const QuestPage = () => {
             setQuestCompletedByAllPlayer(true);
           }
         }
-      }, 30000);
+      }, 3000);
     }
     if (isQuestCompletedByAllPlayers) {
       clearInterval(interlvalid);
@@ -427,7 +446,8 @@ const QuestPage = () => {
           if (!isQuestCompletedByAllPlayers) {
             return (
               <div id="waitingBody">
-                Ожидайте завершение квеста другими игроками
+                <div>Ожидайте завершение квеста другими игроками</div>
+                <div>Просим не обновляйть страницу</div>
               </div>
             );
           } else {
@@ -450,7 +470,7 @@ const QuestPage = () => {
   const [deleteId, setDeleteID] = useState("");
 
   const { questid } = useParams();
-  const userid = localStorage.getItem("id")
+  const userid = localStorage.getItem("id");
   const navigate = useNavigate();
 
   const [isTeamCreator, setTeamCreator] = useState(false);
@@ -470,7 +490,10 @@ const QuestPage = () => {
           <div></div>
         )}
         <div className="Headers">
-          <MainHeader setProfileWindowActive={setProfileWindowActive} />
+          <MainHeader
+            setProfileWindowActive={setProfileWindowActive}
+            additionClass="quest"
+          />
           <QuestHeader
             setActionMenuOpen={setActionMenuOpen}
             setLeftPosition={setLeftPosition}
@@ -488,6 +511,7 @@ const QuestPage = () => {
               className="exitToQuestButtonImage"
               src={`${process.env.PUBLIC_URL}/img/exitToMainButton.svg`}
               alt=""
+              draggable={false}
             />
           </button>
         </div>
@@ -736,7 +760,10 @@ const QuestPage = () => {
           <div></div>
         )}
         <div className="Headers">
-          <MainHeader setProfileWindowActive={setProfileWindowActive} />
+          <MainHeader
+            setProfileWindowActive={setProfileWindowActive}
+            additionClass="quest"
+          />
           <QuestHeader
             setActionMenuOpen={setActionMenuOpen}
             setLeftPosition={setLeftPosition}

@@ -6,3 +6,12 @@
     align-items: center;
     cursor: pointer;
 }
+
+@media screen and (max-width: 500px){
+    .QuestFooterButton img{
+        width: 10vw;
+    }
+    .QuestFooterButton p{
+        font-size: 13px;
+    }
+}

@@ -17,6 +17,7 @@
   font-weight: bold;
   justify-content: center;
   align-items: center;
+  text-align: center;
   width: 100%;
   margin-top: calc(50vh + 10px);
 }
@@ -122,4 +123,18 @@
 #npcQRCode{
   display: flex;
   justify-content: center;
+}
+@media screen and (max-device-width: 500px) {
+  .exitToQuestButtonImage{
+    width: 7vw;
+    margin-top: -1vh;
+  }
+
+  .QuestHeader {
+    width: 90vw;
+  }
+
+  #waitingBody {
+    margin-top: 10vh;
+  }
 }

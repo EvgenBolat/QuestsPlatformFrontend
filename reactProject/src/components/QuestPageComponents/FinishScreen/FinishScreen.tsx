@@ -4,8 +4,10 @@ import { useParams } from "react-router-dom";
 
 const FinishScreen = (props: any) => {
   const { questid } = useParams();
-  const userid = localStorage.getItem("id")
+  const userid = localStorage.getItem("id");
   const [userPoints, setUserPoints] = useState(0);
+
+  const [pointsChanged, setPointsChanged] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
@@ -19,9 +21,10 @@ const FinishScreen = (props: any) => {
         .catch((error) => console.log(error));
       if (response.status === "OK") {
         setUserPoints(response.message.points);
+        setPointsChanged(true);
       }
     };
-    fetchData();
+    setTimeout(fetchData, 2000);
   }, []);
   useEffect(() => {
     const balloonContainer = document.getElementById("balloon-container");
@@ -34,20 +37,22 @@ const FinishScreen = (props: any) => {
       }
     }
     const congradilations = document.getElementById("Congratilations");
-    setTimeout(() => {
-      if (congradilations?.innerHTML !== `Вы набрали ${userPoints} очков`) {
-        if (congradilations) {
-          congradilations.innerHTML = `Вы набрали ${userPoints} очков`;
-        }
-      }
-    }, 5000);
     createBalloons(10);
-    setTimeout(() => {
-      props.setTasksOvered(true);
-      props.setStartedAsking(true);
-      props.setAnyTaskNoCompleted(false)
-      props.setQuestWasPasted(true)
-    }, 10000);
+    if (pointsChanged) {
+      setTimeout(() => {
+        if (congradilations?.innerHTML !== `Вы набрали ${userPoints} очков`) {
+          if (congradilations) {
+            congradilations.innerHTML = `Вы набрали ${userPoints} очков`;
+          }
+        }
+      }, 6000);
+      setTimeout(() => {
+        props.setTasksOvered(true);
+        props.setStartedAsking(true);
+        props.setAnyTaskNoCompleted(false);
+        props.setQuestWasPasted(true);
+      }, 10000);
+    }
   }, [userPoints]);
 
   function random(num: any) {

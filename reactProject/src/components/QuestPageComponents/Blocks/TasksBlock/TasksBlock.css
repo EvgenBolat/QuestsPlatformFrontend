@@ -4,6 +4,7 @@
   font: inherit;
   color: inherit;
   background-color: transparent;
+  border-radius: 10px;
 }
 
 .BlockName {
@@ -36,5 +37,12 @@
 
 .isStarting{
   opacity: 0;
-  cursor: default
+  cursor: default;
+  height: 70vh;
+  width: 50vw;
+  z-index: 0;
+}
+
+.card .TasksBlock .Consistent{
+  border-radius: 10px;
 }

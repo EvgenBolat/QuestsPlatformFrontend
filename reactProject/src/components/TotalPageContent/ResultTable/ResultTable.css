@@ -2,7 +2,9 @@
     margin-bottom: 5px;
     display: flex;
     flex-direction: row;
-    background-color: gray;
+    background-color: rgb(17, 45, 105);
+    color: white;
+    font-weight: bold;
     border-radius: 20px 5px 5px 20px;
 }
 
@@ -22,9 +24,12 @@
 }
 .resultPoints{
     margin-left: 20px;
-    background-color: red;
+    background-color: rgb(35, 74, 154);
     border-radius: 5px;
     padding-left: 5px;
+    color: white;
+    font-weight: bold;
+    padding: 0px 5px 0px 5px;
 }
 .resultElementInfo{
     display: flex;
@@ -36,7 +41,10 @@
 }
 
 .resultUserInfo{
-    width: 150px;
+    width: 130px;
+    background-color: rgb(35, 74, 154);
+    color: white;
+    padding-left: 2vw;
 }
 
 .second .place{

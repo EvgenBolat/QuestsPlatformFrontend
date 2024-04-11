@@ -59,7 +59,7 @@ const TaskWindowHeader = (props: any) => {
   return (
     <div className="TaskNameHeader">
       <form className="TaskNameHeaderForm" action="">
-        <div>Задача № {props.typeOfWindow === "simple" ? props.task.task_num : ""}</div>
+        <div id="taskHeaderName">Задача № {props.typeOfWindow === "simple" ? props.task.task_num : ""}</div>
       </form>
       <img
         onClick={(e) => {

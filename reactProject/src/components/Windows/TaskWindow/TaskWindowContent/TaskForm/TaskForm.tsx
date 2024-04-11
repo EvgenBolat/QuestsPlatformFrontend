@@ -291,9 +291,8 @@ const TaskForm = (props: any) => {
           <option value="2">Взаимодействие с героем вашего квеста</option>
         </select>
         <h1 hidden={typeofTask !== "0"}>Вопрос:</h1>
-        <input
+        <textarea
           hidden={typeofTask !== "0"}
-          type="text"
           name="questionVal"
           id="questionVal"
           value={question}
@@ -375,7 +374,7 @@ const TaskForm = (props: any) => {
             props.setChanged(true);
           }}
         />
-        <span hidden={typeofTask === -1}>:</span>
+        <span id="SpaceBetweenTime" hidden={typeofTask === -1}>:</span>
         <input
           hidden={typeofTask === -1}
           type="number"
@@ -391,7 +390,7 @@ const TaskForm = (props: any) => {
         />
         <h1 hidden={typeofTask === -1}>Добавьте файлы, если это необходимо:</h1>
         <label htmlFor="files" hidden={typeofTask === -1}>
-          <img src={`${process.env.PUBLIC_URL}/img/document.svg`} alt="" />
+          <img id="FilePutImage" src={`${process.env.PUBLIC_URL}/img/document.svg`} alt="" />
         </label>
         <input
           hidden
@@ -405,7 +404,7 @@ const TaskForm = (props: any) => {
           }}
         />
         {filesArray && filesArray.length > 0 && filesArray[0] ? (
-          <p>Загруженно файлов: {filesArray.length}</p>
+          <p id="filesDonwnloadedText">Загруженно файлов: {filesArray.length}</p>
         ) : (
           <div></div>
         )}
@@ -420,7 +419,7 @@ const TaskForm = (props: any) => {
         hidden={typeofTask === -1}
         disabled={
           (typeofTask === "0" && (question === "" || answerOnQuestion === "")) ||
-          (props.typeOfWindow === "simple" && !props.isChanged)
+          (props.typeOfWindow === "simple" && !props.isChanged) || typeofTask === "-1"
         }
         id="CreationTaskButton"
         type="submit"

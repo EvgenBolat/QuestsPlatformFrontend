@@ -18,3 +18,14 @@
     right: 10px;
     top: 50px;
 }
+
+.ProfileWindowContentView{
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 10px;
+  top: -50px;
+}

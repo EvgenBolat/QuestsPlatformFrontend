@@ -2,14 +2,38 @@
     display: flex;
     display: -webkit-flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
-    max-width: 500px;
+    width: 500px;
+    padding: 5px;
+    color: white;
 }
 
+.TaskForm input{
+    margin-bottom: 5px;
+}
+
+.TaskForm textarea{
+    margin-bottom: 5px;
+}
+
+
 select{
-    /* width: 100px; */
     color: black;
+    width: 300px;
+    margin-bottom: 5px;
+}
+
+#filesDonwnloadedText{
+    color: white;
+}
+
+#FilePutImage{
+    margin-top: 5px;
+}
+
+#SpaceBetweenTime{
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #emailError{
@@ -17,8 +41,57 @@ select{
     font-weight: bold;
 }
 
+#questionVal{
+    width: 300px;
+}
+
+#questionAnswer{
+    width: 300px;
+}
+
+#descr{
+    width: 300px;
+}
+
+#maxpoints{
+    width: 40px;
+    text-align: center;
+}
+
+#minpoints{
+    width: 40px;
+    text-align: center;
+}
+
+#minutes{
+    width: 40px;
+    text-align: center;
+    margin-right: 2px;
+}
+
+#seconds{
+    width: 40px;
+    margin-left: 2px;
+    text-align: center;
+}
+
+.TaskForm h1{
+    font-size: 22px;
+}
+
 .TaskForm #CreationTaskButton{
     margin-top: 20px;
     margin-bottom: 10px;
     width: 100px;
+    padding: 2px;
+    font-weight: bold;
+    font-size: 15px;
+    position: relative;
+    left: calc(250px - 50px);
+}
+
+@media screen and (max-width: 500px) {
+    .TaskForm h1{
+        font-size: 16px;
+    }
 }

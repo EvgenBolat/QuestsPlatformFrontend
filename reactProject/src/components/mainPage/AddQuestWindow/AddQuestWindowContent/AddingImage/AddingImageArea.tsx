@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import "./AddingImage.css"
+
 const AddingImageArea = (props: any) => {
   const [file, setFile] = useState("");
   function dragStartHandler(e: any) {
@@ -54,8 +56,7 @@ const AddingImageArea = (props: any) => {
       onDrop={dropHandler}
     >
       {props.filepath === "" ? (
-        <div>
-          <div>вставить изображение</div>
+        <div id="ImageInputTextBlock">
           <input
             hidden={props.typeOfWindow}
             disabled={props.typeOfWindow}

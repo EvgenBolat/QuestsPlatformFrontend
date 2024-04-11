@@ -1,0 +1,13 @@
+#ImageInputTextBlock{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 160px;
+}
+
+@media screen and (max-width: 500px){
+    #ImageInputTextBlock{
+        width: 65vw;
+    }
+}

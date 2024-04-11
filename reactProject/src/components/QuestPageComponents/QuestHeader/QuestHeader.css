@@ -20,3 +20,13 @@
   margin-left: 485px;
   cursor: pointer;
 }
+
+@media screen and (max-width: 500px) {
+  .exitToQuestButtonImage{
+    width: 7vw;
+    margin-top: -1vh;
+  }
+  .ActionQuestButton {
+    margin-left: 83vw;
+  }
+}

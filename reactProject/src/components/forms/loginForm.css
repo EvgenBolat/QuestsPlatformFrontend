@@ -118,7 +118,7 @@
   width: 250px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-device-width: 500px) {
   .main__form {
     width: 70vw;
     padding-bottom: 8px;

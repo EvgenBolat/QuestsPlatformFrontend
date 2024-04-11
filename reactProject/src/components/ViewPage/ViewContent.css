@@ -1,9 +1,24 @@
-.exitToQuestButtonFromView{
+.exitToQuestButtonFromView {
+  position: fixed;
+  background-color: rgb(35, 74, 154);
+  right: 10px;
+  bottom: 10px;
+  border-radius: 100px;
+  padding: 10px;
+  border: none;
+}
+
+@media screen and (max-device-width: 500px) {
+  .exitToQuestButtonFromView {
     position: fixed;
-    background-color: blue;
+    background-color: rgb(35, 74, 154);
     right: 10px;
     bottom: 10px;
-    border-radius: 100px;
-    padding: 10px;
+    border-radius: 100vw;
+    padding: 10px 10px 10px 10px;
     border: none;
+  }
+  .exitToQuestButtonImage {
+    padding-top: 2vw;
+  }
 }
