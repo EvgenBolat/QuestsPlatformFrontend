@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import TaskBlock from "../../../Windows/BlockWindow/BlockWindowContent/TasksList/TaskBlock/TaskBlock";
 import "./ActionMenuContent.css";
 const ActionMenuContent = (props: any) => {
-  const userid  = localStorage.getItem("id");
+  const userid = localStorage.getItem("id");
   const className =
     "ActionMenuContent ActionMenuContent" + props.typeOfActionMenu;
   const style =
@@ -27,6 +27,14 @@ const ActionMenuContent = (props: any) => {
         hidden={props.typeOfActionMenu !== "Quest"}
         disabled={props.typeOfActionMenu !== "Quest"}
         onClick={() => {
+          if (props.isSaved === false || props.isShaffled === true) {
+            alert("Вы не сохранили изменения в списке блоков!");
+            return;
+          }
+          if (props.isShaffledTasks && props.isShaffledTasks === true) {
+            alert("Вы не сохранили изменения в списке задач!");
+            return;
+          }
           props.setAddQuestWindowActive(true);
         }}
       >
@@ -36,6 +44,14 @@ const ActionMenuContent = (props: any) => {
         hidden={props.typeOfActionMenu === "Task"}
         disabled={props.typeOfActionMenu === "Task"}
         onClick={() => {
+          if (props.isSaved === false || props.isShaffled === true) {
+            alert("Вы не сохранили изменения в списке блоков!");
+            return;
+          }
+          if (props.isShaffledTasks && props.isShaffledTasks === true) {
+            alert("Вы не сохранили изменения в списке задач!");
+            return;
+          }
           props.setClarifyingWindowData({
             typeOfWindow:
               props.typeOfActionMenu === "Block"
@@ -54,6 +70,14 @@ const ActionMenuContent = (props: any) => {
       </button>
       <button
         onClick={async (e) => {
+          if (props.isSaved === false || props.isShaffled === true) {
+            alert("Вы не сохранили изменения в списке блоков!");
+            return;
+          }
+          if (props.isShaffledTasks && props.isShaffledTasks === true) {
+            alert("Вы не сохранили изменения в списке задач!");
+            return;
+          }
           if (props.typeOfActionMenu !== "Task") {
             props.setClarifyingWindowData({
               typeOfWindow:
@@ -87,6 +111,12 @@ const ActionMenuContent = (props: any) => {
                 newTasks[i].order = i;
               }
               props.setTasks([...newTasks]);
+              return;
+            } else if (response.message === "Registrate first") {
+              localStorage.clear();
+              localStorage.setItem("auth", JSON.stringify(false));
+              window.location.reload();
+              return;
             }
           }
           props.setActionMenuOpen(false);

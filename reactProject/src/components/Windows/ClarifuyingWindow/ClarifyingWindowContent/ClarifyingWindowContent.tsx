@@ -19,6 +19,11 @@ const ClarifyingWindowContent = (props: any) => {
       navigate("/user");
       window.location.reload();
     }
+    else if (response.message === "Registrate first") {
+      localStorage.clear();
+      localStorage.setItem("auth", JSON.stringify(false));
+      window.location.reload();
+    }
   };
   const DeleteBlock = async () => {
     const response = await fetch(
@@ -32,6 +37,12 @@ const ClarifyingWindowContent = (props: any) => {
       .catch((error) => console.log(error));
     if (response.status === "OK") {
       props.setTasks([])
+      window.location.reload()
+    }
+    else if (response.message === "Registrate first") {
+      localStorage.clear();
+      localStorage.setItem("auth", JSON.stringify(false));
+      window.location.reload();
     }
   };
   const navigate = useNavigate();
@@ -62,6 +73,11 @@ const ClarifyingWindowContent = (props: any) => {
               props.data.setBlocks(blocks);
               props.setIsClarifyingWindowActive(false);
             }
+            else if (response.message === "Registrate first") {
+              localStorage.clear();
+              localStorage.setItem("auth", JSON.stringify(false));
+              window.location.reload();
+            }
           };
           fetchData();
         }
@@ -81,6 +97,11 @@ const ClarifyingWindowContent = (props: any) => {
             if (response.status === "OK") {
               props.setIsClarifyingWindowActive(false);
               navigate("/user");
+            }
+            else if (response.message === "Registrate first") {
+              localStorage.clear();
+              localStorage.setItem("auth", JSON.stringify(false));
+              window.location.reload();
             }
           };
           fetchData();

@@ -26,6 +26,9 @@ const ActionMenu = (props: any) => {
           deleteId={props.deleteId}
           setTasks={props.setTasks}
           setAddQuestWindowActive={props.setAddQuestWindowActive}
+          isSaved={props.isSaved}
+          isShaffled={props.isShaffled}
+          isShaffledTasks={props.isShaffledTasks}
         />
       </div>
     </div>

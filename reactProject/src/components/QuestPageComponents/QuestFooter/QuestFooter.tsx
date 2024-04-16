@@ -5,13 +5,28 @@ import "./QuestFooter.css";
 const QuestFooter = (props: any) => {
   return (
     <div id="QuestFooter">
-      <QuestFooterButton typeOfButton="viewMode" questName={props.questName} />
-      <QuestFooterButton typeOfButton="rate" />
+      <QuestFooterButton
+        typeOfButton="viewMode"
+        isSaved={props.isSaved}
+        isShaffled={props.isShaffled}
+        questName={props.questName}
+      />
+      <QuestFooterButton
+        typeOfButton="rate"
+        isSaved={props.isSaved}
+        isShaffled={props.isShaffled}
+      />
       <QuestFooterButton
         typeOfButton="participants"
+        isSaved={props.isSaved}
+        isShaffled={props.isShaffled}
         setParticipantsListWindowActive={props.setParticipantsListWindowActive}
       />
-      <QuestFooterButton typeOfButton="share" />
+      <QuestFooterButton
+        typeOfButton="share"
+        isSaved={props.isSaved}
+        isShaffled={props.isShaffled}
+      />
     </div>
   );
 };

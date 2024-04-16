@@ -51,6 +51,11 @@ const TaskWindowContent = (props: any) => {
       setTask(response.message);
       setVital(response.message.vital);
     }
+    else if (response.message === "Registrate first") {
+      localStorage.clear();
+      localStorage.setItem("auth", JSON.stringify(false));
+      window.location.reload();
+    }
   };
   useEffect(() => {
     if (props.typeOfWindow === "simple") {

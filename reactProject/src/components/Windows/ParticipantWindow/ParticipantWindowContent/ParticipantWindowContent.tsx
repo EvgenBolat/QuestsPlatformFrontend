@@ -7,7 +7,7 @@ const ParticipantWindowContent = (props: any) => {
   const [name, setName] = useState(props.teamName);
   const [incorrectTeamNameError, setIncorrectTeamNameError] = useState(false);
   const { questid } = useParams();
-  const userid = localStorage.getItem("id")
+  const userid = localStorage.getItem("id");
 
   const [alreadyExistTeamNameError, setalreadyExistTeamNameError] =
     useState(false);
@@ -78,6 +78,10 @@ const ParticipantWindowContent = (props: any) => {
                 props.setInCommand(false);
                 props.setParticipantWindowActive(false);
                 props.setTeamName("");
+              } else if (response.message === "Registrate first") {
+                localStorage.clear();
+                localStorage.setItem("auth", JSON.stringify(false));
+                window.location.reload();
               }
             };
             fetchData();
@@ -107,6 +111,10 @@ const ParticipantWindowContent = (props: any) => {
                 props.setTeamName(name);
                 setOldName(name);
                 props.setParticipantWindowActive(false);
+              } else if (response.message === "Registrate first") {
+                localStorage.clear();
+                localStorage.setItem("auth", JSON.stringify(false));
+                window.location.reload();
               }
             };
             fetchData();
@@ -138,6 +146,10 @@ const ParticipantWindowContent = (props: any) => {
                 props.setTeamCreator(true);
                 props.setInCommand(true);
                 props.setParticipantWindowActive(false);
+              } else if (response.message === "Registrate first") {
+                localStorage.clear();
+                localStorage.setItem("auth", JSON.stringify(false));
+                window.location.reload();
               } else {
                 setClicked(true);
                 setalreadyExistTeamNameError(true);
@@ -169,6 +181,10 @@ const ParticipantWindowContent = (props: any) => {
                 props.setTeamName(name);
                 setName("");
                 props.setParticipantWindowActive(false);
+              } else if (response.message === "Registrate first") {
+                localStorage.clear();
+                localStorage.setItem("auth", JSON.stringify(false));
+                window.location.reload();
               } else {
                 setClicked(true);
                 setIncorrectTeamNameError(true);

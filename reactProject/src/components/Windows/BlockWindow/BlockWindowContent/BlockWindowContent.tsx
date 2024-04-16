@@ -7,6 +7,7 @@ import ActionMenu from "../../../genericClasses/ActionMenu/ActionMenu";
 import SaveTasksOrderButton from "./SaveTasksOrderButton/SaveTasksOrderButton";
 
 const BlockWindowContent = (props: any) => {
+  const [isShaffledTasks, setShaffledTasks] = useState(false);
   const [maxTasks, setMaxTasks] = useState(0);
   const [minTasks, setMinTasks] = useState(0);
   useEffect(() => {
@@ -23,6 +24,10 @@ const BlockWindowContent = (props: any) => {
           .catch((error) => console.log(error));
         if (response.status === "OK") {
           setMinTasks(response.message.min_tasks);
+        } else if (response.message === "Registrate first") {
+          localStorage.clear();
+          localStorage.setItem("auth", JSON.stringify(false));
+          window.location.reload();
         }
       };
       fetchTasks();
@@ -49,19 +54,24 @@ const BlockWindowContent = (props: any) => {
   });
   const [typeofQuest, setTypeOfQuest] = useState(0);
   const { questid } = useParams();
-  const userid = localStorage.getItem("id")
+  const userid = localStorage.getItem("id");
   const [countOfTasks, setCountOfTasks] = useState(0);
   const [leftPosition, setLeftPosition] = useState(0);
   const [topPosition, setTopPosition] = useState(0);
   const [isSaveTasksOrderButtonActive, setSaveTasksOrderButtonActive] =
     useState(false);
   const handleClick = () => {
+    if(props.isShaffledTasks === true){
+      alert("Вы не сохранили изменения в списке задач!")
+      return
+    }
     props.setCreationTaskWindowActive(true);
   };
   return (
     <div className="BlockWindowContent">
       {props.isActionMenuOpen ? (
         <ActionMenu
+          isShaffledTasks={isShaffledTasks}
           setActionMenuOpen={props.setActionMenuOpen}
           typeOfActionMenu="Block"
           leftPosition={leftPosition}
@@ -110,8 +120,10 @@ const BlockWindowContent = (props: any) => {
             )
               .then((response) => response.json())
               .catch((error) => console.log(error));
-            if (response.status === "OK") {
-              console.log("ok");
+            if (response.message === "Registrate first") {
+              localStorage.clear();
+              localStorage.setItem("auth", JSON.stringify(false));
+              window.location.reload();
             }
           }}
           max={maxTasks}
@@ -123,6 +135,8 @@ const BlockWindowContent = (props: any) => {
         setDeleteID={props.setDeleteID}
         deleteId={props.deleteId}
         className="TasksList"
+        setShaffledTasks={setShaffledTasks}
+        isShaffledTasks={isShaffledTasks}
         setSimpleTaskWindowActive={props.setSimpleTaskWindowActive}
         tasks={props.tasks}
         actionMenuData={props.actionMenuData}
@@ -132,6 +146,7 @@ const BlockWindowContent = (props: any) => {
       {isSaveTasksOrderButtonActive ? (
         <SaveTasksOrderButton
           setSaveTasksOrderButtonActive={setSaveTasksOrderButtonActive}
+          setShaffledTasks={setShaffledTasks}
           tasks={props.tasks}
           blockWindowID={props.blockWindowID}
         />

@@ -24,6 +24,11 @@ const TasksList = (props: any) => {
     if (response.status === "OK") {
       props.changetasks(response.message.tasks_list);
     }
+    else if (response.message === "Registrate first") {
+      localStorage.clear();
+      localStorage.setItem("auth", JSON.stringify(false));
+      window.location.reload();
+    }
   };
 
   const [isActionMenuOpen, setActionMenuOpen] = useState(false);
@@ -35,6 +40,10 @@ const TasksList = (props: any) => {
   const [currentCard, setCurrentCard] = useState(defaultCard);
 
   function dragStartHandler(e: any, task: any) {
+    if(props.isShaffledTasks === true){
+      alert("Вы не сохранили изменения в списке задач!")
+      return
+    }
     setCurrentCard(task);
   }
 
@@ -53,6 +62,7 @@ const TasksList = (props: any) => {
 
   function dropHandler(e: any, TaskBlock: any) {
     e.preventDefault();
+    props.setShaffledTasks(true)
     props.setSaveTasksOrderButtonActive(true);
     props.changetasks(
       props.tasks.map((c: any) => {
@@ -73,6 +83,7 @@ const TasksList = (props: any) => {
         <ActionMenu
           setActionMenuOpen={setActionMenuOpen}
           typeOfActionMenu="Task"
+          isShaffledTasks={props.isShaffledTasks}
           leftPosition={leftPosition}
           topPosition={topPosition}
           tasks={props.tasks}
@@ -85,6 +96,7 @@ const TasksList = (props: any) => {
       {props.tasks.sort(sortCard).map((task: any) => {
         return (
           <TaskBlock
+          isShaffledTasks={props.isShaffledTasks}
             data={task}
             key={task.id}
             setSimpleTaskWindowActive={props.setSimpleTaskWindowActive}

@@ -19,3 +19,28 @@
 #firstType{
     padding-top: 80px;
 }
+
+#EmptyWeb{
+    width: 200px;
+    height: 200px;
+    margin-bottom: 2vh;
+}
+
+#emptyLists{
+    position: absolute;
+    margin-top: 20vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#emptyListsHeader{
+    font-weight: bold;
+    text-align: center;
+}
+
+#emptyListsBody{
+    text-align: center;
+}

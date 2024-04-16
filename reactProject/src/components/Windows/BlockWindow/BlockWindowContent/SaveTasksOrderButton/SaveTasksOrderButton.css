@@ -6,4 +6,5 @@
 .SaveTasksOrderButtonBody {
     background-color: rgb(47, 122, 193);
     padding: 5px 5px 5px 5px;
+    border-radius: 5px;
 }

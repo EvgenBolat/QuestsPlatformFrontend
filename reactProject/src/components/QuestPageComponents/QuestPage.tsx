@@ -22,6 +22,8 @@ import QRCode from "react-qr-code";
 
 const QuestPage = () => {
   const [start_date, setStart_date] = useState("");
+  const [isSaved, setSaved] = useState(true);
+  const [isShaffled, setShaffled] = useState(false);
   const [end_time, setEndTime] = useState("");
   useEffect(() => {
     const fetchData = async () => {
@@ -68,9 +70,17 @@ const QuestPage = () => {
               if (data2.message.group.leader_id === data2.message.user_id) {
                 setTeamCreator(true);
               }
+            } else if (data2.message === "Registrate first") {
+              localStorage.clear();
+              localStorage.setItem("auth", JSON.stringify(false));
+              window.location.reload();
             }
           }
         }
+      } else if (data.message === "Registrate first") {
+        localStorage.clear();
+        localStorage.setItem("auth", JSON.stringify(false));
+        window.location.reload();
       }
     };
     fetchData();
@@ -228,6 +238,10 @@ const QuestPage = () => {
       if (response.status === "OK") {
         setQuestWasPasted(response.message);
         setQuestCompletedByAllPlayer(response.message);
+      } else if (response.message === "Registrate first") {
+        localStorage.clear();
+        localStorage.setItem("auth", JSON.stringify(false));
+        window.location.reload();
       }
     };
     fetchData();
@@ -262,8 +276,10 @@ const QuestPage = () => {
     )
       .then((response) => response.json())
       .catch((error) => console.log(error));
-    if (response.status === "OK") {
-      console.log("статус изменён");
+    if (response.message === "Registrate first") {
+      localStorage.clear();
+      localStorage.setItem("auth", JSON.stringify(false));
+      window.location.reload();
     }
   };
 
@@ -637,6 +653,11 @@ const QuestPage = () => {
                         setInCommand(false);
                         setTeamName("");
                       }
+                      else if (response.message === "Registrate first") {
+                        localStorage.clear();
+                        localStorage.setItem("auth", JSON.stringify(false));
+                        window.location.reload();
+                      }
                     }}
                   >
                     Выйти
@@ -684,6 +705,8 @@ const QuestPage = () => {
             setIsClarifyingWindowActive={setIsClarifyingWindowActive}
             setClarifyingWindowData={setClarifyingWindowData}
             setAddQuestWindowActive={setAddQuestWindowActive}
+            isSaved={isSaved}
+            isShaffled={isShaffled}
           />
         ) : (
           <div></div>
@@ -747,6 +770,8 @@ const QuestPage = () => {
           <ProfileWindow
             isProfileWindowActive={isProfileWindowActive}
             setProfileWindowActive={setProfileWindowActive}
+            isSaved={isSaved}
+            isShaffled={isShaffled}
           />
         ) : (
           <div></div>
@@ -755,6 +780,7 @@ const QuestPage = () => {
           <ParticipantsListWindow
             setParticipantsListWindowActive={setParticipantsListWindowActive}
             AsParticipants={false}
+            isSaved={isSaved}
           />
         ) : (
           <div></div>
@@ -763,6 +789,7 @@ const QuestPage = () => {
           <MainHeader
             setProfileWindowActive={setProfileWindowActive}
             additionClass="quest"
+            isSaved={isSaved}
           />
           <QuestHeader
             setActionMenuOpen={setActionMenuOpen}
@@ -770,6 +797,7 @@ const QuestPage = () => {
             setTopPosition={setTopPosition}
             participating={false}
             questName={questName}
+            isSaved={isSaved}
           />
           <button
             className="exitToQuestButton"
@@ -792,18 +820,31 @@ const QuestPage = () => {
           setSaveButtonActive={setSaveButtonActive}
           setBlocks={setBlocks}
           changeBlocks={changeBlocks}
+          setShaffled={setShaffled}
+          isShaffled={isShaffled}
           blocks={blocks}
           currentCard={currentCard}
           setCurrentCard={setCurrentCard}
+          isSaved={isSaved}
+          setSaved={setSaved}
         />
-        <CreationBlocksMenu setCurrentCard={setCurrentCard} />
+        <CreationBlocksMenu
+          setCurrentCard={setCurrentCard}
+          setSaved={setSaved}
+          isShaffled={isShaffled}
+          isSaved={isSaved}
+        />
         <SaveBlockButton
           blocks={blocks}
           isSaveButtonActive={isSaveButtonActive}
           setSaveButtonActive={setSaveButtonActive}
+          setSaved={setSaved}
+          setShaffled={setShaffled}
         />
         <QuestFooter
           questName={questName}
+          isSaved={isSaved}
+          isShaffled={isShaffled}
           setParticipantsListWindowActive={setParticipantsListWindowActive}
         />
       </div>

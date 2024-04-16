@@ -227,6 +227,11 @@ const TaskForm = (props: any) => {
       let currentCard2 = props.currrentCard
       props.setTaskWindowActive(false);
     }
+    else if (response.message === "Registrate first") {
+      localStorage.clear();
+      localStorage.setItem("auth", JSON.stringify(false));
+      window.location.reload();
+    }
   };
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import "./SaveTasksOrderButton.css";
 import { useParams } from "react-router-dom";
 
 const SaveTasksOrderButton = (props: any) => {
-  const userid = localStorage.getItem("id")
+  const userid = localStorage.getItem("id");
   return (
     <div
       className="SaveTasksOrderButton"
@@ -21,10 +21,13 @@ const SaveTasksOrderButton = (props: any) => {
           )
             .then((response) => response.json())
             .catch((error) => console.log(error));
-          if (response.status === "OK") {
-            console.log(response);
+          if (response.message === "Registrate first") {
+            localStorage.clear();
+            localStorage.setItem("auth", JSON.stringify(false));
+            window.location.reload();
           }
         };
+        props.setShaffledTasks(false)
         changeTasksOrder();
         props.setSaveTasksOrderButtonActive(false);
       }}

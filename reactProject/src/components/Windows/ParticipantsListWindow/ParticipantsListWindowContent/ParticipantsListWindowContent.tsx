@@ -20,6 +20,11 @@ const ParticipantsListWindowContent = (props: any) => {
         if (response.status === "OK") {
           setData(response.message.participants);
         }
+        else if (response.message === "Registrate first") {
+          localStorage.clear();
+          localStorage.setItem("auth", JSON.stringify(false));
+          window.location.reload();
+        }
       };
       fetchData();
     } else {
@@ -36,6 +41,11 @@ const ParticipantsListWindowContent = (props: any) => {
         if (response.status === "OK") {
           setData(response.message.participants);
           setLeaderId(response.message.user.id);
+        }
+        else if (response.message === "Registrate first") {
+          localStorage.clear();
+          localStorage.setItem("auth", JSON.stringify(false));
+          window.location.reload();
         }
       };
       fetchData();
@@ -97,6 +107,11 @@ const ParticipantsListWindowContent = (props: any) => {
                               setData(newData);
                               setClicked(true);
                             }
+                            else if (response.message === "Registrate first") {
+                              localStorage.clear();
+                              localStorage.setItem("auth", JSON.stringify(false));
+                              window.location.reload();
+                            }
                           };
                           fetchData();
                         }
@@ -122,6 +137,11 @@ const ParticipantsListWindowContent = (props: any) => {
                               let newData = data;
                               setData(newData);
                               setClicked(true);
+                            }
+                            else if (response.message === "Registrate first") {
+                              localStorage.clear();
+                              localStorage.setItem("auth", JSON.stringify(false));
+                              window.location.reload();
                             }
                           };
                           fetchData();

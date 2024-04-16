@@ -23,6 +23,11 @@ const FinishScreen = (props: any) => {
         setUserPoints(response.message.points);
         setPointsChanged(true);
       }
+      else if (response.message === "Registrate first") {
+        localStorage.clear();
+        localStorage.setItem("auth", JSON.stringify(false));
+        window.location.reload();
+      }
     };
     setTimeout(fetchData, 2000);
   }, []);

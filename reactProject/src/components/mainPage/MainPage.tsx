@@ -28,6 +28,11 @@ const MainPage = (props: any) => {
         if (response.status === "OK") {
           setQuestList(response.message);
         }
+        else if (response.message === "Registrate first") {
+          localStorage.clear();
+          localStorage.setItem("auth", JSON.stringify(false));
+          window.location.reload();
+        }
       };
       fetchData();
       setUpdated(true)

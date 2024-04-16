@@ -9,7 +9,7 @@ const AddQuestWindowContent = (props: any) => {
   const navigate = useNavigate();
   let startDate = new Date();
   const { questid } = useParams();
-  const userid = localStorage.getItem("id")
+  const userid = localStorage.getItem("id");
   const [minStartDate] = useState(new Date(startDate));
   let endDate = new Date(startDate);
   endDate.setMinutes(endDate.getMinutes() + 5);
@@ -43,6 +43,10 @@ const AddQuestWindowContent = (props: any) => {
           setFilePath(
             `https://quests.projectswhynot.site/api/v1/static/${response.message.quest_image}`
           );
+        } else if (response.message === "Registrate first") {
+          localStorage.clear();
+          localStorage.setItem("auth", JSON.stringify(false));
+          window.location.reload();
         }
       };
       fetchData();
@@ -255,8 +259,14 @@ const AddQuestWindowContent = (props: any) => {
                   body: formData,
                 }
               ).then((responce) => responce.json());
-              props.setAddQuestWindowActive(false);
-              window.location.reload();
+              if (send.status === "OK") {
+                props.setAddQuestWindowActive(false);
+                window.location.reload();
+              } else if (send.message === "Registrate first") {
+                localStorage.clear();
+                localStorage.setItem("auth", JSON.stringify(false));
+                window.location.reload();
+              }
             } else if (props.typeOfWindow === 1) {
               let formData = new FormData();
               if (userid) {
@@ -279,8 +289,15 @@ const AddQuestWindowContent = (props: any) => {
                     }),
                   }
                 ).then((responce) => responce.json());
-                props.setAddQuestWindowActive(false);
-                window.location.reload();
+                if (sendChanges.status === "OK") {
+                  props.setAddQuestWindowActive(false);
+                  window.location.reload();
+                }
+                else if (sendChanges.message === "Registrate first") {
+                  localStorage.clear();
+                  localStorage.setItem("auth", JSON.stringify(false));
+                  window.location.reload();
+                }
               }
             }
           }}

@@ -4,6 +4,10 @@ import "./TaskBlock.css";
 
 const TaskBlock = (props: any) => {
   const handleClick = () => {
+    if (props.isShaffledTasks === true) {
+      alert("Вы не сохранили изменения в списке задач!");
+      return;
+    }
     props.setSimpleTaskWindowActive(true);
     props.setDeleteID(props.data.id);
   };
@@ -18,7 +22,7 @@ const TaskBlock = (props: any) => {
       draggable={true}
     >
       <div onClick={handleClick} className="TaskBlock">
-        Задание № {props.data.task_num}
+        Задание № {props.data.task_num + 1}
       </div>
       <button className="TaskBlockButton">
         <img

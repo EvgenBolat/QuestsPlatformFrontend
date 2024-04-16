@@ -1,6 +1,5 @@
 import TasksBlock from "./TasksBlock/TasksBlock";
 import "./Blocks.css";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const Blocks = (props: any) => {
@@ -8,6 +7,11 @@ const Blocks = (props: any) => {
   const userid = localStorage.getItem("id")
 
   function dragStartHandler(e: any, taskBlock: any) {
+    if(props.isSaved === false){
+      alert("Вы не сохранили изменения в списке блоков!")
+      e.preventDefault()
+      return
+    }
     props.setCurrentCard(taskBlock);
   }
 
@@ -34,7 +38,7 @@ const Blocks = (props: any) => {
           block_type: currentCard.block_type,
           block_num: previosindex + 1,
           min_tasks: 0,
-          block_name: "Блок № " + (previosindex + 1),
+          block_name: "Блок № " + (previosindex + 2),
         }),
       }
     )
@@ -46,12 +50,18 @@ const Blocks = (props: any) => {
         block_num: previosindex + 1,
         block_type: props.currentCard.block_type,
         min_tasks: props.currentCard.min_tasks,
-        block_name: "Блок № " + (previosindex + 1),
+        block_name: "Блок № " + (previosindex + 2),
       });
       for (let index = previosindex + 2; index < props.blocks.length; index++) {
         props.blocks[index].block_num += 1;
       }
       props.setBlocks(props.blocks.slice());
+      props.setSaved(false)
+    }
+    else if (response.message === "Registrate first") {
+      localStorage.clear();
+      localStorage.setItem("auth", JSON.stringify(false));
+      window.location.reload();
     }
   };
 
@@ -61,6 +71,7 @@ const Blocks = (props: any) => {
     if (props.currentCard.id === -1 || props.currentCard.id === -2) {
       fetchData(TasksBlock, props.currentCard);
     } else {
+      props.setShaffled(true)
       props.setBlocks(
         props.blocks.map((c: any) => {
           if (c.id === TasksBlock.id) {
@@ -95,6 +106,8 @@ const Blocks = (props: any) => {
               dragEnd={dragEndHandler}
               dragOver={dragOverHandler}
               drop={dropHandler}
+              isSaved={props.isSaved}
+              isShaffled={props.isShaffled}
               setactionMenuData={props.setactionMenuData}
               isBlockWindowActive={props.isBlockWindowActive}
               setBlockWindowActive={props.setBlockWindowActive}
@@ -112,6 +125,8 @@ const Blocks = (props: any) => {
         <TasksBlock
           data={props.blocks.at(-1)}
           last={true}
+          isSaved={props.isSaved}
+          isShaffled={props.isShaffled}
           setCurrentCard={props.setCurrentCard}
           setBlockWindowID={props.setBlockWindowID}
           key={props.blocks.at(-1)?.id}

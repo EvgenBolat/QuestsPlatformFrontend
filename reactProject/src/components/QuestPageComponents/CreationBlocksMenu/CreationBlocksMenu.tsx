@@ -6,6 +6,11 @@ const CreationBlocksMenu = (props: any) => {
   const [isOpen, ChangeOpened] = useState(false);
 
   function dragStartHandler(e: any, taskBlock: any) {
+    if(props.isSaved === false || props.isShaffled === true){
+      alert("Вы не сохранили изменения в списке блоков!")
+      e.preventDefault()
+      return
+    }
     props.setCurrentCard(taskBlock);
   }
   

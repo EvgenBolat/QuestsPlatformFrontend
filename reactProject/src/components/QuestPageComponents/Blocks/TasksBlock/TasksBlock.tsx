@@ -22,6 +22,11 @@ const TasksBlock = (props: any) => {
         draggable={true}
         disabled={props.isStarted}
         onClick={(e) =>{
+            console.log(props.isShaffled)
+            if(props.isSaved === false || props.isShaffled === true){
+                alert("Вы не сохранили изменения в списке блоков!")
+                return
+            }
             if(props.data.id === -1 || props.data.id === -2){
                 return
             }

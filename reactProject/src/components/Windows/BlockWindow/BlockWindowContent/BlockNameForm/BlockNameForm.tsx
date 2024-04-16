@@ -3,7 +3,7 @@ import "./BlockNameForm.css";
 import { useParams } from "react-router-dom";
 
 const BlockNameForm = (props: any) => {
-  const userid = localStorage.getItem("id")
+  const userid = localStorage.getItem("id");
   const useValtidation = (value: any, validations: any) => {
     const [isEmpty, setEmpty] = useState(true);
     const [inputValid, setInputValid] = useState(false);
@@ -57,10 +57,14 @@ const BlockNameForm = (props: any) => {
       )
         .then((response) => response.json())
         .catch((error) => console.log(error));
-      if (response.status === "OK") {
-        console.log("ok");
+      if(response.status === "OK"){
+        window.location.reload();
       }
-      console.log(response)
+      if (response.message === "Registrate first") {
+        localStorage.clear();
+        localStorage.setItem("auth", JSON.stringify(false));
+        window.location.reload();
+      }
     };
 
     return {

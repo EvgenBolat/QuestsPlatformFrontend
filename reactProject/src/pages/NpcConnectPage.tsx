@@ -20,14 +20,12 @@ const NpcConnectPage = () => {
           .then((responce) => responce.json())
           .catch((error) => console.log(error));
         if (data.status === "OK") {
-          console.log(data);
           localStorage.removeItem("questIdParticipation");
           localStorage.removeItem("taskIdParticipation");
           navigate(`/user/quest/${location.pathname.split("/")[2]}`, {
             replace: true,
           });
         } else {
-          console.log(data);
           navigate("/user");
         }
       };

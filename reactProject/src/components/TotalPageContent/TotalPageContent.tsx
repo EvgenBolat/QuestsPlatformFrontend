@@ -29,6 +29,11 @@ const TotapPageContent = (props: any) => {
         if(response.status === "OK"){
           setResult(response.message)
         }
+        else if (response.message === "Registrate first") {
+          localStorage.clear();
+          localStorage.setItem("auth", JSON.stringify(false));
+          window.location.reload();
+        }
     };
     fetchData()
   },[]);

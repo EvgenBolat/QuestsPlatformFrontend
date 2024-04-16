@@ -51,6 +51,11 @@ const ViewContent = (props: any) => {
         setDataFromServer(data.message.blocks_list);
         set_quest_name(data.message.quest_name)
       }
+      else if (data.message === "Registrate first") {
+        localStorage.clear();
+        localStorage.setItem("auth", JSON.stringify(false));
+        window.location.reload();
+      }
     };
     fetchData();
   },[]);
