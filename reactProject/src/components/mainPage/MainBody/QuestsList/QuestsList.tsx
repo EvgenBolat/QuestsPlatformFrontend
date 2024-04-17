@@ -2,6 +2,13 @@ import QuestCard from "../QuestCard/QuestCard";
 import "./QuestsList.css";
 
 const QuestsList = (props: any) => {
+  let classNameForSecondList = "secondType";
+  if (
+      !props.questList.created_quests ||
+      props.questList.created_quests.length <= 0
+  ) {
+    classNameForSecondList += "OnlyOne"
+  }
   return (
     <div>
       {props.questList.created_quests &&
@@ -27,7 +34,7 @@ const QuestsList = (props: any) => {
       {props.questList.participated_quests &&
       props.questList.participated_quests.length > 0 ? (
         <div>
-          <h1 id="secondType">Квесты, в которых вы участвуете</h1>
+          <h1 className={classNameForSecondList}>Квесты, в которых вы участвуете</h1>
           <div id="participantQuests">
             {props.questList.participated_quests.map((el: any) => {
               return (
@@ -45,11 +52,15 @@ const QuestsList = (props: any) => {
         <div></div>
       )}
       {(!props.questList.created_quests ||
-      props.questList.created_quests.length === 0) &&
+        props.questList.created_quests.length === 0) &&
       (!props.questList.participated_quests ||
-      props.questList.participated_quests.length === 0)? (
+        props.questList.participated_quests.length === 0) ? (
         <div id="emptyLists">
-          <img id="EmptyWeb" src={`${process.env.PUBLIC_URL}/img/EmptyWeb.svg`} alt="" />
+          <img
+            id="EmptyWeb"
+            src={`${process.env.PUBLIC_URL}/img/EmptyWeb.svg`}
+            alt=""
+          />
           <div id="emptyListsHeader">Пока здесь ничего нет.</div>
           <div id="emptyListsBody">
             Создайте свой собственный или примите участие в квестах других

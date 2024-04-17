@@ -3,10 +3,18 @@ import { Html5Qrcode } from "html5-qrcode";
 
 import "./taskView.css";
 const TaskView = (props: any) => {
+  // console.log(localStorage.getItem("lastedSecond"));
+  if (props.setQuestWasStarted) {
+    props.setQuestWasStarted(true);
+  }
   const [isQrCodeScanningEnabled, setQrCodeScanningEnabled] = useState(false);
   const [asnwer, setAnswer] = useState("");
   const [isAnswerButtonClicked, setAnswerButtonClicked] = useState(false);
-  const [lastedSecond, setLastedSecond] = useState(0);
+  const [lastedSecond, setLastedSecond] = useState(
+    localStorage.getItem("lastedSecond") != null
+      ? Number(localStorage.getItem("lastedSecond"))
+      : 0
+  );
 
   const CountDown = (minutes = 0, seconds = 0, pausedNow = true) => {
     const [[m, s], setTime] = useState([minutes, seconds]);
@@ -27,6 +35,7 @@ const TaskView = (props: any) => {
         } else {
           setTime([m, s - 1]);
           setLastedSecond(lastedSecond + 1);
+          localStorage.setItem("lastedSecond", (lastedSecond + 1).toString());
         }
       }
     };
@@ -53,6 +62,8 @@ const TaskView = (props: any) => {
         if (!props.viewMode) {
           props.changeTaskStatus(props.data.id, 2, points);
           setTaskPassed(true);
+          setLastedSecond(0);
+          localStorage.setItem("lastedSecond", "0");
         }
         let questData = props.questData;
         if (props.viewMode) {
@@ -275,8 +286,25 @@ const TaskView = (props: any) => {
           id="taskTime"
         >
           {CountDown(
-            Math.floor(props.data.task_time / 60),
-            Math.floor(props.data.task_time % 60),
+            props.data.task_time -
+              Number(localStorage.getItem("lastedSecond")) <=
+              0
+              ? 0
+              : Math.floor(
+                  (props.data.task_time -
+                    Number(localStorage.getItem("lastedSecond"))) /
+                    60
+                ),
+
+            props.data.task_time -
+              Number(localStorage.getItem("lastedSecond")) <=
+              0
+              ? 0
+              : Math.floor(
+                  (props.data.task_time -
+                    Number(localStorage.getItem("lastedSecond"))) %
+                    60
+                ),
             props.data.user_progress.status !== 1
           )}
         </h1>
@@ -284,7 +312,7 @@ const TaskView = (props: any) => {
           Макс. балл : <b>{props.data.max_points} </b>
         </p>
         <p className="simpleTaskText" hidden={!props.data.vital}>
-          При выполнении задания позднее{" "}
+          При выполнении задания позднее
           {props.block_type && props.data.user_progress.status === 0
             ? "указанного времени"
             : ""}{" "}
@@ -360,7 +388,11 @@ const TaskView = (props: any) => {
                             ).toFixed(2)
                           ))
                     );
+                    if (points < 0) {
+                      points = 0;
+                    }
                     if (!props.viewMode) {
+                      setLastedSecond(0);
                       props.changeTaskStatus(props.data.id, 2, points);
                     }
                   } else {

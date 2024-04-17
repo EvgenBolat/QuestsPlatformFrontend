@@ -87,6 +87,8 @@ const QuestPage = () => {
   }, []);
   const location = useLocation();
 
+  const [isQuestWasStarted, setQuestWasStarted] = useState(false);
+
   const [isClarifyingWindowActive, setIsClarifyingWindowActive] =
     useState(false);
   const [startQuest, setStartQuest] = useState(false);
@@ -224,28 +226,28 @@ const QuestPage = () => {
     },
   ]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(
-        `https://quests.projectswhynot.site/api/v1/quests/${questid}/points`,
-        {
-          method: "POST",
-          body: JSON.stringify({ auth_token: userid }),
-        }
-      )
-        .then((response) => response.json())
-        .catch((error) => console.log(error));
-      if (response.status === "OK") {
-        setQuestWasPasted(response.message);
-        setQuestCompletedByAllPlayer(response.message);
-      } else if (response.message === "Registrate first") {
-        localStorage.clear();
-        localStorage.setItem("auth", JSON.stringify(false));
-        window.location.reload();
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await fetch(
+  //       `https://quests.projectswhynot.site/api/v1/quests/${questid}/points`,
+  //       {
+  //         method: "POST",
+  //         body: JSON.stringify({ auth_token: userid }),
+  //       }
+  //     )
+  //       .then((response) => response.json())
+  //       .catch((error) => console.log(error));
+  //     if (response.status === "OK") {
+  //       setQuestWasPasted(response.message);
+  //       setQuestCompletedByAllPlayer(response.message);
+  //     } else if (response.message === "Registrate first") {
+  //       localStorage.clear();
+  //       localStorage.setItem("auth", JSON.stringify(false));
+  //       window.location.reload();
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
   const defaultCard = { id: -1, order: -1, name: "", type: "parallel" };
 
   const [currentCard, setCurrentCard] = useState(defaultCard);
@@ -305,17 +307,19 @@ const QuestPage = () => {
     let interlvalid = setInterval(() => {}, 1000000000000);
     if (!isQuestCompletedByAllPlayers && startedAsking) {
       interlvalid = setInterval(async () => {
-        const response = await fetch(
-          `https://quests.projectswhynot.site/api/v1/quests/${questid}/checkfinish`,
-          {
-            method: "GET",
-          }
-        )
-          .then((response) => response.json())
-          .catch((error) => console.log(error));
-        if (response.status === "OK") {
-          if (response.message === true) {
-            setQuestCompletedByAllPlayer(true);
+        if (!isQuestCompletedByAllPlayers) {
+          const response = await fetch(
+            `https://quests.projectswhynot.site/api/v1/quests/${questid}/checkfinish`,
+            {
+              method: "GET",
+            }
+          )
+            .then((response) => response.json())
+            .catch((error) => console.log(error));
+          if (response.status === "OK") {
+            if (response.message === true) {
+              setQuestCompletedByAllPlayer(true);
+            }
           }
         }
       }, 3000);
@@ -369,6 +373,7 @@ const QuestPage = () => {
               return (
                 <div className="taskParticipating">
                   <TaskView
+                    setQuestWasStarted={setQuestWasStarted}
                     changeTaskStatus={changeTaskStatus}
                     blockId={questData[blockNum].id}
                     block_num={blockNum}
@@ -403,15 +408,17 @@ const QuestPage = () => {
               countOfCompletedVital !== countOfVital
               // || countOfCompletedSimple !== questData[blockNum].min_tasks
             ) {
+              // setQuestWasStarted(true)
               return (
                 <div className="taskParticipating">
                   <BlockView
+                    setQuestWasStarted={setQuestWasStarted}
                     setData={setQuestData}
                     questData={questData}
                     changeTaskStatus={changeTaskStatus}
                     remaining={
-                      countOfCompletedSimple - questData[blockNum].min_tasks > 0
-                        ? countOfCompletedSimple - questData[blockNum].min_tasks
+                       questData[blockNum].min_tasks - countOfCompletedSimple >= 0
+                        ? questData[blockNum].min_tasks - countOfCompletedSimple
                         : 0
                     }
                     viewMode={false}
@@ -449,7 +456,7 @@ const QuestPage = () => {
             }
           }
         }
-        if (!isQuestWasPasted) {
+        if (!isQuestWasPasted && isQuestWasStarted) {
           return (
             <FinishScreen
               setQuestWasPasted={setQuestWasPasted}
@@ -459,7 +466,7 @@ const QuestPage = () => {
             />
           );
         } else {
-          if (!isQuestCompletedByAllPlayers) {
+          if (!isQuestCompletedByAllPlayers && isQuestWasStarted) {
             return (
               <div id="waitingBody">
                 <div>Ожидайте завершение квеста другими игроками</div>
@@ -652,8 +659,7 @@ const QuestPage = () => {
                       if (response.status === "OK") {
                         setInCommand(false);
                         setTeamName("");
-                      }
-                      else if (response.message === "Registrate first") {
+                      } else if (response.message === "Registrate first") {
                         localStorage.clear();
                         localStorage.setItem("auth", JSON.stringify(false));
                         window.location.reload();

@@ -8,16 +8,16 @@ const ActionMenuContent = (props: any) => {
   const style =
     props.typeOfActionMenu === "Task"
       ? {
-          left: `${props.leftPosition - 28}px`,
+          left: `${props.leftPosition - 15}px`,
           top: `${props.topPosition + 5}px`,
         }
       : props.typeOfActionMenu === "Quest"
       ? {
-          left: `${props.leftPosition - 120}px`,
+          left: `${props.leftPosition}px`,
           top: `${props.topPosition}px`,
         }
       : {
-          left: `${props.leftPosition - 120}px`,
+          left: `${props.leftPosition}px`,
           top: `${props.topPosition + 5}px`,
         };
 

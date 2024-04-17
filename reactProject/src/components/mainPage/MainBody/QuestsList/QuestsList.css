@@ -11,7 +11,12 @@
     padding-left: 10px;
 }
 
-#secondType, #firstType{
+.secondType, #firstType{
+    color: rgb(0, 133, 255);
+}
+
+.secondTypeOnlyOne{
+    padding-top: 80px;
     color: rgb(0, 133, 255);
 }
 

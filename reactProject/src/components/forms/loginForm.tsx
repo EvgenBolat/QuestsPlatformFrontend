@@ -20,7 +20,10 @@ const useValtidation = (value: any, validations: any) => {
             ? setEmailError(false)
             : setEmailError(true);
           if (re) {
-            if (String(value).toLowerCase().split("@")[1] !== "edu.hse.ru" && String(value).toLowerCase().split("@")[1] !== "hse.ru") {
+            if (
+              String(value).toLowerCase().split("@")[1] !== "edu.hse.ru" &&
+              String(value).toLowerCase().split("@")[1] !== "hse.ru"
+            ) {
               setEmailError(true);
             } else {
               setEmailError(false);
@@ -68,6 +71,7 @@ const useInput = (initialValue: any, validation: any) => {
 };
 
 const LoginForm = (props: any) => {
+  const [isSending, setSending] = useState(false);
   const [isValid, setValid] = useState(true);
   const email = useInput("", { isEmpty: true, isEmail: false });
   const password = useInput("", { isEmpty: true });
@@ -81,11 +85,16 @@ const LoginForm = (props: any) => {
 
   return (
     <div>
-      <img id="loginLogo" src={`${process.env.PUBLIC_URL}/img/mainLogo.svg`} alt="" />
+      <img
+        id="loginLogo"
+        src={`${process.env.PUBLIC_URL}/img/mainLogo.svg`}
+        alt=""
+      />
       <div id="loginFormCase">
         <div className="login">
           <form
             onSubmit={async (e) => {
+              setSending(true);
               e.preventDefault();
               setO(Math.floor(Math.random() * 100000000).toString());
               const formData = new FormData();
@@ -149,6 +158,7 @@ const LoginForm = (props: any) => {
                   console.log("error");
                 }
               }
+              setSending(false);
             }}
             className="main__form"
           >
@@ -212,7 +222,8 @@ const LoginForm = (props: any) => {
               disabled={
                 !email.inputValid ||
                 !password.inputValid ||
-                isPrivacyComfirmed !== "1"
+                isPrivacyComfirmed !== "1" ||
+                isSending
               }
               type="submit"
               value="Войти"

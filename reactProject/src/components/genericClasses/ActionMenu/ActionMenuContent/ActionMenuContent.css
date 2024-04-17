@@ -10,11 +10,13 @@
 }
 
 .ActionMenuContentQuest{
-    right: 235px;
+    position: absolute;
+    right: 35vw;
     top: -70px;
 }
 
 .ActionMenuContentBlock{
+    position: absolute;
     top: 285px;
     right: 240px;
 }

@@ -2,6 +2,9 @@ import TaskView from "./TaskView/TaskView";
 import Flickity from "react-flickity-component";
 import "./BlockView.css";
 const BlockView = (props: any) => {
+  if (props.setQuestWasStarted) {
+    props.setQuestWasStarted(true);
+  }
   if (props.data.block_type === 0) {
     return (
       <div className="blockView">
@@ -50,7 +53,9 @@ const BlockView = (props: any) => {
             Вам необходимо выполнить следующее количество из предложенных задач,
             помимо обязательных
           </div>
-          <div className="remainingCountHeader">{props.viewMode? props.remaining : props.data.min_tasks}</div>
+          <div className="remainingCountHeader">
+            {!props.viewMode ? props.remaining : props.data.min_tasks}
+          </div>
         </div>
         <Flickity
           className="Slider"

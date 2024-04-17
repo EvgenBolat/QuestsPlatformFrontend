@@ -17,12 +17,6 @@ const SharingPage = () => {
       .then((response) => response.json())
       .catch((error) => console.log(error));
     if (response.status === "OK") {
-      console.log(
-        `/user/${localStorage.getItem("id")}/quest/${
-          location.pathname.split("/")[2]
-        }`
-      );
-      console.log("переход")
       localStorage.removeItem("questIdParticipation");
       navigate(
         `/user/quest/${
@@ -47,7 +41,6 @@ const SharingPage = () => {
         "questIdParticipation",
         `${location.pathname.split("/")[2]}`
       );
-      console.log(`Ставлю айди квеста для участия обычному участнику: ${localStorage.getItem("questIdParticipation")}`)
       navigate("/login", { replace: true });
     }
   }, []);
